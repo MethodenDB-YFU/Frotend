@@ -2,6 +2,9 @@
   "name": "methodenui-yfu",
   "version": "0.1.0",
   "private": true,
+  "theme": {
+    "layout-header-background": "#642869"
+  }
   "dependencies": {
     "antd": "^3.0.1",
     "react": "^16.2.0",
@@ -13,5 +16,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.6.3",
+    "react-app-rewired": "^1.3.8"
   }
 }
