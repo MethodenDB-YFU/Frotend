@@ -1,0 +1,77 @@
+@yfuColorLight: #aa6cac;    
+@yfuColorDark: #51255B;
+@textColor: #555;
+
+.paper-style {
+    padding: 10pt;
+
+    * {font-family: 'National'; }
+
+    .page-header {
+        font-size: 0.8em;
+
+        p {
+            display: block;
+            text-align: center;
+            margin-bottom: 0px;
+        }
+
+        hr {
+            margin: 1px 0px;
+            height: 1px;
+            border-bottom: none;
+            background: #555;
+        }
+
+        img {
+            margin-top: 15px;
+            width: 40%;
+        }
+    }
+    
+    h1 {
+        color: @yfuColorDark;
+        font-size: 29px;
+        line-height: 26px;
+    }
+    
+    h2 {
+        color: @yfuColorLight;
+        font-size: 23px;
+        line-height: 24px;
+    }
+
+    ul {
+        list-style-type: disc;
+    }
+
+    ol {
+        list-style-type: decimal;
+    }
+
+    .page-footer {
+        background: none;
+        .page_number {
+            display: block;
+            text-align: center;
+        }
+    }
+
+    ul {
+        list-style: disc;
+    }
+
+    &.paper-layout {
+        padding: 1cm 2cm 2cm;
+        margin-top: 20px;
+        border: 1px solid #e5e5e5;
+        box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.3);
+    }
+}
+
+#methodDescription_ifr {
+    .editor-h1 {color: @yfuColorDark; font-family: 'Helvetica, Arial, National';}
+    .editor-h2 {color: @yfuColorLight; font-family: 'Helvetica, Arial, National';}
+    .editor-h3 {color: @yfuColorLight; font-family: 'Helvetica, Arial, National';}
+    .editor-p  {color: @textColor; font-family: 'Helvetica, Arial, National';}
+}

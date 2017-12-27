@@ -1,11 +1,11 @@
 const path = require("path");
 const fs = require('fs');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
-const lessToJs = require('less-vars-to-js');
-const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './src/ant-theme-vars.less'), 'utf8'));
+//const lessToJs = require('less-vars-to-js');
+//const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './src/ant-theme-vars.less'), 'utf8'));
 
 module.exports = {
-    entry: ["./src/js/app.js"],
+    entry: ["./src/js/app.jsx"],
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "js/[name].js"
@@ -35,11 +35,7 @@ module.exports = {
                 use: [
                     {loader: "style-loader"},
                     {loader: "css-loader"},
-                    {loader: "less-loader",
-                        options: {
-                            modifyVars: themeVariables
-                        }
-                    }
+                    {loader: "less-loader"}
                 ]
             }
         ]

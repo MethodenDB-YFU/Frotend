@@ -4,9 +4,9 @@
   "description": "",
   "main": "webpack.conf.js",
   "scripts": {
-    "build": "webpack",
+    "build": "lessc src/less/paper-layout.less dist/css/paper-layout.css && webpack",
     "start": "webpack-dev-server --open",
-    "test" : "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +28,7 @@
     "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
+    "@tinymce/tinymce-react": "^2.1.0",
     "antd": "^3.0.3"
   }
 }
