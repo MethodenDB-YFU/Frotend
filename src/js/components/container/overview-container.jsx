@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Input, Table, } from 'antd';
+import { Link } from 'react-router-dom'
+import { Row, Col, Input, Table, Button } from 'antd';
 
 const columns = [{
         title: 'Name',
@@ -49,7 +50,8 @@ export class OverviewContainer extends Component {
     }
 
     render() {
-
+        const createBtn = (<Link to="/method/new">Methode erstellen</Link>);
+        
         return (
                 <div>
                     <Row>
@@ -57,7 +59,7 @@ export class OverviewContainer extends Component {
                         <h1>Methodenübersicht</h1>
                         </Col>
                         <Col span={12}>
-                        <Input size="large" placeholder="Albatross" addonAfter="Methode erstellen" />
+                        <Input size="large" placeholder="Albatross" addonAfter={createBtn} />
                         </Col>
                     </Row>
                     <Table columns={columns} dataSource={data} />

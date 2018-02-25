@@ -15,12 +15,32 @@ export class MethodForm extends Component {
     constructor(props) {
         super(props);
         
+        this.state = {
+            currentStep: 0
+        };
+        
+        this.nextStep = this.nextStep.bind(this);
+        this.prevStep = this.prevStep.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
+    }
+    
+    nextStep(e) {
+        e.preventDefault();
+        const currentStep = this.state.currentStep;
+        
+        this.setState({currentStep: currentStep + 1});
+    }
+    
+    prevStep(e) {
+        e.preventDefault();
+        const currentStep = this.state.currentStep;
+        
+        this.setState({currentStep: currentStep - 1});
     }
     
     handleSubmit(e) {
@@ -38,6 +58,12 @@ export class MethodForm extends Component {
     
     render() {
         const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
+        
+        const {currentStep} = this.state;
+        
+        const attributeState  = ['', 'hide', 'hide'];
+        const contentState    = ['hide', '', 'hide'];
+        const attachmentState = ['hide', 'hide', ''];
 
         // Only show error after a field is touched.
         const userNameError = isFieldTouched('methodName') && getFieldError('methodName');
@@ -50,7 +76,7 @@ export class MethodForm extends Component {
                     </Row>
                     <Row>
                         <Col span={10} offset={7}>
-                            <Steps current={1}>
+                            <Steps current={currentStep}>
                                 <Step title="Metadaten" />
                                 <Step title="Inhalt" />
                                 <Step title="Anhänge" />
@@ -58,7 +84,20 @@ export class MethodForm extends Component {
                         </Col>
                     </Row>
                     <Form layout="vertical" onSubmit={this.handleSubmit}>
-                        <MethodContentField form={this.props.form} />
+                        <MethodAttributeFields
+                            className={attributeState[currentStep]}
+                            form={this.props.form}
+                            nextStep={this.nextStep}
+                            prevStep={this.prevStep} />
+                        <MethodContentField
+                            className={contentState[currentStep]}
+                            form={this.props.form}
+                            nextStep={this.nextStep}
+                            prevStep={this.prevStep} />
+                        <MethodAttachmentField
+                            className={attachmentState[currentStep]}
+                            form={this.props.form}
+                            prevStep={this.prevStep} />
                     </Form>
                 </div>
                 );

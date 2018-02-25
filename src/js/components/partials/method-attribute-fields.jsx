@@ -8,6 +8,7 @@ const Step = Steps.Step;
 export class MethodAttributeFields extends Component {
     constructor(props) {
         super(props);
+        
         this.state = {
 
         };
@@ -17,7 +18,7 @@ export class MethodAttributeFields extends Component {
         const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
         
         return (
-                <div>
+                <div className={this.props.className}>
                     <Row>
                         <Col span={24}>
                         <FormItem label="Methodenname">
@@ -75,7 +76,7 @@ export class MethodAttributeFields extends Component {
                         </Col>
                     </Row>
                     <FormItem>
-                        <Button type="primary">Weiter</Button>
+                        <Button className="next-step" type="primary" onClick={this.props.nextStep}>Weiter</Button>
                     </FormItem>
                 </div>
                 );

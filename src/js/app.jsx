@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Link } from 'react-router-dom'
 import { Layout, Menu } from 'antd';
 import { OverviewContainer } from './components/container/overview-container';
 import { MethodFormContainer } from './components/container/method-form-container';
@@ -20,21 +21,24 @@ class App extends Component {
                             defaultSelectedKeys={['method']}
                             style={{lineHeight: '62px' }}
                             >
-                            <MenuItem key="method">Methoden</MenuItem>
-                            <MenuItem key="deminar">Seminarziele</MenuItem>
+                            <MenuItem key="method"><Link to="/">Methoden</Link></MenuItem>
+                            <MenuItem key="seminar">Seminarziele</MenuItem>
                         </Menu>
                     </Header>
                     <Content style={{padding: '0 50px' }}>
                         <div style={{background: '#fff', padding: 24, minHeight: 280 }}>
-                            <MethodFormContainer />
+                            <Route path="/" exact component={OverviewContainer}/>
+                            <Route path="/method/new" exact component={MethodFormContainer}/>
                         </div>
                     </Content>
                 </Layout>
                 );
     }
-}
-;
+};
 
 export default App;
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<BrowserRouter>
+                    <App />
+                </BrowserRouter>,
+                document.getElementById('root'));
