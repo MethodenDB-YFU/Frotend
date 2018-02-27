@@ -10,8 +10,80 @@ export class MethodAttributeFields extends Component {
         super(props);
         
         this.state = {
-
+            seminarTypes: '',
+            seminarGoals: {},
+            methodTypes: '',
+            methodLevels: '',
+            selectedSeminar: '',
+            seminarGoalsDisabled: true,
+            seminarGoalsPlaceholder: 'Bitte erst ein Seminar auswählen!'
         };
+        
+        this.onSelectSeminarType = this.onSelectSeminarType.bind(this);
+        this.onDeselectSeminarType = this.onDeselectSeminarType.bind(this);
+    }
+    
+    componentDidMount() {
+        fetch('http://localhost:1234/api/seminars/types')
+            .then(results => {
+                return results.json();
+            }).then(data => {
+                let seminarTypes = data.map((type) => {
+                    return (
+                            <Option key={type.id} value={type.id}>{type.name}</Option>
+                            );
+                });
+                
+                let seminarGoals = data.map((type) => {
+                    let goals = type.map((goal) => {
+                        return (
+                                <Option key={goal.id} value={goal.id}>{goal.name}</Option>
+                                );
+                    });
+                    return type.id = goals;
+                });
+                
+                this.setState({
+                    seminarTypes: seminarTypes,
+                    seminarGoals: seminarGoals
+                });
+            });
+        
+        fetch('http://localhost:1234/api/methods/types')
+            .then(results => {
+                return results.json();
+            }).then(data => {
+                let methodTypes = data.map((type) => {
+                    return (
+                            <Option key={type.id} value={type.id}>{type.name}</Option>
+                            );
+                });
+                this.setState({methodTypes: methodTypes});
+            });
+        
+        fetch('http://localhost:1234/api/methods/levels')
+            .then(results => {
+                return results.json();
+            }).then(data => {
+                let methodLevels = data.map((level) => {
+                    return (
+                            <Option key={level.id} value={level.id}>{level.name}</Option>
+                            );
+                });
+                this.setState({methodLevels: methodLevels});
+            });
+    }
+    
+    onSelectSeminarType(value, option) {
+        this.setState({selectedSeminar: value,
+                    seminarGoalsDisabled: false,
+                    seminarGoalsPlaceholder: 'Bitte erst ein Seminar auswählen!'});
+    }
+    
+    onDeselectSeminarType(value, option) {
+        this.setState({selectedSeminar: '',
+                    seminarGoalsDisabled: true,
+                    seminarGoalsPlaceholder: 'Seminarziel(e) auswählen...!'});
     }
 
     render() {
@@ -32,10 +104,12 @@ export class MethodAttributeFields extends Component {
                         <Col span={8}>
                         <FormItem label="Seminar">
                             {getFieldDecorator('seminarTyp')(
-                                <Select placeholder="Seminar auswählen...">
-                                    <Option value="1">VBT</Option>
-                                    <Option value="2">NBT</Option>
-                                    <Option value="3">ReEntry</Option>
+                                <Select
+                                    placeholder="Seminar auswählen..."
+                                    notFoundContent="Es existieren keine Seminare"
+                                    onSelect={this.onSelectSeminarType}
+                                    onDeselect={this.onDeselectSeminarType} >
+                                    {this.state.seminarTypes}
                                 </Select>
                             )}
                         </FormItem>
@@ -43,10 +117,10 @@ export class MethodAttributeFields extends Component {
                         <Col span={8}>
                         <FormItem label="Typ">
                             {getFieldDecorator('methodTyp')(
-                                <Select placeholder="Methodentyp auswählen...">
-                                    <Option value="1">Diskussion</Option>
-                                    <Option value="2">Referat</Option>
-                                    <Option value="3">Simulation</Option>
+                                <Select
+                                    placeholder="Methodentyp auswählen..."
+                                    notFoundContent="Es existieren keine Methodenypen" >
+                                    {this.state.methodTypes}
                                 </Select>
                             )}
                         </FormItem>
@@ -54,9 +128,10 @@ export class MethodAttributeFields extends Component {
                         <Col span={8}>
                         <FormItem label="Level">
                             {getFieldDecorator('methodLevel')(
-                                <Select placeholder="Level auswählen...">
-                                    <Option value="1">Persönlich</Option>
-                                    <Option value="2">Theoretisch</Option>
+                                <Select
+                                    placeholder="Level auswählen..."
+                                    notFoundContent="Es existieren keine Level">
+                                    {this.state.methodLevels}
                                 </Select>
                             )}
                         </FormItem>
@@ -66,10 +141,12 @@ export class MethodAttributeFields extends Component {
                         <Col span={24}>
                         <FormItem label="Seminarziele">
                             {getFieldDecorator('seminarGoal')(
-                                <Select mode="multiple" placeholder="Seminarziel(e) auswählen...">
-                                    <Option value="1">Abstrakten Begriff der Anpassung verstehen</Option>
-                                    <Option value="2">Zugehörigkeitsgefühl zum Verein schaffen</Option>
-                                    <Option value="3">Reflexion der eigenen Werte</Option>
+                                <Select
+                                    mode="multiple"
+                                    disabled={this.state.seminarGoalsDisabled}
+                                    placeholder={this.state.seminarGoalsPlaceholder}
+                                    notFoundContent="Es existieren keine Seminarziele">
+                                    {this.state.seminarGoals[this.state.selectedSeminar]}
                                 </Select>
                             )}
                         </FormItem>
