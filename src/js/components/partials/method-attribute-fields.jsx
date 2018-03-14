@@ -28,19 +28,21 @@ export class MethodAttributeFields extends Component {
             .then(results => {
                 return results.json();
             }).then(data => {
+                let i = 0;
                 let seminarTypes = data.map((type) => {
-                    return (
-                            <Option key={type.id} value={type.id}>{type.name}</Option>
+                    let options = (
+                            <Option key={i} value={type.id}>{type.name}</Option>
                             );
+                    i++;
+                    return options;
                 });
                 
                 let seminarGoals = data.map((type) => {
-                    let goals = type.map((goal) => {
+                    return type.seminar_goals.map((goal) => {
                         return (
                                 <Option key={goal.id} value={goal.id}>{goal.name}</Option>
                                 );
                     });
-                    return type.id = goals;
                 });
                 
                 this.setState({
@@ -75,7 +77,7 @@ export class MethodAttributeFields extends Component {
     }
     
     onSelectSeminarType(value, option) {
-        this.setState({selectedSeminar: value,
+        this.setState({selectedSeminar: option.key,
                     seminarGoalsDisabled: false,
                     seminarGoalsPlaceholder: 'Bitte erst ein Seminar auswählen!'});
     }

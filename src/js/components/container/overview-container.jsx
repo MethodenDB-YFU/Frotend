@@ -40,7 +40,7 @@ export class OverviewContainer extends Component {
                     let methodJson = {
                         key: method.id,
                         name: method.title,
-                        seminar: 'VBT',
+                        seminar: method.seminar_type.name,
                         typ: method.method_types[0].name,
                         level: method.method_levels[0].name
                     };
