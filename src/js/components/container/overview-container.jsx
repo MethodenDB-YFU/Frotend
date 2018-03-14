@@ -21,32 +21,34 @@ const columns = [{
         key: 'level'
     }];
 
-const data = [{
-        key: '1',
-        name: 'Albatross',
-        seminar: 'VBT',
-        typ: 'Simulation',
-        level: 'Persönlich'
-    }, {
-        key: '2',
-        name: 'Eisberg',
-        seminar: 'VBT',
-        typ: 'Diskussion',
-        level: 'Theoretisch'
-    }, {
-        key: '3',
-        name: 'Kommunikationsspiel "Sesamstraße"',
-        seminar: 'VBT',
-        typ: 'Simulation',
-        level: 'Persönlich'
-    }];
-
 export class OverviewContainer extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        
         this.state = {
-
+            methods: [],
+            tableLoading: true
         };
+    }
+    
+    componentDidMount() {
+        fetch('http://localhost:1234/api/methods')
+            .then(results => {
+                return results.json();
+            }).then(data => {
+                let methods = data.map((method) => {
+                    let methodJson = {
+                        key: method.id,
+                        name: method.title,
+                        seminar: method.seminar_type.name,
+                        typ: method.method_types[0].name,
+                        level: method.method_levels[0].name
+                    };
+                    return methodJson;
+                });
+                this.setState({methods: methods});
+                this.setState({tableLoading: false});
+            });
     }
 
     render() {
@@ -62,7 +64,7 @@ export class OverviewContainer extends Component {
                         <Input size="large" placeholder="Albatross" addonAfter={createBtn} />
                         </Col>
                     </Row>
-                    <Table columns={columns} dataSource={data} />
+                    <Table columns={columns} dataSource={this.state.methods} loading={this.state.tableLoading} />
                 </div>
                 );
     }
