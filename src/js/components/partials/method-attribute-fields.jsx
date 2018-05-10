@@ -1,17 +1,31 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Select, Button, Steps, Input } from 'antd';
+import { Row, Col, Form, Select, Button, Input } from 'antd';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const Step = Steps.Step;
 
+/**
+ * form fields to describe the method with some meta data
+ * @module components/partials/MethodAttributeFields
+ * @extends Component
+ */
 export class MethodAttributeFields extends Component {
     constructor(props) {
         super(props);
         
+        /**
+         * @type {object}
+         * @property {ReactNode} seminarTypes selectable seminar types
+         * @property {ReactNode} seminarGoals selectable seminar goals
+         * @property {ReactNode} methodTypes selectable method types
+         * @property {ReactNode} methodLevels selectable method levels
+         * @property {string} selectedSeminar id of selected seminar
+         * @property {bool} seminarGoalsDisabled state of seminar goals select field (*default is true*)
+         * @property {string} seminarGoalsPlaceholder placeholder for seminar goals select
+         */
         this.state = {
             seminarTypes: '',
-            seminarGoals: {},
+            seminarGoals: '',
             methodTypes: '',
             methodLevels: '',
             selectedSeminar: '',
@@ -28,7 +42,11 @@ export class MethodAttributeFields extends Component {
         });
     }
     
+    /**
+     * load the options for the select-fields
+     */
     componentDidMount() {
+        // fetching the seminar types including their goals
         fetch('http://localhost:1234/api/seminars/types',{
             headers: this.reqHeader
         }).then(results => {
@@ -37,17 +55,21 @@ export class MethodAttributeFields extends Component {
                 let i = 0;
                 let seminarTypes = data.map((type) => {
                     let options = (
-                            <Option key={i} value={type.id}>{type.name}</Option>
-                            );
+                        <Option key={i} value={type.id}>{type.name}</Option>
+                    );
                     i++;
                     return options;
                 });
                 
+                console.log(seminarTypes);
+                
+                // mapping the seminar goals to the seminar-type id so when the seminar type is selected
+                // only those goals can be selected which are availabel for the seminar type.
                 let seminarGoals = data.map((type) => {
                     return type.seminar_goals.map((goal) => {
                         return (
-                                <Option key={goal.id} value={goal.id}>{goal.name}</Option>
-                                );
+                            <Option key={goal.id} value={goal.id}>{goal.name}</Option>
+                        );
                     });
                 });
                 
@@ -57,6 +79,7 @@ export class MethodAttributeFields extends Component {
                 });
             });
         
+        // fetching the method types
         fetch('http://localhost:1234/api/methods/types',{
             headers: this.reqHeader
         }).then(results => {
@@ -64,12 +87,13 @@ export class MethodAttributeFields extends Component {
             }).then(data => {
                 let methodTypes = data.map((type) => {
                     return (
-                            <Option key={type.id} value={type.id}>{type.name}</Option>
-                            );
+                        <Option key={type.id} value={type.id}>{type.name}</Option>
+                    );
                 });
                 this.setState({methodTypes: methodTypes});
             });
         
+        // fetching the method levels
         fetch('http://localhost:1234/api/methods/levels',{
             headers: this.reqHeader
         }).then(results => {
@@ -77,41 +101,62 @@ export class MethodAttributeFields extends Component {
             }).then(data => {
                 let methodLevels = data.map((level) => {
                     return (
-                            <Option key={level.id} value={level.id}>{level.name}</Option>
-                            );
+                        <Option key={level.id} value={level.id}>{level.name}</Option>
+                    );
                 });
                 this.setState({methodLevels: methodLevels});
             });
     }
     
+    /**
+     * When a seminar type is selected the related goals become available.
+     * @see https://ant.design/components/select/#API
+     * @param {string} value
+     * @param {ReactElement} option
+     */
     onSelectSeminarType(value, option) {
-        this.setState({selectedSeminar: option.key,
-                    seminarGoalsDisabled: false,
-                    seminarGoalsPlaceholder: 'Bitte erst ein Seminar auswählen!'});
+        this.setState({
+            selectedSeminar: option.key,
+            seminarGoalsDisabled: false,
+            seminarGoalsPlaceholder: 'Bitte erst ein Seminar auswählen!'
+        });
     }
     
-    onDeselectSeminarType(value, option) {
-        this.setState({selectedSeminar: '',
-                    seminarGoalsDisabled: true,
-                    seminarGoalsPlaceholder: 'Seminarziel(e) auswählen...!'});
+    /**
+     * When a seminar type is deselected the goals-select becomes inactive.
+     * @see https://ant.design/components/select/#API
+     * @param {string} value
+     * @param {ReactElement} option
+     */
+    onDeselectSeminarType(value, option) { //eslint-disable-line no-unused-vars
+        this.setState({
+            selectedSeminar: '',
+            seminarGoalsDisabled: true,
+            seminarGoalsPlaceholder: 'Seminarziel(e) auswählen...!'
+        });
     }
 
+    /**
+     * render method
+     * @return {ReactElement} markup
+     * @private
+     */
     render() {
-        const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
+        const {getFieldDecorator} = this.props.form;
         
         return (
-                <div className={this.props.className}>
-                    <Row>
-                        <Col span={24}>
+            <div className={this.props.className}>
+                <Row>
+                    <Col span={24}>
                         <FormItem label="Methodenname">
                             {getFieldDecorator('title')(
                                 <Input placeholder="Methodenname" />
                             )}
                         </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={8}>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={8}>
                         <FormItem label="Seminar">
                             {getFieldDecorator('seminarType')(
                                 <Select
@@ -123,8 +168,8 @@ export class MethodAttributeFields extends Component {
                                 </Select>
                             )}
                         </FormItem>
-                        </Col>
-                        <Col span={8}>
+                    </Col>
+                    <Col span={8}>
                         <FormItem label="Typ">
                             {getFieldDecorator('methodType')(
                                 <Select
@@ -134,8 +179,8 @@ export class MethodAttributeFields extends Component {
                                 </Select>
                             )}
                         </FormItem>
-                        </Col>
-                        <Col span={8}>
+                    </Col>
+                    <Col span={8}>
                         <FormItem label="Level">
                             {getFieldDecorator('methodLevel')(
                                 <Select
@@ -145,10 +190,10 @@ export class MethodAttributeFields extends Component {
                                 </Select>
                             )}
                         </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={24}>
                         <FormItem label="Seminarziele">
                             {getFieldDecorator('seminarGoal')(
                                 <Select
@@ -160,12 +205,12 @@ export class MethodAttributeFields extends Component {
                                 </Select>
                             )}
                         </FormItem>
-                        </Col>
-                    </Row>
-                    <FormItem>
-                        <Button className="next-step" type="primary" onClick={this.props.nextStep}>Weiter</Button>
-                    </FormItem>
-                </div>
-                );
+                    </Col>
+                </Row>
+                <FormItem>
+                    <Button className="next-step" type="primary" onClick={this.props.nextStep}>Weiter</Button>
+                </FormItem>
+            </div>
+        );
     }
 }
