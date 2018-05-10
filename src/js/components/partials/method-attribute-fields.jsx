@@ -50,62 +50,62 @@ export class MethodAttributeFields extends Component {
         fetch('http://localhost:1234/api/seminars/types',{
             headers: this.reqHeader
         }).then(results => {
-                return results.json();
-            }).then(data => {
-                let i = 0;
-                let seminarTypes = data.map((type) => {
-                    let options = (
-                        <Option key={i} value={type.id}>{type.name}</Option>
+            return results.json();
+        }).then(data => {
+            let i = 0;
+            let seminarTypes = data.map((type) => {
+                let options = (
+                    <Option key={i} value={type.id}>{type.name}</Option>
+                );
+                i++;
+                return options;
+            });
+
+            console.log(seminarTypes);
+
+            // mapping the seminar goals to the seminar-type id so when the seminar type is selected
+            // only those goals can be selected which are availabel for the seminar type.
+            let seminarGoals = data.map((type) => {
+                return type.seminar_goals.map((goal) => {
+                    return (
+                        <Option key={goal.id} value={goal.id}>{goal.name}</Option>
                     );
-                    i++;
-                    return options;
-                });
-                
-                console.log(seminarTypes);
-                
-                // mapping the seminar goals to the seminar-type id so when the seminar type is selected
-                // only those goals can be selected which are availabel for the seminar type.
-                let seminarGoals = data.map((type) => {
-                    return type.seminar_goals.map((goal) => {
-                        return (
-                            <Option key={goal.id} value={goal.id}>{goal.name}</Option>
-                        );
-                    });
-                });
-                
-                this.setState({
-                    seminarTypes: seminarTypes,
-                    seminarGoals: seminarGoals
                 });
             });
+
+            this.setState({
+                seminarTypes: seminarTypes,
+                seminarGoals: seminarGoals
+            });
+        });
         
         // fetching the method types
         fetch('http://localhost:1234/api/methods/types',{
             headers: this.reqHeader
         }).then(results => {
-                return results.json();
-            }).then(data => {
-                let methodTypes = data.map((type) => {
-                    return (
-                        <Option key={type.id} value={type.id}>{type.name}</Option>
-                    );
-                });
-                this.setState({methodTypes: methodTypes});
+            return results.json();
+        }).then(data => {
+            let methodTypes = data.map((type) => {
+                return (
+                    <Option key={type.id} value={type.id}>{type.name}</Option>
+                );
             });
+            this.setState({methodTypes: methodTypes});
+        });
         
         // fetching the method levels
         fetch('http://localhost:1234/api/methods/levels',{
             headers: this.reqHeader
         }).then(results => {
-                return results.json();
-            }).then(data => {
-                let methodLevels = data.map((level) => {
-                    return (
-                        <Option key={level.id} value={level.id}>{level.name}</Option>
-                    );
-                });
-                this.setState({methodLevels: methodLevels});
+            return results.json();
+        }).then(data => {
+            let methodLevels = data.map((level) => {
+                return (
+                    <Option key={level.id} value={level.id}>{level.name}</Option>
+                );
             });
+            this.setState({methodLevels: methodLevels});
+        });
     }
     
     /**

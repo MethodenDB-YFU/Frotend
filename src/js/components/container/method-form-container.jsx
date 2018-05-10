@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Steps, Row, Col, Form } from 'antd';
+import { Steps, Row, Col, Form, message } from 'antd';
 import { browserHistory } from 'react-router-dom';
 import { MethodAttributeFields } from '../partials/method-attribute-fields';
 import { MethodContentField } from '../partials/method-content-field';
@@ -83,8 +83,8 @@ export class MethodForm extends Component {
             console.log('Received values: ', values);
             
             let method_post = {
-                "title": "test",
-                "content": "values.methodDescription"
+                title: 'test',
+                content: values.methodDescription
             };
             
             //method_post = values;
@@ -102,11 +102,12 @@ export class MethodForm extends Component {
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error("Antwort der API war nicht 'Ok'!");
+                throw new Error('Antwort der API war nicht "Ok"!');
             }).then(data => {
-//                this.props.form.resetFields();
+                console.log(data);
+                // this.props.form.resetFields();
                 browserHistory.push('/');
-//                message.success('Das Ereignis wurde erfolgreich eingetragen!');
+                // message.success('Das Ereignis wurde erfolgreich eingetragen!');
             }).catch(error => {
                 console.log('Error:' + error);
                 message.error('Das Ereignis wurde nicht erstellt. Bitte versuche es später nochmal!');

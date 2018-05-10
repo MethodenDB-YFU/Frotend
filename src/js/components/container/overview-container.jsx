@@ -50,25 +50,25 @@ export class OverviewContainer extends Component {
         fetch('http://localhost:1234/api/methods',{
             headers: this.reqHeader
         }).then(results => {
-                return results.json();
-            }).then(data => {
-                let methods = data.map((method) => {
-                    let methodJson = {
-                        key: method.id,
-                        name: method.title,
-                        seminar: method.seminar_type.name,
-                        typ: method.method_types[0].name,
-                        level: method.method_levels[0].name
-                    };
-                    return methodJson;
-                });
-                
-                // display loaded methods and remove loading-animation
-                this.setState({
-                    methods: methods,
-                    tableLoading: false
-                });
+            return results.json();
+        }).then(data => {
+            let methods = data.map((method) => {
+                let methodJson = {
+                    key: method.id,
+                    name: method.title,
+                    seminar: method.seminar_type.name,
+                    typ: method.method_types[0].name,
+                    level: method.method_levels[0].name
+                };
+                return methodJson;
             });
+                
+            // display loaded methods and remove loading-animation
+            this.setState({
+                methods: methods,
+                tableLoading: false
+            });
+        });
     }
 
     /**
