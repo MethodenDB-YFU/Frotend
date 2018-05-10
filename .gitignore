@@ -11,6 +11,9 @@ npm-debug.log
 /dist
 /build
 
+# documentation
+/docs
+
 # misc
 .DS_Store
 
