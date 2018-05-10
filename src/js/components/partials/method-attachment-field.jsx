@@ -37,7 +37,7 @@ export class MethodAttachmentField extends Component {
                     <Row>
                         <Col span={24}>
                         <FormItem>
-                            {getFieldDecorator('methodAttachments')(
+                            {getFieldDecorator('attachments')(
                                         <Dragger {...draggerProps}>
                                             <p className="ant-upload-drag-icon"><Icon type="inbox" /></p>
                                             <p className="ant-upload-text">Klick oder zieh eine Datei in diesen Bereich zum Hochladen</p>

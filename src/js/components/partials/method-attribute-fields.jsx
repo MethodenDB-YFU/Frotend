@@ -21,11 +21,17 @@ export class MethodAttributeFields extends Component {
         
         this.onSelectSeminarType = this.onSelectSeminarType.bind(this);
         this.onDeselectSeminarType = this.onDeselectSeminarType.bind(this);
+        
+        this.reqHeader = new Headers({
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        });
     }
     
     componentDidMount() {
-        fetch('http://localhost:1234/api/seminars/types')
-            .then(results => {
+        fetch('http://localhost:1234/api/seminars/types',{
+            headers: this.reqHeader
+        }).then(results => {
                 return results.json();
             }).then(data => {
                 let i = 0;
@@ -51,8 +57,9 @@ export class MethodAttributeFields extends Component {
                 });
             });
         
-        fetch('http://localhost:1234/api/methods/types')
-            .then(results => {
+        fetch('http://localhost:1234/api/methods/types',{
+            headers: this.reqHeader
+        }).then(results => {
                 return results.json();
             }).then(data => {
                 let methodTypes = data.map((type) => {
@@ -63,8 +70,9 @@ export class MethodAttributeFields extends Component {
                 this.setState({methodTypes: methodTypes});
             });
         
-        fetch('http://localhost:1234/api/methods/levels')
-            .then(results => {
+        fetch('http://localhost:1234/api/methods/levels',{
+            headers: this.reqHeader
+        }).then(results => {
                 return results.json();
             }).then(data => {
                 let methodLevels = data.map((level) => {
@@ -96,7 +104,7 @@ export class MethodAttributeFields extends Component {
                     <Row>
                         <Col span={24}>
                         <FormItem label="Methodenname">
-                            {getFieldDecorator('methodName')(
+                            {getFieldDecorator('title')(
                                 <Input placeholder="Methodenname" />
                             )}
                         </FormItem>
@@ -105,7 +113,7 @@ export class MethodAttributeFields extends Component {
                     <Row gutter={16}>
                         <Col span={8}>
                         <FormItem label="Seminar">
-                            {getFieldDecorator('seminarTyp')(
+                            {getFieldDecorator('seminarType')(
                                 <Select
                                     placeholder="Seminar auswählen..."
                                     notFoundContent="Es existieren keine Seminare"
@@ -118,7 +126,7 @@ export class MethodAttributeFields extends Component {
                         </Col>
                         <Col span={8}>
                         <FormItem label="Typ">
-                            {getFieldDecorator('methodTyp')(
+                            {getFieldDecorator('methodType')(
                                 <Select
                                     placeholder="Methodentyp auswählen..."
                                     notFoundContent="Es existieren keine Methodenypen" >

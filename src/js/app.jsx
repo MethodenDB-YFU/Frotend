@@ -27,8 +27,8 @@ class App extends Component {
                     </Header>
                     <Content style={{padding: '0 50px' }}>
                         <div style={{background: '#fff', padding: 24, minHeight: 280 }}>
-                            <Route path="/" exact component={OverviewContainer}/>
-                            <Route path="/method/new" exact component={MethodFormContainer}/>
+                            <Route path="/overview" exact component={OverviewContainer}/>
+                            <Route path="/" exact component={MethodFormContainer}/>
                         </div>
                     </Content>
                 </Layout>

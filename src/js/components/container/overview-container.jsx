@@ -29,11 +29,17 @@ export class OverviewContainer extends Component {
             methods: [],
             tableLoading: true
         };
+        
+        this.reqHeader = new Headers({
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        });
     }
     
     componentDidMount() {
-        fetch('http://localhost:1234/api/methods')
-            .then(results => {
+        fetch('http://localhost:1234/api/methods',{
+            headers: this.reqHeader
+        }).then(results => {
                 return results.json();
             }).then(data => {
                 let methods = data.map((method) => {
