@@ -9,7 +9,8 @@ const columns = [{
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    render: text => <a href="#">{text}</a>
+    render: (text, record) => <Link to={'/method/show/'+record.key}>{text}</Link>
+//    render: text => <a href="#">{text}</a>
 }, {
     title: 'Seminar',
     dataIndex: 'seminar',

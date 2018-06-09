@@ -8,9 +8,11 @@ module.exports = {
     entry: ["./src/js/app.jsx"],
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "js/[name].js"
+        filename: "js/[name].js",
+        publicPath: '/'
     },
     devServer: {
+        historyApiFallback: true,
         contentBase: "./dist"
     },
     module: {
