@@ -2,7 +2,9 @@ import {userConstants} from './constants';
 import { userService } from '../middleware';
 import { alertActions } from './';
 import { history } from '../helpers';
-
+/**
+ * Redux Actions for User
+ */
 export const userActions = {
     login,
     logout,
@@ -12,7 +14,11 @@ export const userActions = {
     deleteUser
 };
 
-
+/**
+ * React action methode for Login
+ * @return {object} 
+ * @public
+ */
 function login(username, password) {
     return dispatch => {
         dispatch(request({ username }));

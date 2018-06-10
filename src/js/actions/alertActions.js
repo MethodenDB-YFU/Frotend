@@ -1,5 +1,7 @@
 import { alertConstants } from './constants';
-
+/**
+ * Redux Actions for Alerts
+ */
 export const alertActions = {
     success,
     error,

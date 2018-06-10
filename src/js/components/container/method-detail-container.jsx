@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Card, Divider } from 'antd';
+import { urlHelper } from '../../helpers';
+import {urlConstants} from '../../constants';
 
 /**
  * form to generate a new method
@@ -27,7 +29,10 @@ export class MethodDetailContainer  extends Component{
      * initialy disables submit button
      */
     componentDidMount() {
-        fetch('http://localhost:1234/api/methods/'+this.state.id, {method: 'GET',headers:{ 'Content-Type': 'application/json', 'X-User-ID': 'aa40d8c0-e705-11e7-80c1-9a214cf093ae'}})
+        const fetchParams = urlHelper.buildFetchParams(urlConstants.getMethod, this.state.id);
+        console.log('fetchParams',fetchParams);
+        //fetch('http://localhost:1234/api/methods/'+this.state.id, {method: 'GET',headers:{ 'Content-Type': 'application/json', 'X-User-ID': 'aa40d8c0-e705-11e7-80c1-9a214cf093ae'}})
+        fetch(fetchParams.url, fetchParams.request)
             .then(results => {
                 return results.json();
             }).then(data => {

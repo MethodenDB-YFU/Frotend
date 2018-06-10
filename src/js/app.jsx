@@ -7,8 +7,8 @@ import { history } from './helpers';
 import { connect } from 'react-redux';
 import store from './store';
 import { Provider } from 'react-redux';
-import { PrivateRoute } from './components/PrivateRoute';
-import { AppMenu } from './components/AppMenu';
+import { PrivateRoute } from './components/partials/PrivateRoute';
+import { AppMenu } from './components/partials/AppMenu';
 
 import { OverviewContainer } from './components/container/overview-container';
 import { MethodFormContainer } from './components/container/method-form-container';
@@ -32,13 +32,23 @@ const {Header} = Layout;
 export default class App extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            user: {}
+        };
+
         // const { dispatch } = this.props;
         history.listen((location, action) => {
             console.log(action, location);
+            const state = store.getState();
+            var user = state.user.user;
+            if(!user) {
+                const userLoggedIn = userActions.userLoggedIn();
+                user = userLoggedIn.user; 
+            }
             // clear get Login User
             //dispatch(userActions.userLoggedIn());
-            const user = userActions.userLoggedIn();
             console.log('history.listen',user);
+            this.setState({user: user});
         });
     };
 
