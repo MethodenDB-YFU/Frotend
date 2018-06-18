@@ -10,7 +10,7 @@ import Logo from '../../../images/logo/logo.js';
 import '../../../less/styles.less';
 
 const MenuItem = Menu.Item;
-
+const SubMenu = Menu.SubMenu;
 /**
  * form fields to describe the method with some meta data
  * @module components/partials/AppMenu
@@ -76,13 +76,22 @@ export class AppMenuComponent extends Component {
             history.push('/');
             break;
         case 'seminar':
-            history.push('/');
+            // history.push('/');
             break;
         case 'cart':
             history.push('/cart');
             break;
         case 'logon':
             this.gotoLogoff();
+            break;
+        case 'seminartype':
+            history.push('/seminar/type');
+            break;
+        case 'seminarrole':
+            history.push('/seminar/role');
+            break;
+        case 'seminargoal':
+            history.push('/seminar/goal');
             break;
         }
     }
@@ -115,7 +124,11 @@ export class AppMenuComponent extends Component {
                         style={{lineHeight: '62px' }}
                     >
                         <MenuItem key="method">Methoden</MenuItem>
-                        <MenuItem key="seminar">Seminarziele</MenuItem>
+                        <SubMenu key="sub1" title='Seminar'>
+                            <MenuItem key="seminartype">Typen</MenuItem>
+                            <MenuItem key="seminargoal">Ziele</MenuItem>
+                            <MenuItem key="seminarrole">Rollen</MenuItem>
+                        </SubMenu>
                     </Menu>
                 </Col>
                 <Col span={3}>

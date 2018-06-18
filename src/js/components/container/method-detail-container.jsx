@@ -33,7 +33,8 @@ export class MethodDetail_Container  extends Component{
      * initialy disables submit button
      */
     componentDidMount() {
-        const fetchParams = urlHelper.buildFetchParams(urlConstants.methoden.getMethod, this.state.id);
+        // const fetchParams = urlHelper.buildFetchParams(urlConstants.methoden.getMethod, this.state.id);
+        const fetchParams = urlHelper.buildFetchParams(urlConstants.getMethod, this.state.id);
         console.log('fetchParams',fetchParams);
         //fetch('http://localhost:1234/api/methods/'+this.state.id, {method: 'GET',headers:{ 'Content-Type': 'application/json', 'X-User-ID': 'aa40d8c0-e705-11e7-80c1-9a214cf093ae'}})
         fetch(fetchParams.url, fetchParams.request)

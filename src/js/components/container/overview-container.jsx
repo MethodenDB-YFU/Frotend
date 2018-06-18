@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Input, Table } from 'antd';
+import { urlHelper } from '../../helpers';
+import {urlConstants} from '../../constants';
 
 /**
  * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
@@ -43,7 +45,9 @@ export class OverviewContainer extends Component {
      * loading all methods when method overview is loaded
      */
     componentDidMount() {
-        fetch('http://localhost:1234/api/methods')
+        const fetchParams = urlHelper.buildFetchParams(urlConstants.getAllMethods);
+        //fetch('http://localhost:1234/api/methods')
+        fetch(fetchParams.url, fetchParams.request)
             .then(results => {
                 return results.json();
             }).then(data => {

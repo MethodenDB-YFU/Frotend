@@ -15,10 +15,17 @@ import { MethodFormContainer } from './components/container/method-form-containe
 import { MethodDetailContainer } from './components/container/method-detail-container';
 import { LogonFormContainer } from './components/container/logon-container';
 import { CartContainer } from './components/container/method-cart-container';
+import { TypesOverviewContainer} from './components/container/types-overview-container';
+import { RolesOverviewContainer} from './components/container/roles-overview-container';
+import { GoalesOverviewContainer} from './components/container/goals-overview-container';
+
 import '../less/styles.less';
 
 import { userActions } from './actions/userActions';
 import { cartActions } from './actions/cartActions';
+
+//var dotenv = require('dotenv');
+//var dotenvExpand = require('dotenv-expand');
 
 //import './favicon.ico';
 
@@ -85,6 +92,9 @@ export default class App extends Component {
                         <Route path="/method/show/:id" component={MethodDetailContainer}/>
                         <Route path="/cart" exact component={CartContainer}/>
                         <Route path="/logon" exact component={LogonFormContainer}/>
+                        <Route path="/seminar/type" exact component={TypesOverviewContainer}/>
+                        <Route path="/seminar/role" exact component={RolesOverviewContainer}/>
+                        <Route path="/seminar/goal" exact component={GoalesOverviewContainer}/>
                     </div>
                 </Router>
             </Layout>
