@@ -1,2 +1,1 @@
-
-export logo from './logo/yfu_logo.svg';
+export logo from './logo/yfu_logo.svg'; 

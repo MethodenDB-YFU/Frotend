@@ -14,9 +14,11 @@ import { OverviewContainer } from './components/container/overview-container';
 import { MethodFormContainer } from './components/container/method-form-container';
 import { MethodDetailContainer } from './components/container/method-detail-container';
 import { LogonFormContainer } from './components/container/logon-container';
+import { CartContainer } from './components/container/method-cart-container';
 import '../less/styles.less';
 
 import { userActions } from './actions/userActions';
+import { cartActions } from './actions/cartActions';
 
 //import './favicon.ico';
 
@@ -64,12 +66,16 @@ export default class App extends Component {
             const userLoggedIn = userActions.userLoggedIn();
             if (userLoggedIn)
                 user = userLoggedIn.user;
-        }
-        else
+        } else {
             console.log('render',user);
+        }
+        var { cart } = this.props;
+        if(!cart) {
+            cart = cartActions.getBasket();
+        }
         return (
             <Layout className="layout">
-                <Header>
+                <Header className="yfu_menu">
                     <AppMenu></AppMenu>
                 </Header>
                 <Router history={history}>
@@ -77,6 +83,7 @@ export default class App extends Component {
                         <PrivateRoute path="/" exact component={OverviewContainer} />
                         <Route path="/method/new" exact component={MethodFormContainer}/>
                         <Route path="/method/show/:id" component={MethodDetailContainer}/>
+                        <Route path="/cart" exact component={CartContainer}/>
                         <Route path="/logon" exact component={LogonFormContainer}/>
                     </div>
                 </Router>
@@ -86,9 +93,12 @@ export default class App extends Component {
 }
 function mapStateToProps(state) {
     const { user } = state;
+    const { cart } = state;
     console.log('map User',user);
+    console.log('map Cart',cart);
     return {
-        user
+        user,
+        cart
     };
 }
 const connectedApp = connect(mapStateToProps)(App);

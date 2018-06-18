@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, Divider } from 'antd';
+import { Row, Col, Card, Divider, Button } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
+import { connect } from 'react-redux';
+import { cartActions } from '../../actions/cartActions';
+import { history } from '../../helpers';
+import '../../../less/styles.less';
 
 /**
  * form to generate a new method
  * @extends Component
  * @todo maybe extend class to also edit a method
  */
-export class MethodDetailContainer  extends Component{
+export class MethodDetail_Container  extends Component{
     constructor(props) {
         super(props);
         console.log(props);
@@ -29,7 +33,7 @@ export class MethodDetailContainer  extends Component{
      * initialy disables submit button
      */
     componentDidMount() {
-        const fetchParams = urlHelper.buildFetchParams(urlConstants.getMethod, this.state.id);
+        const fetchParams = urlHelper.buildFetchParams(urlConstants.methoden.getMethod, this.state.id);
         console.log('fetchParams',fetchParams);
         //fetch('http://localhost:1234/api/methods/'+this.state.id, {method: 'GET',headers:{ 'Content-Type': 'application/json', 'X-User-ID': 'aa40d8c0-e705-11e7-80c1-9a214cf093ae'}})
         fetch(fetchParams.url, fetchParams.request)
@@ -94,7 +98,22 @@ export class MethodDetailContainer  extends Component{
                 </div>
             );
         }
-
+        const onGoToEdit = () => {
+            console.log('onGoToEdit',this);
+            history.push('/method/edit/'+this.state.id);
+        };
+        const onAddToCart = () => {
+            
+            let method = {
+                id: this.state.methode.key,
+                name: this.state.methode.name,
+                seminar: this.state.methode.seminar,
+                typ: this.state.methode.typ,
+                level: this.state.methode.level
+            };
+            this.props.dispatch(cartActions.addMethod(method));
+        };
+        
         return (
             <div>
                 <Row>
@@ -104,7 +123,14 @@ export class MethodDetailContainer  extends Component{
                 </Row>
                 <Row>
                     <Col span={24}>
-                        <Card title={this.state.methode.name} bordered={false} loading={this.state.tableLoading} extra={<a href={'/method/edit/'+this.state.methode.key}>Bearbeiten</a>} >
+                        <Card title={this.state.methode.name} bordered={false} loading={this.state.tableLoading} 
+                            extra={
+                                <div>
+                                    <Button id="onGoToEdit" type="primary" icon="edit" onClick={onGoToEdit}>Bearbeiten</Button>
+                                    <Button id="onAddToCart" type="primary" icon="shopping-cart" onClick={onAddToCart}>Merken</Button>
+                                </div>
+                            } 
+                        >
                             <RawHTML>{this.state.methode.content}</RawHTML> 
                             <br/>
                             <div><h2>Attatchemt</h2>
@@ -118,7 +144,14 @@ export class MethodDetailContainer  extends Component{
     }
 }
 
-MethodDetailContainer.displayName = 'Method Detail Container';
+MethodDetail_Container.displayName = 'Method Detail Container';
+function mapStateToProps(state) {
+    console.log('state.cart', state.cart);
+}
+
+const connectedMethodDetailPage = connect(mapStateToProps)(MethodDetail_Container);
+export { connectedMethodDetailPage as MethodDetailContainer }; 
+
 /**
  * container for the method form
  * @type Form

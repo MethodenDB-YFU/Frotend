@@ -8,10 +8,10 @@ export const urlHelper = {
 };
 
 function buildURL(service, parameter) {
-    let url =  urlConstants.apiURL + service.url;
+    let url =  urlConstants.methoden.apiURL + service.url;
     switch (service) {
-    case urlConstants.getMethod:
-        url = urlConstants.apiURL + service.url + parameter;
+    case urlConstants.methoden.getMethod:
+        url = urlConstants.methoden.apiURL + service.url + parameter;
         break;
     default:
         return url;

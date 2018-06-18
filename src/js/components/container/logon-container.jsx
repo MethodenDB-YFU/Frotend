@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Form,  Icon, Input, Button, Row, Col, Card } from 'antd';
 // import { Form, Icon, Input, Button, Row, Col, Card } from 'antd';
-// import logo from './images/logo/yfu_logo.svg';
+import Yfu_logo from '../../../images/logo/yfu_logo';
 import { connect } from 'react-redux';
 
 import { userActions } from '../../actions/userActions';
 
 const FormItem = Form.Item;
-
+const { Meta } = Card;
 /**
  * form to generate a new method
  * @extends Component
@@ -77,7 +77,8 @@ export class LogonContainer  extends Component{
                 <Form layout="vertical" onSubmit={this.handleSubmit} className="login-form">
                     <Row>
                         <Col span={12} offset={6}>
-                            <Card title={logonTitle} bordered={false} loading={this.state.tableLoading}>
+                            <Card bordered={false} loading={this.state.tableLoading}  cover={<Yfu_logo/>}>
+                                <Meta title={logonTitle} />
                                 <FormItem>
                                     {getFieldDecorator('username', {
                                         rules: [{ required: true, message: 'Please input your username!' }],

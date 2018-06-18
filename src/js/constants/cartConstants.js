@@ -1,0 +1,7 @@
+export const cartConstants = {
+    ADD_METHOD: 'ADD_METHOD',
+    DELETE_METHOD: 'DELETE_METHOD',
+    CLEAR: 'BASKET_CLEAR',
+    GET_COUNT: 'BASKET_COUNT',
+    GET_ALL: 'BASKET_GET'
+};

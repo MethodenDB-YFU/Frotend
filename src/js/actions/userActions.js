@@ -1,4 +1,4 @@
-import {userConstants} from './constants';
+import {userConstants} from '../constants';
 import { userService } from '../middleware';
 import { alertActions } from './';
 import { history } from '../helpers';
