@@ -1,3 +1,8 @@
+/**
+ * generated script vor YFU Logo
+ * using svg-to-react-cli
+ * svgtoreact yfu_logo.svg yfu_logo.js
+*/
 import React from 'react';
 
 export default function Yfu_logo(props) {

@@ -1,3 +1,8 @@
+/**
+ * generated script vor smal YFU Logo
+ * using svg-to-react-cli
+ * svgtoreact logo.svg logo.js
+*/
 import React from 'react';
 
 export default function Logo(props) {

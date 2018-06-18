@@ -6,7 +6,7 @@ import { cartActions } from '../../actions/cartActions';
 import store from '../../store';
 import { connect } from 'react-redux';
 import { history } from '../../helpers';
-import Logo from '../../../images/logo/Logo.js';
+import Logo from '../../../images/logo/logo.js';
 import '../../../less/styles.less';
 
 const MenuItem = Menu.Item;
