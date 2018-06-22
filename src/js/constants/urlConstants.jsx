@@ -33,7 +33,7 @@ export const urlConstants = {
 
     /* URLs for methoden service */
     methoden: {
-        apiURL: 'http://localhost:1234',
+        apiURL: 'http://localhost:8082',
 
         getAllMethods: { url: '/api/methods', method: 'GET'},
         createMethod: { url: '/api/methods', method: 'POST'},

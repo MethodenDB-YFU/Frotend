@@ -26,12 +26,16 @@ const addMethode = methodId => (dispatch, getState) => {
 function addMethod(method) {
     return { type: cartConstants.ADD_METHOD, method };
 }
-function deleteMethode(methode) {
+function deleteMethode(delMethod) {
+/*
     var cart = localStorage.getItem('cart');
     var idx = cart.indexOf(methode);
-    cart.splice(idx, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    return { type: cartConstants.DELETE_METHOD, cart };
+    cart.splice(idx, 1); 
+    let newCart = getState().cart.filter((method) => method.id !== delMethod.id);
+    localStorage.setItem('cart', JSON.stringify(newCart));
+    */
+    const id = delMethod.id;
+    return { type: cartConstants.DELETE_METHOD, id };
 }
 
 function clearBasket() {
@@ -42,7 +46,7 @@ function clearBasket() {
 
 function getCart() {
     const cartString = localStorage.getItem('cart');
-    console.log('getCart:cartString',cartString);
+    // console.log('getCart:cartString',cartString);
     if(cartString == '[null]') {
         return dispatch => {
             dispatch({
@@ -51,7 +55,7 @@ function getCart() {
         };
     } else {
         const cart = JSON.parse(cartString);
-        console.log('getCart',cart);
+        //console.log('getCart',cart);
         //return { type: cartConstants.GET_ALL, cart };
         return dispatch => {
             dispatch({
@@ -64,12 +68,12 @@ function getCart() {
 
 function getBasket() {
     const cartString = localStorage.getItem('cart');
-    console.log('cartString',cartString);
+    //console.log('cartString',cartString);
     if(cartString == '[null]') {
         return { type: cartConstants.GET_ALL };
     }
     const cart = JSON.parse(cartString);
-    console.log('getBasket',cart);
+    //console.log('getBasket',cart);
     return { type: cartConstants.GET_ALL, cart };
 }
 

@@ -48,7 +48,7 @@ function logout() {
 }
 function userLoggedIn() {
     const user = userService.userLoggedIn();
-    console.log('userLoggedIn',user);
+    //console.log('userLoggedIn',user);
     return {
         type: userConstants.USER_LOGGED_IN,
         user: user

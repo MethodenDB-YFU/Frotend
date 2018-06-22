@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import { Link } from 'react-router-dom';
-import { Menu, Icon, Row, Col, Badge } from 'antd';
+import { Menu, Icon, Badge } from 'antd';
+// import Block from 'react-blocks';
 import { userActions } from '../../actions/userActions';
 import { cartActions } from '../../actions/cartActions';
 import store from '../../store';
@@ -27,8 +28,8 @@ export class AppMenuComponent extends Component {
     }
 
     /**
-     * render method
-     * @return {Object} user
+     * check is user Loggd in
+     *  @return {Object} methods
      * @private
      */
     isLoggdIn () {
@@ -38,20 +39,20 @@ export class AppMenuComponent extends Component {
             const userLoggedIn = userActions.userLoggedIn();
             user = userLoggedIn.user; 
         }
-        console.log('AppMenu-isLoggdIn',user);
+        //console.log('AppMenu-isLoggdIn',user);
         if(this.state.user != user)
             this.setState({user: user});
         return user;
     }
     /**
-     * render method
+     * count the items in cart
      * @return {Int} methods
      * @private
      */
     cartCount () {
         const state = store.getState();
         var anz = 0;
-        console.log('cartCount:State',state);
+        //console.log('cartCount:State',state);
         if (state.cart) {
             var cart = state.cart;
             if(cart) {
@@ -61,16 +62,23 @@ export class AppMenuComponent extends Component {
             const cartCount = cartActions.getBasketCount();
             anz = cartCount.length;
         }
-        console.log('cartCount:anz',anz);
+        //console.log('cartCount:anz',anz);
         return anz;
     }
+    /**
+     * set user invalid and go to logon view
+     */
     gotoLogoff() {
         this.props.dispatch(userActions.logout());
         history.push('/logon');
     }
+    /**
+     * handle klick un menu item
+     * @param {string} param0 
+     */
     onMenuClick ( { key } ) {
     /* { item, key, selectedKeys } */
-        console.log('onMenuClick:e', key);
+        //console.log('onMenuClick:e', key);
         switch (key) {
         case 'method':
             history.push('/');
@@ -96,7 +104,7 @@ export class AppMenuComponent extends Component {
         }
     }
     /**
-     * initialy disables submit button
+     * initialy read the cart items
      */
     componentDidMount() {
         this.props.dispatch(cartActions.getCart());
@@ -110,50 +118,53 @@ export class AppMenuComponent extends Component {
     render() {
         return (
             this.isLoggdIn() &&
-            <Row type="flex" justify="space-between">
-                <Col span={1}>
-                    <Logo/>
-                </Col>
-                <Col span={20}>
-                    <Menu
-                        onClick={this.onMenuClick.bind(this)}
-                        id='YfuMenu'
-                        theme="light"
-                        mode="horizontal"
-                        defaultSelectedKeys={['method']}
-                        style={{lineHeight: '62px' }}
-                    >
-                        <MenuItem key="method">Methoden</MenuItem>
-                        <SubMenu key="sub1" title='Seminar'>
-                            <MenuItem key="seminartype">Typen</MenuItem>
-                            <MenuItem key="seminargoal">Ziele</MenuItem>
-                            <MenuItem key="seminarrole">Rollen</MenuItem>
-                        </SubMenu>
-                    </Menu>
-                </Col>
-                <Col span={3}>
-                    <Menu
-                        onClick={this.onMenuClick.bind(this)}
-                        theme="light"
-                        mode="horizontal"
-                        style={{lineHeight: '62px' }}
-                    >
-                        <MenuItem key="cart"><a href="/cart"> 
-                            <Badge count={this.cartCount()} id="cardBadge" style={{ backgroundColor: '#642869' }}>
-                                <Icon type="shopping-cart" style={{ fontSize: 20 }}/>
-                            </Badge>
-                        </a></MenuItem>
-                        <MenuItem key="logon"><Icon type="logout" />Abmelden    </MenuItem>
-                    </Menu>
-                </Col>
-            </Row>
+        <div className="yfu-menu-header">
+            <div className="yfu-menu-logo">
+                <Logo/>
+            </div>
+            <div className="yfu-menu-left">
+                <Menu
+                    onClick={this.onMenuClick.bind(this)}
+                    id='YfuMenu'
+                    theme="light"
+                    mode="horizontal"
+                    defaultSelectedKeys={['method']}
+                    style={{lineHeight: '62px' }}
+                >
+                    <MenuItem key="method">Methoden</MenuItem>
+                    <SubMenu key="sub1" title='Seminar'>
+                        <MenuItem key="seminartype">Typen</MenuItem>
+                        <MenuItem key="seminargoal">Ziele</MenuItem>
+                        <MenuItem key="seminarrole">Rollen</MenuItem>
+                    </SubMenu>
+                </Menu>
+            </div>
+            <div className="yfu-menu-right">
+                <Menu
+                    onClick={this.onMenuClick.bind(this)}
+                    theme="light"
+                    mode="horizontal"
+                    style={{lineHeight: '62px' }}
+                >
+                    <MenuItem key="cart"><a href="/cart"> 
+                        <Badge count={this.cartCount()} id="cardBadge" style={{ backgroundColor: '#642869' }}>
+                            <Icon type="shopping-cart" style={{ fontSize: 20 }}/>
+                        </Badge>
+                    </a></MenuItem>
+                    <MenuItem key="logon"><Icon type="logout" />Abmelden    </MenuItem>
+                </Menu>
+            </div>
+        </div>
         );
     }
 }
-
+/**
+ * 
+ * @param {Object} state 
+ */
 function mapStateToProps(state) {
     const { user, cart } = state;
-    console.log('map Cart',cart);
+    //    console.log('map Cart',cart);
     return {
         user,
         cart

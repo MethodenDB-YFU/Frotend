@@ -15,7 +15,7 @@ import '../../../less/styles.less';
 export class MethodDetail_Container  extends Component{
     constructor(props) {
         super(props);
-        console.log(props);
+        //console.log(props);
         /**
          * @type {object}
          * @property {number} currentStep set step in formular
@@ -35,7 +35,7 @@ export class MethodDetail_Container  extends Component{
     componentDidMount() {
         // const fetchParams = urlHelper.buildFetchParams(urlConstants.methoden.getMethod, this.state.id);
         const fetchParams = urlHelper.buildFetchParams(urlConstants.getMethod, this.state.id);
-        console.log('fetchParams',fetchParams);
+        //console.log('fetchParams',fetchParams);
         //fetch('http://localhost:1234/api/methods/'+this.state.id, {method: 'GET',headers:{ 'Content-Type': 'application/json', 'X-User-ID': 'aa40d8c0-e705-11e7-80c1-9a214cf093ae'}})
         fetch(fetchParams.url, fetchParams.request)
             .then(results => {
@@ -50,7 +50,7 @@ export class MethodDetail_Container  extends Component{
                     level: data.method_levels[0].name,
                     attachments: data.attachments
                 };
-                console.log(method);
+                //console.log(method);
                
                 // display loaded methods and remove loading-animation
                 this.setState({
@@ -134,7 +134,7 @@ export class MethodDetail_Container  extends Component{
                         >
                             <RawHTML>{this.state.methode.content}</RawHTML> 
                             <br/>
-                            <div><h2>Attatchemt</h2>
+                            <div><h2>Anhänge</h2>
                                 <AttachmentList attachments={this.state.methode.attachments}></AttachmentList>
                             </div>
                         </Card>
@@ -147,7 +147,11 @@ export class MethodDetail_Container  extends Component{
 
 MethodDetail_Container.displayName = 'Method Detail Container';
 function mapStateToProps(state) {
-    console.log('state.cart', state.cart);
+    //console.log('state.cart', state.cart);
+    const { cart } = state;
+    return {
+        cart
+    };
 }
 
 const connectedMethodDetailPage = connect(mapStateToProps)(MethodDetail_Container);

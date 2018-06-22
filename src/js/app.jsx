@@ -18,6 +18,7 @@ import { CartContainer } from './components/container/method-cart-container';
 import { TypesOverviewContainer} from './components/container/types-overview-container';
 import { RolesOverviewContainer} from './components/container/roles-overview-container';
 import { GoalesOverviewContainer} from './components/container/goals-overview-container';
+import { GoalFormContainer} from './components/container/goal-form-container';
 
 import '../less/styles.less';
 
@@ -50,14 +51,18 @@ export default class App extends Component {
             console.log(action, location);
             const state = store.getState();
             var user = state.user.user;
+            var newUser = user;
+            //console.log('state.user.user',user);
             if(!user) {
                 const userLoggedIn = userActions.userLoggedIn();
-                user = userLoggedIn.user; 
+                newUser = userLoggedIn.user; 
             }
             // clear get Login User
             //dispatch(userActions.userLoggedIn());
-            console.log('history.listen',user);
-            this.setState({user: user});
+            if(user != newUser) {
+                console.log('history.listen newUser',newUser);
+                this.setState({user: newUser});
+            }
         });
     };
 
@@ -95,6 +100,7 @@ export default class App extends Component {
                         <Route path="/seminar/type" exact component={TypesOverviewContainer}/>
                         <Route path="/seminar/role" exact component={RolesOverviewContainer}/>
                         <Route path="/seminar/goal" exact component={GoalesOverviewContainer}/>
+                        <Route path="/goals/new" exact component={GoalFormContainer}/>
                     </div>
                 </Router>
             </Layout>

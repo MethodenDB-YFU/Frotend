@@ -36,7 +36,7 @@ export class RolesOverviewContainer extends Component {
    * loading all methods when method overview is loaded
    */
     componentDidMount() {
-        const fetchParams = urlHelper.buildFetchParams(urlConstants.getTypes);
+        const fetchParams = urlHelper.buildFetchParams(urlConstants.getRoles);
         fetch(fetchParams.url, fetchParams.request)
             .then(results => {
                 return results.json();

@@ -36,7 +36,7 @@ export class GoalesOverviewContainer extends Component {
    * loading all methods when method overview is loaded
    */
     componentDidMount() {
-        const fetchParams = urlHelper.buildFetchParams(urlConstants.getTypes);
+        const fetchParams = urlHelper.buildFetchParams(urlConstants.getGoals);
         fetch(fetchParams.url, fetchParams.request)
             .then(results => {
                 return results.json();
@@ -76,7 +76,7 @@ export class GoalesOverviewContainer extends Component {
                         <h1>Seminarziele Übersicht</h1>
                     </Col>
                     <Col span={12}>
-                        <Input size="large" placeholder="Leiter" addonAfter={createBtn} />
+                        <Input size="large" placeholder="Kommunikation" addonAfter={createBtn} />
                     </Col>
                 </Row>
                 <Table columns={columns} dataSource={this.state.goals} loading={this.state.tableLoading} />
