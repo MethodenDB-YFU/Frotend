@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Input, Select, Button } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
-import uuid from 'react-native-uuid';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -50,7 +49,11 @@ export class GoalForm extends Component {
         this.onDeselectSeminarType = this.onDeselectSeminarType.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-
+    /**
+     * 
+     * @param {*} value 
+     * @param {*} option 
+     */
     onSelectSeminarType(value, option) {
         console.log('onSelectSeminarType:value',value);
         console.log('onSelectSeminarType:option',option);
@@ -59,20 +62,27 @@ export class GoalForm extends Component {
             typeName: option.props.children
         });
     }
+    /**
+     * 
+     * @param {*} value 
+     * @param {*} option 
+     */
     onDeselectSeminarType(value, option) { //eslint-disable-line no-unused-vars
         this.setState({
             typeId: '',
             typeName: ''
         });
     }
-
+    /**
+     * 
+     * @param {Object} e 
+     */
     handleSubmit(e) {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
                 const newGoal = {
-                    id: uuid.v1(),
                     name: values.goalName,
                     explanation: values.explanation,
                     type: {

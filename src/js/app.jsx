@@ -19,6 +19,9 @@ import { TypesOverviewContainer} from './components/container/types-overview-con
 import { RolesOverviewContainer} from './components/container/roles-overview-container';
 import { GoalesOverviewContainer} from './components/container/goals-overview-container';
 import { GoalFormContainer} from './components/container/goal-form-container';
+import { TypesDetailContainer } from './components/container/types-detail-container';
+import { RoleDetailContainer} from './components/container/roles-detail-container';
+
 
 import '../less/styles.less';
 
@@ -101,6 +104,8 @@ export default class App extends Component {
                         <Route path="/seminar/role" exact component={RolesOverviewContainer}/>
                         <Route path="/seminar/goal" exact component={GoalesOverviewContainer}/>
                         <Route path="/goals/new" exact component={GoalFormContainer}/>
+                        <Route path="/types/show/:id" exact component={TypesDetailContainer}/>
+                        <Route path="/roles/show/:id" exact component={RoleDetailContainer}/>
                     </div>
                 </Router>
             </Layout>

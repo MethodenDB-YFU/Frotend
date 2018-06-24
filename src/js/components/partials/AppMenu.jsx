@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-// import { Link } from 'react-router-dom';
 import { Menu, Icon, Badge } from 'antd';
-// import Block from 'react-blocks';
 import { userActions } from '../../actions/userActions';
 import { cartActions } from '../../actions/cartActions';
 import store from '../../store';
@@ -20,11 +18,15 @@ const SubMenu = Menu.SubMenu;
 export class AppMenuComponent extends Component {
     constructor(props) {
         super(props);
+        /**
+         * 
+         */
         this.state = {
             user: {},
             cartCount: 0
         };
         this.onMenuClick = this.onMenuClick.bind(this);
+        this.onLogoClick = this.onLogoClick.bind(this);
     }
 
     /**
@@ -71,6 +73,10 @@ export class AppMenuComponent extends Component {
     gotoLogoff() {
         this.props.dispatch(userActions.logout());
         history.push('/logon');
+    }
+
+    onLogoClick() {
+        history.push('/');
     }
     /**
      * handle klick un menu item
@@ -119,7 +125,7 @@ export class AppMenuComponent extends Component {
         return (
             this.isLoggdIn() &&
         <div className="yfu-menu-header">
-            <div className="yfu-menu-logo">
+            <div className="yfu-menu-logo" onClick={this.onLogoClick.bind(this)}>
                 <Logo/>
             </div>
             <div className="yfu-menu-left">
@@ -146,12 +152,12 @@ export class AppMenuComponent extends Component {
                     mode="horizontal"
                     style={{lineHeight: '62px' }}
                 >
-                    <MenuItem key="cart"><a href="/cart"> 
+                    <MenuItem key="cart">
                         <Badge count={this.cartCount()} id="cardBadge" style={{ backgroundColor: '#642869' }}>
                             <Icon type="shopping-cart" style={{ fontSize: 20 }}/>
                         </Badge>
-                    </a></MenuItem>
-                    <MenuItem key="logon"><Icon type="logout" />Abmelden    </MenuItem>
+                    </MenuItem>
+                    <MenuItem key="logon"><Icon type="logout" />Abmelden</MenuItem>
                 </Menu>
             </div>
         </div>
