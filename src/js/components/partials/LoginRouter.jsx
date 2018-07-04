@@ -5,27 +5,28 @@ import store from '../../store';
 //import { userActions } from '../../actions/userActions';
 import { userService } from '../../middleware';
 
-export default class PrivateRouteComponent extends Component {
+export default class LoginRouteComponent extends Component {
     constructor(props) {
         super(props);
-        //console.log('PrivateRouteComponent',props);
+        //console.log('LoginRouteComponent',props);
         this.state = {
-            user: props.user
+            user: {}
         };
     };
     isLoggdIn () {
         var user = {};
-        console.log('PrivateRoute:Props User',this.props.user);
+        console.log('LoginRouteComponent:Props User',this.props.user);
         if(this.props.user)
             user = this.props.user;
+        // const state =  this.state;
         if(!user) {
             const state = store.getState();
-            console.log('PrivateRoute:Store store',state.user);
+            console.log('LoginRouteComponent:Store User',state.user);
             user = state.user.user;
         }
         if(user.toLogin) {
-            console.log('PrivateRoute:toLogin',user.toLogin);
-            return !user.toLogin;
+            console.log('LoginRouteComponent:toLogin',user.toLogin);
+            return user.toLogin;
         } else {
             console.log('PrivateRoute:user',user);
             return user;
@@ -33,13 +34,12 @@ export default class PrivateRouteComponent extends Component {
     };
     render() {
         const Component = this.props.component;
-        //const isLoggdIn = this.isLoggdIn();
-        const toLogin = !this.props.user.toLogin;
+        const isLoggdIn = this.isLoggdIn();
         return (
             <Route exact path={this.props.path} render={props => (
-                toLogin
+                isLoggdIn
                     ?<Component/>
-                    : <Redirect to={{ pathname: '/logon', state: { from: props.location }}} />
+                    : <Redirect to={{ pathname: '/', state: { from: props.location }}} />
                 
             )} />
         );
@@ -56,7 +56,6 @@ function mapStateToProps(state) {
         user,
         oidc
     };
-    
 }
-const connectedPrivateRoute = connect(mapStateToProps)(PrivateRouteComponent);
-export { connectedPrivateRoute as PrivateRoute }; 
+const connectedLoginRoute = connect(mapStateToProps)(LoginRouteComponent);
+export { connectedLoginRoute as LoginRoute }; 

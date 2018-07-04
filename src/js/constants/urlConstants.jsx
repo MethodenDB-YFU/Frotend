@@ -1,81 +1,83 @@
-
+/**
+ * 
+ */
 export const urlConstants = {
     /* methoden services */
-    getAllMethods: { service: 'methoden', hasParameter: false, name:'getAllMethods'},
-    createMethod: { service: 'methoden', hasParameter: false, name:'createMethod'},
-    getAllMethodLevels: { service: 'methoden', hasParameter: false , name:'getAllMethodLevels'},
-    createMethodLevel: { service: 'methoden', hasParameter: false, name:'createMethodLevel'},
-    updateMethodLevel: { service: 'methoden', hasParameter: true, name:'updateMethodLevel'},
-    getAllMethodTypes: { service: 'methoden', hasParameter: false, name:'getAllMethodTypes'},
-    createMethodType: { service: 'methoden', hasParameter: false, name:'createMethodType'},
-    updateMethodType: { service: 'methoden', hasParameter: true, name:'updateMethodType'},
-    deleteMethod:{ service: 'methoden', hasParameter: true, name:'deleteMethod'},
-    getMethod: { service: 'methoden', hasParameter: true, name:'getMethod'},
-    updateMethod: { service: 'methoden', hasParameter: true, name:'updateMethod'},
+    getAllMethods: { service: 'methoden', name:'getAllMethods'},
+    createMethod: { service: 'methoden', name:'createMethod'},
+    getAllMethodLevels: { service: 'methoden', name:'getAllMethodLevels'},
+    createMethodLevel: { service: 'methoden', name:'createMethodLevel'},
+    updateMethodLevel: { service: 'methoden', name:'updateMethodLevel'},
+    getAllMethodTypes: { service: 'methoden', name:'getAllMethodTypes'},
+    createMethodType: { service: 'methoden', name:'createMethodType'},
+    updateMethodType: { service: 'methoden', name:'updateMethodType'},
+    deleteMethod:{ service: 'methoden', name:'deleteMethod'},
+    getMethod: { service: 'methoden', name:'getMethod'},
+    updateMethod: { service: 'methoden', name:'updateMethod'},
     /* goals services */
-    getGoals: { service: 'goals', hasParameter: false, name:'getGoals'},
-    createGoal: { service: 'goals', hasParameter: false, name:'createGoal'},
-    deleteGoal: { service: 'goals', hasParameter: true, name:'deleteGoal'},
-    getGoal: { service: 'goals', hasParameter: true, name:'getGoal'},
-    updateGoal: { service: 'goals', hasParameter: true, name:'updateGoal'},
+    getGoals: { service: 'goals', name:'getGoals'},
+    createGoal: { service: 'goals', name:'createGoal'},
+    deleteGoal: { service: 'goals', name:'deleteGoal'},
+    getGoal: { service: 'goals', name:'getGoal'},
+    updateGoal: { service: 'goals', name:'updateGoal'},
     /* roles services */
-    getRoles: { service: 'roles', hasParameter: false, name:'getRoles'},
-    createRole: { service: 'roles', hasParameter: false, name:'createRole'},
-    deleteRole: { service: 'roles', hasParameter: true, name:'deleteRole'},
-    getRole: { service: 'roles', hasParameter: true, name:'getRole'},
-    updateRole: { service: 'roles', hasParameter: true, name:'updateRole'},
+    getRoles: { service: 'roles', name:'getRoles'},
+    createRole: { service: 'roles', name:'createRole'},
+    deleteRole: { service: 'roles', name:'deleteRole'},
+    getRole: { service: 'roles', name:'getRole'},
+    updateRole: { service: 'roles', name:'updateRole'},
     /* Type services */
-    getTypes: { service: 'types', hasParameter: false, name:'getTypes'},
-    createType: { service: 'types', hasParameter: false, name:'createType'},
-    deleteType: { service: 'types', hasParameter: true, name:'deleteType'},
-    getType: { service: 'types', hasParameter: true, name:'getType'},
-    updateType: { service: 'types', hasParameter: true, name:'updateType'},
+    getTypes: { service: 'types', name:'getTypes'},
+    createType: { service: 'types', name:'createType'},
+    deleteType: { service: 'types', name:'deleteType'},
+    getType: { service: 'types', name:'getType'},
+    updateType: { service: 'types', name:'updateType'},
 
     /* URLs for methoden service */
     methoden: {
         apiURL: 'http://localhost:8082',
 
-        getAllMethods: { url: '/api/methods', method: 'GET'},
-        createMethod: { url: '/api/methods', method: 'POST'},
+        getAllMethods: { url: '/api/methods', method: 'GET',  hasParameter: false},
+        createMethod: { url: '/api/methods', method: 'POST',  hasParameter: false},
     
-        getAllMethodLevels: { url: '/api/methods/levels', method: 'GET'},
-        createMethodLevel: { url: '/api/methods/levels', method: 'POST'},
-        updateMethodLevel: { url: '/api/methods/types/', method: 'PUT'},
+        getAllMethodLevels: { url: '/api/methods/levels', method: 'GET', hasParameter: false},
+        createMethodLevel: { url: '/api/methods/levels', method: 'POST', hasParameter: false},
+        updateMethodLevel: { url: '/api/methods/types/', method: 'PUT', hasParameter: true},
     
-        getAllMethodTypes: { url: '/api/methods/types', method: 'GET'},
-        createMethodType: { url: '/api/methods/types', method: 'POST'},
-        updateMethodType: { url: '/api/methods/types/', method: 'PUT'},
+        getAllMethodTypes: { url: '/api/methods/types', method: 'GET', hasParameter: false},
+        createMethodType: { url: '/api/methods/types', method: 'POST', hasParameter: false},
+        updateMethodType: { url: '/api/methods/types/', method: 'PUT', hasParameter: true},
     
-        deleteMethod: { url: '/api/methods/', method: 'DELETE'},
-        getMethod: { url: '/api/methods/', method: 'GET'},
-        updateMethod: { url: '/api/methods/', method: 'PUT'}
+        deleteMethod: { url: '/api/methods/', method: 'DELETE', hasParameter: true},
+        getMethod: { url: '/api/methods/', method: 'GET', hasParameter: true},
+        updateMethod: { url: '/api/methods/', method: 'PUT', hasParameter: true}
     },
     /* URLs for goal service */
     goals:{
         apiURL: 'http://localhost:8081',
 
-        getGoals: { url: '/api/seminars/goals', method: 'GET'},
-        createGoal: { url: '/api/seminars/goals', method: 'POST'},
-        deleteGoal: { url: '/api/seminars/goals/', method: 'DELETE'},
-        getGoal: { url: '/api/seminars/goals/', method: 'GET'},
-        updateGoal: { url: '/api/seminars/goals/', method: 'PUT'}
+        getGoals: { url: '/api/seminars/goals', method: 'GET', hasParameter: false},
+        createGoal: { url: '/api/seminars/goals', method: 'POST', hasParameter: false},
+        deleteGoal: { url: '/api/seminars/goals/', method: 'DELETE', hasParameter: true},
+        getGoal: { url: '/api/seminars/goals/', method: 'GET', hasParameter: true},
+        updateGoal: { url: '/api/seminars/goals/', method: 'PUT', hasParameter: true}
     },
     /* URLs for role service */
     roles:{
         apiURL: 'http://localhost:8081',
-        getRoles: { url: '/api/seminars/roles', method: 'GET'},
-        createRole: { url: '/api/seminars/roles', method: 'POST'},
-        deleteRole: { url: '/api/seminars/roles/', method: 'DELETE'},
-        getRole: { url: '/api/seminars/roles/', method: 'GET'},
-        updateRole: { url: '/api/seminars/roles/', method: 'PUT'}
+        getRoles: { url: '/api/seminars/roles', method: 'GET', hasParameter: false},
+        createRole: { url: '/api/seminars/roles', method: 'POST', hasParameter: false},
+        deleteRole: { url: '/api/seminars/roles/', method: 'DELETE', hasParameter: true},
+        getRole: { url: '/api/seminars/roles/', method: 'GET', hasParameter: true},
+        updateRole: { url: '/api/seminars/roles/', method: 'PUT', hasParameter: true}
     },
     /* URLs for type service */
     types:{
         apiURL: 'http://localhost:8081',
-        getTypes: { url: '/api/seminars/types', method: 'GET'},
-        createType: { url: '/api/seminars/types', method: 'POST'},
-        deleteType: { url: '/api/seminars/types/', method: 'DELETE'},
-        getType: { url: '/api/seminars/types/', method: 'GET'},
-        updateType: { url: '/api/seminars/types/', method: 'PUT'}
+        getTypes: { url: '/api/seminars/types', method: 'GET', hasParameter: false},
+        createType: { url: '/api/seminars/types', method: 'POST', hasParameter: false},
+        deleteType: { url: '/api/seminars/types/', method: 'DELETE', hasParameter: true},
+        getType: { url: '/api/seminars/types/', method: 'GET', hasParameter: true},
+        updateType: { url: '/api/seminars/types/', method: 'PUT', hasParameter: true}
     }
 };

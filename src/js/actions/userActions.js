@@ -2,15 +2,20 @@ import {userConstants} from '../constants';
 import { userService } from '../middleware';
 import { alertActions } from './';
 import { history } from '../helpers';
+import {USER_FOUND} from 'redux-oidc';
+
 /**
  * Redux Actions for User
  */
 export const userActions = {
     login,
+    signIn,
     logout,
     userLoggedIn,
+    setLoggedIn,
     getUser,
     saveUser,
+    userFound,
     deleteUser
 };
 
@@ -48,12 +53,28 @@ function logout() {
 }
 function userLoggedIn() {
     const user = userService.userLoggedIn();
-    //console.log('userLoggedIn',user);
+    console.log('userLoggedIn',user);
     return {
         type: userConstants.USER_LOGGED_IN,
         user: user
     };
 };
+
+function setLoggedIn( user ) {
+    console.log('setLoggedIn',user);
+    return {
+        type: userConstants.USER_LOGGED_IN,
+        user: user
+    };
+};
+function userFound( user ) {
+    console.log('userFound',user);
+    return {
+        type: USER_FOUND,
+        payload: user
+    };
+};
+
 function getUser () {
     const user = localStorage.getItem('user');
     console.log('getUser',user);
@@ -67,6 +88,9 @@ function getUser () {
 
 function saveUser(post) {
     return post;
+};
+function signIn() {
+    userService.signIn(); 
 };
 
 function deleteUser(id) {

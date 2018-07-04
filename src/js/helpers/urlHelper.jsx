@@ -7,13 +7,13 @@ export const urlHelper = {
     buildFetchParams
 };
 
-function buildURL(service, parameter) {
+function buildURL(service, parameter = null) {
     const services = urlConstants[service.service];
     const ackService = services[service.name];
     const apiURL = services.apiURL;
     let url =  apiURL + ackService.url;
 
-    if(service.hasParameter) {
+    if(ackService.hasParameter) {
         url = apiURL + ackService.url + parameter;
     }else{
         url =  apiURL + ackService.url;
@@ -24,22 +24,42 @@ function buildURL(service, parameter) {
 function buildHeader() {
     const state = store.getState();
     const user = state.user.user;
-    let userId = '0';
-    if(user)
-        userId = user.id;
-    //console.log('user',user);
+    let userId = null;
+    if(user) {
+        if(user.id) {
+            userId = user.id;
+        } else {
+            if(user.profile.sub)
+                userId = user.profile.sub;
+            else
+                userId = user.id_token;
+        };
+    }
+
+    console.log('userId',userId);
     let header = {
         //'Access-Control-Allow-Origin': '*',
         //'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
         //'Access-Control-Allow-Headers': 'Content-Type, Accept, X-User-ID',
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'X-User-ID': userId
+        'Accept': 'application/json'
+        //'Authorization' : 'Bearer'
+        //'X-User-ID': userId
     };
+    /*
+    if(user.access_token)
+        header = { ...header,
+            'Authorization' : 'Bearer '+user.access_token
+        };
+    if(userId)
+        header = { ...header,
+            'X-User-ID': userId
+        };
+        */
     return header;
 }
 
-function buildFetchParams(service, parameter = {}, data = {}) {
+function buildFetchParams(service, parameter = null, data = {}) {
     const url = buildURL(service, parameter);
     const header = buildHeader();
     const services = urlConstants[service.service];

@@ -5,6 +5,7 @@ import { cartActions } from '../../actions/cartActions';
 import store from '../../store';
 import { connect } from 'react-redux';
 import { history } from '../../helpers';
+import { userService } from '../../middleware';
 import Logo from '../../../images/logo/logo.js';
 import '../../../less/styles.less';
 
@@ -22,7 +23,8 @@ export class AppMenuComponent extends Component {
          * 
          */
         this.state = {
-            user: {},
+            user: props.user,
+            cart: props.cart,
             cartCount: 0
         };
         this.onMenuClick = this.onMenuClick.bind(this);
@@ -35,16 +37,32 @@ export class AppMenuComponent extends Component {
      * @private
      */
     isLoggdIn () {
-        const state = store.getState();
-        var user = state.user.user;
+        let userLoggdIn = false;
+        //const state = store.getState();
+        const state = this.state;
+        console.log('AppMenu-isLoggdIn:state',state);
+        var user = null;
+        if(state.user)
+            user = state.user.user;
         if(!user) {
             const userLoggedIn = userActions.userLoggedIn();
             user = userLoggedIn.user; 
         }
         //console.log('AppMenu-isLoggdIn',user);
-        if(this.state.user != user)
-            this.setState({user: user});
-        return user;
+        if(this.state.user != user){
+            // console.log('AppMenu new User State',user);
+            //this.setState({user: user});
+        }
+        if(user){
+            if(typeof user.loggedIn != 'undefined'){
+                userLoggdIn = user.loggedIn;
+            } else {
+                if(typeof user.user.loggedIn != 'undefined'){
+                    userLoggdIn = user.user.loggedIn;
+                }    
+            }
+        }
+        return userLoggdIn;
     }
     /**
      * count the items in cart
@@ -169,8 +187,11 @@ export class AppMenuComponent extends Component {
  * @param {Object} state 
  */
 function mapStateToProps(state) {
-    const { user, cart } = state;
+    let { user} = state;
+    const { cart, oidc } = state;
+    //const { user, cart } = state;
     //    console.log('map Cart',cart);
+    user = userService.mapOidc2User(oidc,user);
     return {
         user,
         cart

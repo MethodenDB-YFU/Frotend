@@ -50,7 +50,9 @@ export class OverviewContainer extends Component {
         fetch(fetchParams.url, fetchParams.request)
             .then(results => {
                 return results.json();
-            }).then(data => {
+            })
+            .catch(error => console.error('Fetch Error =\n', error))
+            .then(data => {
                 let methods = data.map((method) => {
                     let methodJson = {
                         key: method.id,
@@ -67,7 +69,8 @@ export class OverviewContainer extends Component {
                     methods: methods,
                     tableLoading: false
                 });
-            });
+            })
+            .catch(error => console.error('Fetch Error =\n', error));
     }
 
     /**

@@ -29,7 +29,7 @@
             "always"
         ],
         "no-extra-semi": "off",
-        "no-console": ["warn", { "allow": ["warn", "log"] }],
+        "no-console": ["warn", { "allow": ["warn", "log", "error"] }],
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error"
     }

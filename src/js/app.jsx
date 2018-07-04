@@ -1,41 +1,22 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Router, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Layout } from 'antd';
 import { history } from './helpers';
 
 import { connect } from 'react-redux';
 import store from './store';
 import { Provider } from 'react-redux';
-import { PrivateRoute } from './components/partials/PrivateRoute';
 import { AppMenu } from './components/partials/AppMenu';
+import { RouterComponent } from './components/partials/RouterComponent';
 
-import { OverviewContainer } from './components/container/overview-container';
-import { MethodFormContainer } from './components/container/method-form-container';
-import { MethodDetailContainer } from './components/container/method-detail-container';
-import { LogonFormContainer } from './components/container/logon-container';
-import { CartContainer } from './components/container/method-cart-container';
-import { TypesOverviewContainer} from './components/container/types-overview-container';
-import { RolesOverviewContainer} from './components/container/roles-overview-container';
-import { GoalesOverviewContainer} from './components/container/goals-overview-container';
-import { GoalFormContainer} from './components/container/goal-form-container';
-import { TypesDetailContainer } from './components/container/types-detail-container';
-import { RoleDetailContainer} from './components/container/roles-detail-container';
-
+import { OidcProvider } from 'redux-oidc';
+import userManager from './helpers/userManager';
+import { userService } from './middleware';
 
 import '../less/styles.less';
 
-import { userActions } from './actions/userActions';
-import { cartActions } from './actions/cartActions';
-
-//var dotenv = require('dotenv');
-//var dotenvExpand = require('dotenv-expand');
-
-//import './favicon.ico';
-
-//const {Header, Content} = Layout;
-const {Header} = Layout;
-//const MenuItem = Menu.Item;
+const {Header, Content} = Layout;
   
 
 /**
@@ -46,29 +27,29 @@ export default class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: {}
+            user: props.user,
+            oidc: {},
+            cart: {},
+            isLoadingUser: true
         };
 
         // const { dispatch } = this.props;
         history.listen((location, action) => {
             console.log(action, location);
-            const state = store.getState();
-            var user = state.user.user;
-            var newUser = user;
-            //console.log('state.user.user',user);
-            if(!user) {
-                const userLoggedIn = userActions.userLoggedIn();
-                newUser = userLoggedIn.user; 
-            }
-            // clear get Login User
-            //dispatch(userActions.userLoggedIn());
-            if(user != newUser) {
-                console.log('history.listen newUser',newUser);
-                this.setState({user: newUser});
-            }
+
         });
     };
-
+    isLoading() {
+        //const state = this.state;
+        const state = store.getState();
+        const oidc  = state.oidc;
+        console.log('isLoading',oidc);
+        if(!oidc)
+            return true;
+        if (oidc.isLoadingUser == null)
+            return true;
+        return oidc.isLoadingUser;
+    };
     /**
      * render method
      * @return {ReactElement} markup
@@ -76,49 +57,29 @@ export default class App extends Component {
      * @private
      */
     render() {
-        var { user } = this.props;
-        if(!user) {
-            const userLoggedIn = userActions.userLoggedIn();
-            if (userLoggedIn)
-                user = userLoggedIn.user;
-        } else {
-            console.log('render',user);
-        }
-        var { cart } = this.props;
-        if(!cart) {
-            cart = cartActions.getBasket();
-        }
+
         return (
             <Layout className="layout">
                 <Header className="yfu_menu">
                     <AppMenu></AppMenu>
                 </Header>
-                <Router history={history}>
-                    <div style={{background: '#fff', padding: 24, minHeight: 280 }}>
-                        <PrivateRoute path="/" exact component={OverviewContainer} />
-                        <Route path="/method/new" exact component={MethodFormContainer}/>
-                        <Route path="/method/show/:id" component={MethodDetailContainer}/>
-                        <Route path="/cart" exact component={CartContainer}/>
-                        <Route path="/logon" exact component={LogonFormContainer}/>
-                        <Route path="/seminar/type" exact component={TypesOverviewContainer}/>
-                        <Route path="/seminar/role" exact component={RolesOverviewContainer}/>
-                        <Route path="/seminar/goal" exact component={GoalesOverviewContainer}/>
-                        <Route path="/goals/new" exact component={GoalFormContainer}/>
-                        <Route path="/types/show/:id" exact component={TypesDetailContainer}/>
-                        <Route path="/roles/show/:id" exact component={RoleDetailContainer}/>
-                    </div>
-                </Router>
+                <Content>
+                    <RouterComponent></RouterComponent>
+                </Content>}
             </Layout>
         );
     }
 }
 function mapStateToProps(state) {
-    const { user } = state;
+    let { user } = state;
+    let { oidc } = state;
     const { cart } = state;
-    console.log('map User',user);
-    console.log('map Cart',cart);
+    //console.log('App map User',user);
+    //console.log('App map Cart',cart);
+    user = userService.mapOidc2User(oidc,user);
     return {
         user,
+        oidc: oidc,
         cart
     };
 }
@@ -128,7 +89,10 @@ export { connectedApp as App };
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
-            <App />
+            <OidcProvider store={store} userManager={userManager}>
+                <App />
+            </OidcProvider>
         </Provider>
     </BrowserRouter>,
     document.getElementById('root'));
+ 

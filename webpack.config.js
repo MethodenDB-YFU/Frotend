@@ -12,8 +12,12 @@ module.exports = {
         publicPath: '/'
     },
     devServer: {
+        https: false,
         historyApiFallback: true,
-        contentBase: "./dist"
+        contentBase: "./dist",
+        headers: {
+            'X-Frame-Options': '*'
+        }        
     },
     module: {
         rules: [
