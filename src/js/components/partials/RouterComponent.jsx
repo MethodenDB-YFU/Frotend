@@ -7,6 +7,7 @@ import { history } from '../../helpers';
 import ReactLoading from 'react-loading';
 //import {mapOidc2User} from '../../middleware';
 import { userService } from '../../middleware';
+import { loginUser, checkLoginStatus } from '../../actions/loginActions';
 
 import { OverviewContainer } from '../container/overview-container';
 import { MethodFormContainer } from '../container/method-form-container';
@@ -28,10 +29,14 @@ export default class RouterComponentPart extends Component {
         super(props);
         this.state = {
             user: props.user,
-            oidc: props.oicd,
             isLoadingUser: true
         };
     };
+
+    componentWillMount(){
+        this.props.checkLoginStatus();
+    };
+
     isLoading() {
         let loadingSate = true;
         const x = 1;
@@ -42,26 +47,10 @@ export default class RouterComponentPart extends Component {
                 loadingSate = false;
             console.log('RouterComponentPart:loadingState',loadingSate);
             return loadingSate;
-        }
+        } 
         //const state = this.state;
         const state = store.getState();
-        const oidc  = state.oidc;
-        console.log('RouterComponentPart:isLoading',oidc);
-        if(!oidc) {
-            loadingSate = true;
-        } else {
-            if (oidc.isLoadingUser == null)
-                loadingSate = true;
-            else
-                loadingSate = oidc.isLoadingUser;
-            if (!oidc.user) {
-                loadingSate = false;
-            } else {
-                const user = oidc.user;
-                if(user.loggedIn==true)
-                    loadingSate = false;
-            }
-        }
+        loadingSate = state.user.isLoginPending;
         console.log('RouterComponentPart:loadingSate',loadingSate);
         return loadingSate;
     };
@@ -94,19 +83,33 @@ export default class RouterComponentPart extends Component {
         );
     }
 }
+
+function mapDispatchToProps (dispatch) {
+    console.log('RouterComponentPart:mapDispatchToProps');
+    return {
+        login: () => {
+            dispatch(loginUser());
+        },
+        checkLoginStatus: () => {
+            dispatch(checkLoginStatus());
+        }
+    };
+};
+
+
 function mapStateToProps(state) {
     let { user } = state;
-    const { oidc } = state;
+    //const { oidc } = state;
     //console.log('Router map User',user);
     //console.log('Router map oidc',oidc);
-    user = userService.mapOidc2User(oidc,user);
+    //user = userService.mapOidc2User(oidc,user);
     console.log('Router new User',user);
-    console.log('isLoadingUser',oidc.isLoadingUser);
+    //console.log('isLoadingUser',oidc.isLoadingUser);
     return {
         user,
-        oidc: state.oidc,
-        isLoadingUser: oidc.isLoadingUser,
+        //oidc: state.oidc,
+        //isLoadingUser: oidc.isLoadingUser,
     };
 }
-const connectedRouter = connect(mapStateToProps)(RouterComponentPart);
+const connectedRouter = connect(mapStateToProps,mapDispatchToProps)(RouterComponentPart);
 export { connectedRouter as RouterComponent }; 

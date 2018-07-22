@@ -48,13 +48,13 @@ export default class LoginRouteComponent extends Component {
 
 function mapStateToProps(state) {
     let { user } = state;
-    const { oidc } = state;
+    //const { oidc } = state;
     //console.log('PrivateRoute map User',user);
     //console.log('PrivateRoute map oidc',oidc);
-    user = userService.mapOidc2User(oidc,user);
+    //user = userService.mapOidc2User(oidc,user);
     return {
-        user,
-        oidc
+        user
+        //oidc
     };
 }
 const connectedLoginRoute = connect(mapStateToProps)(LoginRouteComponent);

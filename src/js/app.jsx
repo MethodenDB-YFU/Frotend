@@ -9,10 +9,12 @@ import store from './store';
 import { Provider } from 'react-redux';
 import { AppMenu } from './components/partials/AppMenu';
 import { RouterComponent } from './components/partials/RouterComponent';
-
+/*
 import { OidcProvider } from 'redux-oidc';
 import userManager from './helpers/userManager';
 import { userService } from './middleware';
+*/
+import { loginUser, checkLoginStatus } from './actions/loginActions';
 
 import '../less/styles.less';
 
@@ -28,7 +30,6 @@ export default class App extends Component {
         super(props);
         this.state = {
             user: props.user,
-            oidc: {},
             cart: {},
             isLoadingUser: true
         };
@@ -41,15 +42,17 @@ export default class App extends Component {
     };
     isLoading() {
         //const state = this.state;
-        const state = store.getState();
-        const oidc  = state.oidc;
-        console.log('isLoading',oidc);
-        if(!oidc)
-            return true;
-        if (oidc.isLoadingUser == null)
-            return true;
-        return oidc.isLoadingUser;
     };
+    /**
+     * 
+     */
+    componentDidMount(){
+        // this.props.checkLoginStatus();
+        //const dispatch = this.props.dispatch;
+        //this.props.dispatch(checkLoginStatus());
+    };
+    
+
     /**
      * render method
      * @return {ReactElement} markup
@@ -72,26 +75,33 @@ export default class App extends Component {
 }
 function mapStateToProps(state) {
     let { user } = state;
-    let { oidc } = state;
     const { cart } = state;
-    //console.log('App map User',user);
-    //console.log('App map Cart',cart);
-    user = userService.mapOidc2User(oidc,user);
     return {
+        username: state.loginReducer.username,
         user,
-        oidc: oidc,
         cart
     };
 }
-const connectedApp = connect(mapStateToProps)(App);
+
+function mapDispatchToProps (dispatch) {
+    console.log('App:mapDispatchToProps');
+    return {
+        login: () => {
+            dispatch(loginUser());
+        },
+        checkLoginStatus: () => {
+            dispatch(checkLoginStatus());
+        }
+    };
+};
+
+const connectedApp = connect(mapStateToProps,mapDispatchToProps)(App);
 export { connectedApp as App }; 
 
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
-            <OidcProvider store={store} userManager={userManager}>
-                <App />
-            </OidcProvider>
+            <App />
         </Provider>
     </BrowserRouter>,
     document.getElementById('root'));

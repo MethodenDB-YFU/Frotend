@@ -3,7 +3,7 @@ import { Form,  Icon, Input, Button, Row, Col, Card } from 'antd';
 import Yfu_logo from '../../../images/logo/yfu_logo';
 import { connect } from 'react-redux';
 
-import { userActions } from '../../actions/userActions';
+//import { userActions } from '../../actions/userActions';
 //import userManager from '../../helper/userManager';
 import { userService } from '../../middleware';
 
@@ -41,7 +41,7 @@ export class LogonContainer  extends Component{
         e.preventDefault();
         //const { dispatch } = this.props;
         //dispatch(userActions.signIn());
-        userActions.signIn();
+        // userActions.signIn();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);

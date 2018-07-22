@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { CallbackComponent } from 'redux-oidc';
+//import { CallbackComponent } from 'redux-oidc';
 //import { userActions } from '../../actions/userActions';
 import ReactLoading from 'react-loading';
 
-import userManager from '../../helpers/userManager';
+//import userManager from '../../helpers/userManager';
 import { history } from '../../helpers';
 
 class CallbackPage extends React.Component {
@@ -55,24 +55,10 @@ class CallbackPage extends React.Component {
     render() {
         // just redirect to '/' in both cases
         return (
-            <CallbackComponent
-                userManager={userManager}
-                successCallback={() => {
-                    //console.log('successCallback'.this.state);
-                    history.push('/');
-                    //this.successLogin();
-                }}
-                errorCallback={error => {
-                    //console.log(this.state);
-                    console.error(error);
-                    //history.push('/logon');
-                }}
-            >
-                <div>
-                    <center><h1>Redirecting...</h1></center>
-                    <center><ReactLoading type="spinningBubbles" color="#642869"  /></center>
-                </div>
-            </CallbackComponent>
+            <div>
+                <center><h1>Redirecting...</h1></center>
+                <center><ReactLoading type="spinningBubbles" color="#642869"  /></center>
+            </div>
         );
     }
 }

@@ -3,8 +3,8 @@ import thunk from 'redux-thunk';
 //import promise from 'redux-promise-middleware';
 //import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from '../reducers';
-import { loadUser } from 'redux-oidc';
-import userManager from '../helpers/userManager';
+//import { loadUser } from 'redux-oidc';
+//import userManager from '../helpers/userManager';
 import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 
@@ -22,5 +22,4 @@ const createStoreWithMiddleware = compose(
 
 const store = createStoreWithMiddleware(rootReducer, initialState);
 
-loadUser(store, userManager);
 export default store;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Menu, Icon, Badge } from 'antd';
-import { userActions } from '../../actions/userActions';
+//import { userActions } from '../../actions/userActions';
+import { logoutUser } from '../../actions/loginActions';
 import { cartActions } from '../../actions/cartActions';
 import store from '../../store';
 import { connect } from 'react-redux';
@@ -38,28 +39,27 @@ export class AppMenuComponent extends Component {
      */
     isLoggdIn () {
         let userLoggdIn = false;
+        userLoggdIn = userService.userLoggedIn();
+        if(userLoggdIn != true){
         //const state = store.getState();
-        const state = this.state;
-        console.log('AppMenu-isLoggdIn:state',state);
-        var user = null;
-        if(state.user)
-            user = state.user.user;
-        if(!user) {
-            const userLoggedIn = userActions.userLoggedIn();
-            user = userLoggedIn.user; 
-        }
-        //console.log('AppMenu-isLoggdIn',user);
-        if(this.state.user != user){
-            // console.log('AppMenu new User State',user);
-            //this.setState({user: user});
-        }
-        if(user){
-            if(typeof user.loggedIn != 'undefined'){
-                userLoggdIn = user.loggedIn;
-            } else {
-                if(typeof user.user.loggedIn != 'undefined'){
-                    userLoggdIn = user.user.loggedIn;
-                }    
+            const state = this.state;
+            console.log('AppMenu-isLoggdIn:state',state);
+            var user = null;
+            if(state.user)
+                user = state.user.user;
+            //console.log('AppMenu-isLoggdIn',user);
+            if(this.state.user != user){
+                // console.log('AppMenu new User State',user);
+                //this.setState({user: user});
+            }
+            if(user){
+                if(typeof user.loggedIn != 'undefined'){
+                    userLoggdIn = user.loggedIn;
+                } else {
+                    if(typeof user.user.loggedIn != 'undefined'){
+                        userLoggdIn = user.user.loggedIn;
+                    }    
+                }
             }
         }
         return userLoggdIn;
@@ -89,7 +89,7 @@ export class AppMenuComponent extends Component {
      * set user invalid and go to logon view
      */
     gotoLogoff() {
-        this.props.dispatch(userActions.logout());
+        this.props.logout();
         history.push('/logon');
     }
 
@@ -131,7 +131,8 @@ export class AppMenuComponent extends Component {
      * initialy read the cart items
      */
     componentDidMount() {
-        this.props.dispatch(cartActions.getCart());
+        // this.props.dispatch(cartActions.getCart());
+        this.props.getCart();
     }
 
     /**
@@ -182,21 +183,32 @@ export class AppMenuComponent extends Component {
         );
     }
 }
+function mapDispatchToProps (dispatch) {
+    console.log('AppMenu:mapDispatchToProps');
+    return {
+        logout: () => {
+            dispatch(logoutUser());
+        },
+        getCart: () => {
+            dispatch(cartActions.getCart());
+        }
+    };
+};
+
 /**
  * 
  * @param {Object} state 
  */
 function mapStateToProps(state) {
     let { user} = state;
-    const { cart, oidc } = state;
+    const { cart } = state;
     //const { user, cart } = state;
     //    console.log('map Cart',cart);
-    user = userService.mapOidc2User(oidc,user);
     return {
         user,
         cart
     };
 }
 
-const connectedAppMenuPage = connect(mapStateToProps)(AppMenuComponent);
+const connectedAppMenuPage = connect(mapStateToProps,mapDispatchToProps)(AppMenuComponent);
 export { connectedAppMenuPage as AppMenu }; 

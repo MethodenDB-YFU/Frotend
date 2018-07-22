@@ -29,22 +29,23 @@ function buildHeader() {
         if(user.id) {
             userId = user.id;
         } else {
-            if(user.profile.sub)
-                userId = user.profile.sub;
-            else
-                userId = user.id_token;
+            if(user.profile) {
+                if(user.profile.sub)
+                    userId = user.profile.sub;
+                else
+                    userId = user.id_token;
+            }
         };
     }
-
     console.log('userId',userId);
     let header = {
         //'Access-Control-Allow-Origin': '*',
         //'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
         //'Access-Control-Allow-Headers': 'Content-Type, Accept, X-User-ID',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Content-Type': 'application/json', 
+        'Accept': 'application/json',
         //'Authorization' : 'Bearer'
-        //'X-User-ID': userId
+        'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
     };
     /*
     if(user.access_token)

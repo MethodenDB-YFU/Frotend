@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import store from '../../store';
 //import { userActions } from '../../actions/userActions';
-import { userService } from '../../middleware';
+//import { userService } from '../../middleware';
 
 export default class PrivateRouteComponent extends Component {
     constructor(props) {
@@ -48,13 +48,13 @@ export default class PrivateRouteComponent extends Component {
 
 function mapStateToProps(state) {
     let { user } = state;
-    const { oidc } = state;
+    //const { oidc } = state;
     //console.log('PrivateRoute map User',user);
     //console.log('PrivateRoute map oidc',oidc);
-    user = userService.mapOidc2User(oidc,user);
+    // user = userService.mapOidc2User(oidc,user);
     return {
-        user,
-        oidc
+        user
+        //oidc
     };
     
 }
