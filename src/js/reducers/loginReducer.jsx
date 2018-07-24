@@ -31,7 +31,7 @@ action) => {
         break;
     case 'SET_LOGIN_SUCCESS':
         state = {
-            ...state,
+            //...state,
             isLoginSuccess: true,
             loggedIn: true,
             isLoginPending: false,

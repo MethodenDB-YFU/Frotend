@@ -4,7 +4,8 @@ export const userService = {
     SetLoading,
     GetLoading,
     SetExpired,
-    GetExpired
+    GetExpired,
+    getUserToken
 };
 
 function SetLoading(state) {
@@ -40,4 +41,9 @@ function userLoggedIn() {
             isLogin = true;
     }
     return isLogin;
+}
+function getUserToken() {
+    let idToken = authContext.getCachedToken(authContext.config.clientId);
+    console.log('getUserToken',idToken);
+    return idToken;
 }

@@ -1,3 +1,4 @@
+//import React from 'react';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -15,7 +16,6 @@ import userManager from './helpers/userManager';
 import { userService } from './middleware';
 */
 import { loginUser, checkLoginStatus } from './actions/loginActions';
-
 import '../less/styles.less';
 
 const {Header, Content} = Layout;

@@ -1,4 +1,5 @@
 import { authContext } from '../helpers/adal-config';
+import { userService } from '../middleware';
 let user = authContext.getCachedUser();
 // let userName = undefined;
 // let userToken = null;
@@ -60,6 +61,10 @@ export function checkLoginStatus(){
                 userData.Token = token;
                 // userToken = token;
             });
+            if (!userData.Token) {
+                console.log('No token!');
+                userData.Token = userService.getUserToken();
+            }
             dispatch(setLoginSuccess(userData));
         } else {
             authContext.login();

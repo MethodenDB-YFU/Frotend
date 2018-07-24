@@ -1,11 +1,14 @@
 import store from '../store';
 import {urlConstants} from '../constants';
+import { userService } from '../middleware';
 
 export const urlHelper = {
     buildURL,
     buildHeader,
     buildFetchParams
 };
+
+let USE_BEARER = false;
 
 function buildURL(service, parameter = null) {
     const services = urlConstants[service.service];
@@ -24,7 +27,10 @@ function buildURL(service, parameter = null) {
 function buildHeader() {
     const state = store.getState();
     const user = state.user.user;
+    console.log('buildHeader:user',state.user);
     let userId = null;
+    let userToken = null;
+    console.log('user',user);
     if(user) {
         if(user.id) {
             userId = user.id;
@@ -36,6 +42,12 @@ function buildHeader() {
                     userId = user.id_token;
             }
         };
+        if(user.Token)
+            userToken = user.Token;
+        if (!userToken) {
+            userToken = userService.getUserToken();
+        }
+
     }
     console.log('userId',userId);
     let header = {
@@ -47,11 +59,13 @@ function buildHeader() {
         //'Authorization' : 'Bearer'
         'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
     };
+    if(USE_BEARER === 'true') {
+        if(userToken)
+            header = { ...header,
+                'Authorization' : 'Bearer '+userToken
+            };
+    }
     /*
-    if(user.access_token)
-        header = { ...header,
-            'Authorization' : 'Bearer '+user.access_token
-        };
     if(userId)
         header = { ...header,
             'X-User-ID': userId
