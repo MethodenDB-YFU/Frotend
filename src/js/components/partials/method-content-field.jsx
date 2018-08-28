@@ -1,8 +1,111 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Button } from 'antd';
-import { Editor } from '@tinymce/tinymce-react';
+import Editor, { createEditorStateWithText } from 'draft-js-plugins-editor';
+import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
+import createBlockStyleButton, {
+    ItalicButton,
+    BoldButton,
+    UnderlineButton,
+    HeadlineOneButton,
+    HeadlineTwoButton,
+    HeadlineThreeButton,
+    UnorderedListButton,
+    OrderedListButton,
+    BlockquoteButton
+} from 'draft-js-buttons';
+import '../../../less/editor-layout.less';
 
 const FormItem = Form.Item;
+
+const Paragraph = createBlockStyleButton({
+    blockType: 'paragraph',
+    children: 'P'
+});
+
+class HeadlinesPicker extends Component {
+    constructor(props) {
+        super(props);
+        
+        this.onWindowClick = this.onWindowClick.bind(this);
+    }
+    
+    componentDidMount() {
+        setTimeout(() => { window.addEventListener('click', this.onWindowClick); });
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('click', this.onWindowClick);
+    }
+    
+    // Call `onOverrideContent` again with `undefined`
+    // so the toolbar can show its regular content again.
+    onWindowClick() {
+        this.props.onOverrideContent(undefined);
+    }
+
+    render() {
+        const buttons = [HeadlineOneButton, HeadlineTwoButton, HeadlineThreeButton];
+        return (
+            <div>
+                {buttons.map((Button, i) => // eslint-disable-next-line
+                    <Button key={i} {...this.props} />
+                )}
+            </div>
+        );
+    }
+}
+
+
+class HeadlinesButton extends Component {
+    constructor(props) {
+        super(props);
+        
+        this.onClick = this.onClick.bind(this);
+    }
+    
+    // A button can call `onOverrideContent` to replace the content
+    // of the toolbar. This can be useful for displaying sub
+    // menus or requesting additional information from the user.
+    onClick() {
+        this.props.onOverrideContent(HeadlinesPicker);
+    }
+
+    render() {
+        return (
+            <div className="headlineButtonWrapper">
+                <button onClick={this.onClick} className="headlineButton">
+                    H
+                </button>
+            </div>
+        );
+    }
+}
+
+
+
+
+
+
+
+
+
+
+const toolbarPlugin = createToolbarPlugin({
+    structure: [
+        BoldButton,
+        ItalicButton,
+        UnderlineButton,
+        Separator,
+        HeadlinesButton,
+        UnorderedListButton,
+        OrderedListButton,
+        BlockquoteButton,
+        Paragraph
+    ]
+});
+const { Toolbar } = toolbarPlugin;
+const plugins = [toolbarPlugin];
+const text = 'The toolbar above the editor can be used for formatting text, as in conventional static editors  …';
 
 /**
  * form field to add the important content of the method
@@ -12,15 +115,18 @@ export class MethodContentField extends Component {
     constructor(props) {
         super(props);
         
-        this.handleEditorChange = this.handleEditorChange.bind(this);
+        this.state = {editorState: createEditorStateWithText(text)};
+        
+        this.onChange = this.onChange.bind(this);
+        this.focus = this.focus.bind(this);
     }
     
-    /**
-     * TinyMCE creates an iframe and doesn't copy the written content to the hidden textarea which React sees,
-     * so we copy the written content when ever something changes in the editor
-     */
-    handleEditorChange(e) {
-        document.getElementById('methodDescription').value = e.target.getContent();
+    onChange(editorState) {
+        this.setState({editorState});
+    }
+    
+    focus() {
+        this.editor.focus();
     }
 
     /**
@@ -35,28 +141,17 @@ export class MethodContentField extends Component {
             <div className={this.props.className}>
                 <Row>
                     <Col span={24}>
-                        <FormItem>
+                        <FormItem className="editor paper-style">
                             {getFieldDecorator('methodDescription')(
                                 <Editor
-                                    init={{
-                                        plugins: 'autolink image link lists paste table',
-                                        menubar: '',
-                                        toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist indent outdent | link image | table',
-                                        height: 400,
-                                        content_css: '/css/paper-layout.css',
-                                        body_class: 'paper-style',
-                                        style_formats: [
-                                            { title: 'Heading 1', block: 'h1' },
-                                            { title: 'Heading 2', block: 'h2' },
-                                            { title: 'Heading 3', block: 'h3' },
-                                            { title: 'Text', block: 'p' }
-                                        ],
-                                        statusbar: false
-                                    }}
-                                    onChange={this.handleEditorChange}
+                                    editorState={this.state.editorState}
+                                    onChange={this.onChange}
+                                    plugins={plugins}
+                                    ref={(element) => { this.editor = element; }}
                                 />
                             )}
                         </FormItem>
+                        <Toolbar />
                     </Col>
                 </Row>
                 <FormItem>

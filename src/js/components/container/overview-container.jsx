@@ -47,7 +47,7 @@ export class OverviewContainer extends Component {
      * loading all methods when method overview is loaded
      */
     componentDidMount() {
-        fetch('http://localhost:1234/api/methods',{
+        fetch('http://localhost:8082/api/methods',{
             headers: this.reqHeader
         }).then(results => {
             return results.json();

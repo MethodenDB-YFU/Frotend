@@ -47,7 +47,7 @@ export class MethodAttributeFields extends Component {
      */
     componentDidMount() {
         // fetching the seminar types including their goals
-        fetch('http://localhost:1234/api/seminars/types',{
+        fetch('http://localhost:8081/api/seminars/types',{
             headers: this.reqHeader
         }).then(results => {
             return results.json();
@@ -61,12 +61,10 @@ export class MethodAttributeFields extends Component {
                 return options;
             });
 
-            console.log(seminarTypes);
-
             // mapping the seminar goals to the seminar-type id so when the seminar type is selected
             // only those goals can be selected which are availabel for the seminar type.
             let seminarGoals = data.map((type) => {
-                return type.seminar_goals.map((goal) => {
+                return type.goals.map((goal) => {
                     return (
                         <Option key={goal.id} value={goal.id}>{goal.name}</Option>
                     );
@@ -80,7 +78,7 @@ export class MethodAttributeFields extends Component {
         });
         
         // fetching the method types
-        fetch('http://localhost:1234/api/methods/types',{
+        fetch('http://localhost:8082/api/methods/types',{
             headers: this.reqHeader
         }).then(results => {
             return results.json();
@@ -94,7 +92,7 @@ export class MethodAttributeFields extends Component {
         });
         
         // fetching the method levels
-        fetch('http://localhost:1234/api/methods/levels',{
+        fetch('http://localhost:8082/api/methods/levels',{
             headers: this.reqHeader
         }).then(results => {
             return results.json();

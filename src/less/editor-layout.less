@@ -1,0 +1,56 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 08.07.2018, 13:00:01
+    Author     : marco
+*/
+
+@import "paper-layout.less";
+@import "~draft-js-static-toolbar-plugin/lib/plugin.css";
+// @import "~draft-js/dist/Draft.css";
+
+#root {
+    .editor {
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        cursor: text;
+        border-radius: 0 0 2px 2px;
+        margin-bottom: 2em;
+        background: #fefefe;
+
+        .public-DraftEditor-content {
+            min-height: 140px;
+        }
+    }
+    
+    .headlineButtonWrapper {
+        display: inline-block;
+
+        .headlineButton {
+            background: #fbfbfb;
+            color: #888;
+            font-size: 18px;
+            border: 0;
+            padding-top: 5px;
+            vertical-align: bottom;
+            height: 34px;
+            width: 36px;
+            
+            &:hover, &:focus {
+                background: #f3f3f3;
+            }
+        }
+    }
+}
+
+
+// Muss auf neuen Editor umgeschrieben werden...
+#methodDescription_ifr {
+    .editor-h1 {color: @yfuColorDark; font-family: 'National';}
+    .editor-h2 {color: @yfuColorLight; font-family: 'National';}
+    .editor-h3 {color: @yfuColorLight; font-family: 'National';}
+    .editor-p  {color: @textColor; font-family: 'National';}
+}

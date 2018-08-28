@@ -32,7 +32,7 @@ export default class App extends Component {
                         defaultSelectedKeys={['method']}
                         style={{lineHeight: '62px' }}
                     >
-                        <MenuItem key="method"><Link to="/">Methoden</Link></MenuItem>
+                        <MenuItem key="method"><Link to="/overview">Methoden</Link></MenuItem>
                         <MenuItem key="seminar">Seminarziele</MenuItem>
                     </Menu>
                 </Header>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Steps, Row, Col, Form, message } from 'antd';
-import { browserHistory } from 'react-router-dom';
+// import { browserHistory } from 'react-router-dom';
 import { MethodAttributeFields } from '../partials/method-attribute-fields';
 import { MethodContentField } from '../partials/method-content-field';
 import { MethodAttachmentField } from '../partials/method-attachment-field';
@@ -75,6 +75,13 @@ export class MethodForm extends Component {
         e.preventDefault();        
         this.props.form.setFieldsValue({'methodDescription': document.getElementById('methodDescription').value});
         
+        this.props.form.getFieldValue('keys').forEach((num) => {
+            // let attachment = 'attachments[' + num + ']';
+            // this.props.form.setFieldsValue({attachment: document.getElementById(attachment).value});
+            console.log(this.props.form.getFieldValue('methodAtt[0]') + '; Num:' + num);
+            // this.props.form.setFieldsValue({attachment: document.getElementById(attachment).value});
+        });
+        
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return;
@@ -83,13 +90,15 @@ export class MethodForm extends Component {
             console.log('Received values: ', values);
             
             let method_post = {
-                title: 'test',
-                content: values.methodDescription
+                title: values.title,
+                content: values.methodDescription,
+                seminar_type: {id: values.seminarType},
+                seminar_goal: values.seminarGoal,
+                method_levels: [{id: values.methodLevel}],
+                method_types: [{id: values.methodType}]
             };
-            
-            //method_post = values;
 
-            let postMethodReq = new Request('http://localhost:1234/api/methods/', {
+            let postMethodReq = new Request('http://localhost:8082/api/methods/', {
                 method: 'POST',
                 /* headers are important*/
                 headers: this.reqHeader,
@@ -106,8 +115,8 @@ export class MethodForm extends Component {
             }).then(data => {
                 console.log(data);
                 // this.props.form.resetFields();
-                browserHistory.push('/');
-                // message.success('Das Ereignis wurde erfolgreich eingetragen!');
+                // browserHistory.push('/');
+                message.success('Das Ereignis wurde erfolgreich eingetragen!');
             }).catch(error => {
                 console.log('Error:' + error);
                 message.error('Das Ereignis wurde nicht erstellt. Bitte versuche es später nochmal!');
@@ -123,7 +132,7 @@ export class MethodForm extends Component {
         /**
          * @type {number}
          */
-        const currentStep = this.state;
+        const currentStep = this.state.currentStep;
         /**
          * @type {Array.<string>}
          */
