@@ -1,26 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Row, Col, Input, Table } from 'antd';
+import { Row, Col, Input, Table, Badge } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
 
 /**
  * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
  */
-const columns = [{
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text, record) => <Link to={'/types/show/'+record.key}>{text}</Link>
-}, {
-    title: 'Category',
-    dataIndex: 'category',
-    key: 'category'
-}, {
-    title: 'Section',
-    dataIndex: 'section',
-    key: 'section'
-}];
 
 /**
  * container to display an overview of all available methods
@@ -32,6 +17,8 @@ export class TypesOverviewContainer extends Component {
         
         this.state = {
             types: [],
+            categories: [],
+            sections: [],
             tableLoading: true
         };
     }
@@ -49,15 +36,21 @@ export class TypesOverviewContainer extends Component {
                     let methodJson = {
                         key: type.id,
                         name: type.name,
-                        category: type.category,
-                        section: type.section
+                        category: type.category ? type.category : 'Unbekannt',
+                        section: type.section ? type.section : 'Unbekannt'
                     };
                     return methodJson;
                 });
-                
+
+                // filter duplicate values
+                let sections = [ ... new Set(types.map(item => item.section))];
+                let categories = [... new Set(types.map(item => item.category))]; 
+
                 // display loaded methods and remove loading-animation
                 this.setState({
                     types: types,
+                    categories: categories.sort(),
+                    sections: sections.sort(),
                     tableLoading: false
                 });
             });
@@ -69,10 +62,35 @@ export class TypesOverviewContainer extends Component {
    * @private
    */
     render() {
+
+        const columns = [{
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            sorter: (a,b) => a.name < b.name ? -1 : 1
+            // render: (text, record) => <Link to={'/types/show/'+record.key}>{text}</Link>
+        }, {
+            title: 'Kategorie',
+            dataIndex: 'category',
+            key: 'category',
+            filters: this.state.categories.map(item => ({text: item, value: item})),
+            sorter: (a, b) => a.category < b.category ? -1 : 1,
+            onFilter: (value, record) => record.category.indexOf(value) === 0,
+
+        }, {
+            title: 'Section',
+            dataIndex: 'section',
+            key: 'section',
+            filters: this.state.sections.map(item => ({text: item, value: item})),
+            sorter: (a, b) => a.section < b.section ? -1 : 1,
+            onFilter: (value, record) => record.section.indexOf(value) === 0,
+        }
+        ];
+
         /**
        * @type {ReactElement}
        */
-        const createBtn = (<Link to="/method/new">Type erstellen</Link>);
+        // const createBtn = (<Link to="/method/new">Type erstellen</Link>);
       
         return (
             <div>
@@ -81,10 +99,10 @@ export class TypesOverviewContainer extends Component {
                         <h1>Seminartypen Übersicht</h1>
                     </Col>
                     <Col span={12}>
-                        <Input size="large" placeholder="VBT" addonAfter={createBtn} />
+                        <Input placeholder="VBT" addonBefore="Suche" onChange={this.handleFilter}/>
                     </Col>
                 </Row>
-                <Table columns={columns} dataSource={this.state.types} loading={this.state.tableLoading} />
+                <Table columns={columns} dataSource={this.state.types} loading={this.state.tableLoading} size="small"/>
             </div>
         );
     }

@@ -8,7 +8,7 @@ export const urlHelper = {
     buildFetchParams
 };
 
-let USE_BEARER = false;
+let USE_BEARER = true;
 
 function buildURL(service, parameter = null) {
     const services = urlConstants[service.service];
@@ -59,7 +59,7 @@ function buildHeader() {
         //'Authorization' : 'Bearer'
         'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
     };
-    if(USE_BEARER === 'true') {
+    if(USE_BEARER === true) {
         if(userToken)
             header = { ...header,
                 'Authorization' : 'Bearer '+userToken

@@ -14,13 +14,13 @@ import { MethodFormContainer } from '../container/method-form-container';
 import { MethodDetailContainer } from '../container/method-detail-container';
 import { LogonFormContainer } from '../container/logon-container';
 import { CartContainer } from '../container/method-cart-container';
-import { TypesOverviewContainer} from '../container/types-overview-container';
 import { RolesOverviewContainer} from '../container/roles-overview-container';
 import { GoalesOverviewContainer} from '../container/goals-overview-container';
 import { GoalFormContainer} from '../container/goal-form-container';
 import { TypesDetailContainer } from '../container/types-detail-container';
 import { RoleDetailContainer} from '../container/roles-detail-container';
 import { CallbackPage} from '../container/callback_page';
+import { SeminarsContainer } from '../container/seminars-container';
 //import { NOTINITIALIZED } from 'dns';
 //import { NotFound} from '../container/NotFound';
 
@@ -71,7 +71,7 @@ export default class RouterComponentPart extends Component {
                         <Route path="/method/show/:id" component={MethodDetailContainer}/>
                         <Route path="/cart" exact component={CartContainer}/>
                         <Route path="/logon" exact component={LogonFormContainer}/>
-                        <Route path="/seminar/type" exact component={TypesOverviewContainer}/>
+                        <Route path="/seminar/type" exact component={SeminarsContainer}/>
                         <Route path="/seminar/role" exact component={RolesOverviewContainer}/>
                         <Route path="/seminar/goal" exact component={GoalesOverviewContainer}/>
                         <Route path="/goals/new" exact component={GoalFormContainer}/>
