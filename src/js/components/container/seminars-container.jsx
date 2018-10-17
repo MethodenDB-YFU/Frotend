@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import { Tabs } from 'antd';
+import { history } from '../../helpers';
 import { TypesOverviewContainer} from './types-overview-container';
 import { GoalsOverviewContainer} from './goals-overview-container';
 import { RolesOverviewContainer} from './roles-overview-container';
 
-
 const TabPane = Tabs.TabPane;
-
-/**
- * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
- */
 
 /**
  * container to display an overview of all available methods
@@ -18,12 +14,25 @@ const TabPane = Tabs.TabPane;
 export class SeminarsContainer extends Component {
     constructor(props) {
         super(props);
-        
-        this.state = {
-        };
+
+        this.onTabPaneClick = this.onTabPaneClick.bind(this);
+
+    }
+
+    onTabPaneClick( key ) {
+        switch (key) {
+        case 'type':
+            history.push('/seminar/type');
+            break;
+        case 'goal':
+            history.push('/seminar/goal');
+            break;
+        case 'role':
+            history.push('/seminar/role');
+            break;
+        }
     }
   
-
     /**
    * render method
    * @return {ReactElement} markup
@@ -33,16 +42,16 @@ export class SeminarsContainer extends Component {
         /**
        * @type {ReactElement}
        */
-      
         return (
             <div>
                 <Tabs
-                    defaultActiveKey="1"
+                    defaultActiveKey={this.props.activeTab}
                     tabPosition='left'
+                    onTabClick={this.onTabPaneClick.bind(this)}
                 >
-                    <TabPane tab="Seminartypen" key="1"><TypesOverviewContainer /></TabPane>
-                    <TabPane tab="Seminarziele" key="2"><GoalsOverviewContainer /></TabPane>
-                    <TabPane tab="Seminarrollen" key="3"><RolesOverviewContainer /></TabPane>
+                    <TabPane tab="Seminartypen" key="type"><TypesOverviewContainer /></TabPane>
+                    <TabPane tab="Seminarziele" key="goal"><GoalsOverviewContainer /></TabPane>
+                    <TabPane tab="Seminarrollen" key="role"><RolesOverviewContainer /></TabPane>
                 </Tabs>
             </div>
         );
