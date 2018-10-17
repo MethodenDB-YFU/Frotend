@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { Row, Col, Input, Table } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
@@ -11,7 +11,7 @@ const columns = [{
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    render: (text, record) => <Link to={'/goals/show/'+record.key}>{text}</Link>
+    //render: (text, record) => <Link to={'/goals/show/'+record.key}>{text}</Link>
 }, {
     title: 'Beschreibung',
     dataIndex: 'explanation',
@@ -22,7 +22,7 @@ const columns = [{
  * container to display an overview of all available methods
  * @extends Component
  */
-export class GoalesOverviewContainer extends Component {
+export class GoalsOverviewContainer extends Component {
     constructor(props) {
         super(props);
         
@@ -49,7 +49,7 @@ export class GoalesOverviewContainer extends Component {
                     };
                     return methodJson;
                 });
-                
+                                
                 // display loaded methods and remove loading-animation
                 this.setState({
                     goals: goals,
@@ -66,9 +66,7 @@ export class GoalesOverviewContainer extends Component {
     render() {
         /**
        * @type {ReactElement}
-       */
-        const createBtn = (<Link to="/goals/new">Ziele erstellen</Link>);
-      
+       */      
         return (
             <div>
                 <Row>
@@ -76,13 +74,13 @@ export class GoalesOverviewContainer extends Component {
                         <h1>Seminarziele Übersicht</h1>
                     </Col>
                     <Col span={12}>
-                        <Input size="large" placeholder="Kommunikation" addonAfter={createBtn} />
+                        <Input placeholder="Kommunikation" addonBefore='Suche' />
                     </Col>
                 </Row>
-                <Table columns={columns} dataSource={this.state.goals} loading={this.state.tableLoading} />
+                <Table columns={columns} dataSource={this.state.goals} loading={this.state.tableLoading} size="small"/>
             </div>
         );
     }
 }
 
-GoalesOverviewContainer.displayName = 'Seminarziehle Overview Container';
+GoalsOverviewContainer.displayName = 'Seminarziehle Overview Container';

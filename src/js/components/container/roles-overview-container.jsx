@@ -1,22 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Row, Col, Input, Table } from 'antd';
+import { Row, Col, Input, Table, Tag } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
 
-/**
- * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
- */
-const columns = [{
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text, record) => <Link to={'/roles/show/'+record.key}>{text}</Link>
-}, {
-    title: 'Rollen Typ',
-    dataIndex: 'role_type',
-    key: 'role_type'
-}];
+
 
 /**
  * container to display an overview of all available methods
@@ -28,6 +15,7 @@ export class RolesOverviewContainer extends Component {
         
         this.state = {
             roles: [],
+            role_types: [],
             tableLoading: true
         };
     }
@@ -50,9 +38,13 @@ export class RolesOverviewContainer extends Component {
                     return methodJson;
                 });
                 
+                // filter duplicate values
+                let role_types = [ ... new Set(roles.map(item => item.role_type))];
+
                 // display loaded methods and remove loading-animation
                 this.setState({
                     roles: roles,
+                    role_types: role_types,
                     tableLoading: false
                 });
             });
@@ -64,11 +56,32 @@ export class RolesOverviewContainer extends Component {
    * @private
    */
     render() {
+
+        /**
+         * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
+         */
+        const columns = [{
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            sorter: (a, b) => a.name < b.name ? -1 : 1,
+        }, {
+            title: 'Rollen Typ',
+            dataIndex: 'role_type',
+            key: 'role_type',
+            filters: this.state.role_types.map(item => ({text: item, value: item})),
+            sorter: (a, b) => a.role_type < b.role_type ? -1 : 1,
+            onFilter: (value, record) => record.role_type.indexOf(value) === 0,
+            render: role_type => (
+                <span>
+                    {<Tag color="blue" key={role_type}>{role_type}</Tag>}
+                </span>
+            )
+        }];
+
         /**
        * @type {ReactElement}
-       */
-        const createBtn = (<Link to="/roles/new">Rolle erstellen</Link>);
-      
+       */      
         return (
             <div>
                 <Row>
@@ -76,10 +89,10 @@ export class RolesOverviewContainer extends Component {
                         <h1>Seminarollen Übersicht</h1>
                     </Col>
                     <Col span={12}>
-                        <Input size="large" placeholder="Leiter" addonAfter={createBtn} />
+                        <Input placeholder="Leiter" addonBefore='Suche' />
                     </Col>
                 </Row>
-                <Table columns={columns} dataSource={this.state.roles} loading={this.state.tableLoading} />
+                <Table columns={columns} dataSource={this.state.roles} loading={this.state.tableLoading} size="small"/>
             </div>
         );
     }

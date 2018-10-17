@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
 import { Tabs } from 'antd';
 import { TypesOverviewContainer} from './types-overview-container';
+import { GoalsOverviewContainer} from './goals-overview-container';
+import { RolesOverviewContainer} from './roles-overview-container';
 
 
 const TabPane = Tabs.TabPane;
@@ -19,8 +20,6 @@ export class SeminarsContainer extends Component {
         super(props);
         
         this.state = {
-            types: [],
-            tableLoading: true
         };
     }
   
@@ -42,8 +41,8 @@ export class SeminarsContainer extends Component {
                     tabPosition='left'
                 >
                     <TabPane tab="Seminartypen" key="1"><TypesOverviewContainer /></TabPane>
-                    <TabPane tab="Seminarziele" key="2">Content of tab 2</TabPane>
-                    <TabPane tab="Seminarrollen" key="3">Content of tab 3</TabPane>
+                    <TabPane tab="Seminarziele" key="2"><GoalsOverviewContainer /></TabPane>
+                    <TabPane tab="Seminarrollen" key="3"><RolesOverviewContainer /></TabPane>
                 </Tabs>
             </div>
         );
