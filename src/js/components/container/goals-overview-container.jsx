@@ -45,7 +45,6 @@ export class GoalsOverviewContainer extends Component {
     };
 
     updateData(newData) {
-        console.log(newData);
         this.setState({
             data: newData,
         });

@@ -3,6 +3,7 @@ import { Row, Col, Input, Table, Tag } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
 
+const Search = Input.Search;
 
 
 /**
@@ -18,7 +19,25 @@ export class RolesOverviewContainer extends Component {
             role_types: [],
             tableLoading: true
         };
+
+        this.handleSearch = this.handleSearch.bind(this);
+        this.updateData = this.updateData.bind(this);
     }
+
+    handleSearch(searchText) {
+        const filtered = this.state.roles.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+        this.updateData(filtered);
+    };
+
+    updateData(newData) {
+        // filter duplicate values
+        let role_types = [ ... new Set(newData.map(item => item.role_type))];
+
+        this.setState({
+            data: newData,
+            role_types: role_types
+        });
+    };
   
     /**
    * loading all methods when method overview is loaded
@@ -38,13 +57,11 @@ export class RolesOverviewContainer extends Component {
                     return methodJson;
                 });
                 
-                // filter duplicate values
-                let role_types = [ ... new Set(roles.map(item => item.role_type))];
+                this.updateData(roles);
 
                 // display loaded methods and remove loading-animation
                 this.setState({
                     roles: roles,
-                    role_types: role_types,
                     tableLoading: false
                 });
             });
@@ -74,7 +91,7 @@ export class RolesOverviewContainer extends Component {
             onFilter: (value, record) => record.role_type.indexOf(value) === 0,
             render: role_type => (
                 <span>
-                    {<Tag color="#642869" key={role_type}>{role_type}</Tag>}
+                    {<Tag color="purple" key={role_type}>{role_type}</Tag>}
                 </span>
             )
         }];
@@ -89,10 +106,10 @@ export class RolesOverviewContainer extends Component {
                         <h1>Seminarollen Übersicht</h1>
                     </Col>
                     <Col span={12}>
-                        <Input placeholder="Leiter" addonBefore='Suche' />
+                        <Search placeholder="Leiter" addonBefore='Suche' onSearch={this.handleSearch}/>
                     </Col>
                 </Row>
-                <Table columns={columns} dataSource={this.state.roles} loading={this.state.tableLoading} size="small"/>
+                <Table columns={columns} dataSource={this.state.data} loading={this.state.tableLoading} size="small"/>
             </div>
         );
     }
