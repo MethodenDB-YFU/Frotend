@@ -39,7 +39,7 @@ export class SeminarsContainer extends Component {
      * @private
      */
     render() {
-      /**
+        /**
        * @type {ReactElement}
        */
         return (

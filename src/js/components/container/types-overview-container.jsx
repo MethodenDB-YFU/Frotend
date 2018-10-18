@@ -67,9 +67,6 @@ export class TypesOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        // console.log(searchText);
-        // this.setState({searchText: searchText});
-
         const filtered = this.state.types.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
         this.updateData(filtered);
     };

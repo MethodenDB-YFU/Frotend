@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 // import { Link } from 'react-router-dom';
-import { Row, Col, Input, Table } from 'antd';
+import { Row, Col, Input, Table, Badge, Icon } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
+
+const Search = Input.Search;
 
 /**
  * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
  */
 const columns = [{
+    title: <Icon type="key" theme="outlined" />,
+    dataIndex: 'required',
+    key: 'required',
+    render: (required) => <span><Badge status={required ? 'error' : 'success'} /></span>,
+}, {
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    //render: (text, record) => <Link to={'/goals/show/'+record.key}>{text}</Link>
-}, {
-    title: 'Beschreibung',
-    dataIndex: 'explanation',
-    key: 'explanation'
+    sorter: (a,b) => a.name < b.name ? -1 : 1
 }];
 
 /**
@@ -30,7 +33,22 @@ export class GoalsOverviewContainer extends Component {
             goals: [],
             tableLoading: true
         };
+
+        this.handleSearch = this.handleSearch.bind(this);
+        this.updateData = this.updateData.bind(this);
     }
+
+    handleSearch(searchText) {
+        const filtered = this.state.goals.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+        this.updateData(filtered);
+    };
+
+    updateData(newData) {
+        console.log(newData);
+        this.setState({
+            data: newData,
+        });
+    };
   
     /**
    * loading all methods when method overview is loaded
@@ -45,10 +63,13 @@ export class GoalsOverviewContainer extends Component {
                     let methodJson = {
                         key: goal.id,
                         name: goal.name,
-                        explanation: goal.explanation
+                        explanation: goal.explanation,
+                        required: goal.required
                     };
                     return methodJson;
                 });
+
+                this.updateData(goals);
                                 
                 // display loaded methods and remove loading-animation
                 this.setState({
@@ -74,10 +95,10 @@ export class GoalsOverviewContainer extends Component {
                         <h1>Seminarziele Übersicht</h1>
                     </Col>
                     <Col span={12}>
-                        <Input placeholder="Kommunikation" addonBefore='Suche' />
+                        <Search placeholder="Kommunikation" addonBefore='Suche' onSearch={this.handleSearch}/>
                     </Col>
                 </Row>
-                <Table columns={columns} dataSource={this.state.goals} loading={this.state.tableLoading} size="small"/>
+                <Table columns={columns} expandedRowRender={goal => <p style={{ margin: 0 }}> {goal.explanation || 'Hier könnte eine Erklärung stehen.'}</p>} dataSource={this.state.data} loading={this.state.tableLoading} size="small"/>
             </div>
         );
     }
