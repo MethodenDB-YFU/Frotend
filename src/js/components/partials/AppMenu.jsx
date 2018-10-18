@@ -11,7 +11,6 @@ import Logo from '../../../images/logo/logo.js';
 import '../../../less/styles.less';
 
 const MenuItem = Menu.Item;
-const SubMenu = Menu.SubMenu;
 /**
  * form fields to describe the method with some meta data
  * @module components/partials/AppMenu
@@ -103,27 +102,19 @@ export class AppMenuComponent extends Component {
     onMenuClick ( { key } ) {
     /* { item, key, selectedKeys } */
         //console.log('onMenuClick:e', key);
+        this.setState({selectedKeys: [key]});
         switch (key) {
         case 'method':
             history.push('/');
             break;
         case 'seminar':
-            // history.push('/');
+            history.push('/seminar');
             break;
         case 'cart':
             history.push('/cart');
             break;
         case 'logon':
             this.gotoLogoff();
-            break;
-        case 'seminartype':
-            history.push('/seminar/type');
-            break;
-        case 'seminarrole':
-            history.push('/seminar/role');
-            break;
-        case 'seminargoal':
-            history.push('/seminar/goal');
             break;
         }
     }
@@ -154,14 +145,11 @@ export class AppMenuComponent extends Component {
                     theme="light"
                     mode="horizontal"
                     defaultSelectedKeys={['method']}
+                    selectedKeys={this.state.selectedKeys}
                     style={{lineHeight: '62px' }}
                 >
                     <MenuItem key="method">Methoden</MenuItem>
-                    <SubMenu key="sub1" title='Seminar'>
-                        <MenuItem key="seminartype">Typen</MenuItem>
-                        <MenuItem key="seminargoal">Ziele</MenuItem>
-                        <MenuItem key="seminarrole">Rollen</MenuItem>
-                    </SubMenu>
+                    <MenuItem key="seminar">Seminar</MenuItem>
                 </Menu>
             </div>
             <div className="yfu-menu-right">
