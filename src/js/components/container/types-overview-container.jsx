@@ -3,6 +3,8 @@ import { Row, Col, Input, Table } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
 
+const Search = Input.Search;
+
 /**
  * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
  */
@@ -56,13 +58,37 @@ export class TypesOverviewContainer extends Component {
             types: [],
             categories: [],
             sections: [],
-            tableLoading: true
+            tableLoading: true,
+            searchText: '',
         };
+
+        this.handleSearch = this.handleSearch.bind(this);
+        this.updateData = this.updateData.bind(this);
     }
+
+    handleSearch(searchText) {
+        // console.log(searchText);
+        // this.setState({searchText: searchText});
+
+        const filtered = this.state.types.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+        this.updateData(filtered);
+    };
+
+    updateData(newData) {
+        // filter duplicate values
+        let sections = [ ... new Set(newData.map(item => item.section))];
+        let categories = [... new Set(newData.map(item => item.category))]; 
+
+        this.setState({
+            data: newData,
+            categories: categories.sort(),
+            sections: sections.sort(),
+        });
+    };
   
     /**
-   * loading all methods when method overview is loaded
-   */
+     * loading all methods when method overview is loaded
+     */
     componentDidMount() {
         const fetchParams = urlHelper.buildFetchParams(urlConstants.getTypes);
         fetch(fetchParams.url, fetchParams.request)
@@ -79,25 +105,21 @@ export class TypesOverviewContainer extends Component {
                     return methodJson;
                 });
 
-                // filter duplicate values
-                let sections = [ ... new Set(types.map(item => item.section))];
-                let categories = [... new Set(types.map(item => item.category))]; 
+                this.updateData(types);
 
                 // display loaded methods and remove loading-animation
                 this.setState({
                     types: types,
-                    categories: categories.sort(),
-                    sections: sections.sort(),
                     tableLoading: false
                 });
             });
     }
 
     /**
-   * render method
-   * @return {ReactElement} markup
-   * @private
-   */
+     * render method
+     * @return {ReactElement} markup
+     * @private
+     */
     render() {
 
         const columns = [{
@@ -105,7 +127,6 @@ export class TypesOverviewContainer extends Component {
             dataIndex: 'name',
             key: 'name',
             sorter: (a,b) => a.name < b.name ? -1 : 1
-            // render: (text, record) => <Link to={'/types/show/'+record.key}>{text}</Link>
         }, {
             title: 'Kategorie',
             dataIndex: 'category',
@@ -121,14 +142,11 @@ export class TypesOverviewContainer extends Component {
             filters: this.state.sections.map(item => ({text: item, value: item})),
             sorter: (a, b) => a.section < b.section ? -1 : 1,
             onFilter: (value, record) => record.section.indexOf(value) === 0,
-        }
-        ];
+        }];
 
         /**
-       * @type {ReactElement}
-       */
-        // const createBtn = (<Link to="/method/new">Type erstellen</Link>);
-      
+         * @type {ReactElement}
+         */
         return (
             <div>
                 <Row>
@@ -136,10 +154,13 @@ export class TypesOverviewContainer extends Component {
                         <h1>Seminartypen Übersicht</h1>
                     </Col>
                     <Col span={12}>
-                        <Input placeholder="VBT" addonBefore="Suche" onChange={this.handleFilter}/>
+                        <Search 
+                            placeholder="VBT" 
+                            addonBefore="Suche" 
+                            onSearch={this.handleSearch}/>
                     </Col>
                 </Row>
-                <Table columns={columns} dataSource={this.state.types} loading={this.state.tableLoading} size="small"/>
+                <Table columns={columns} dataSource={this.state.data} loading={this.state.tableLoading} size="small"/>
             </div>
         );
     }

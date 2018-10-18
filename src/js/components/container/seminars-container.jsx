@@ -19,7 +19,7 @@ export class SeminarsContainer extends Component {
 
     }
 
-    onTabPaneClick( key ) {
+    onTabPaneClick(key) {
         switch (key) {
         case 'type':
             history.push('/seminar/type');
@@ -34,12 +34,12 @@ export class SeminarsContainer extends Component {
     }
   
     /**
-   * render method
-   * @return {ReactElement} markup
-   * @private
-   */
+     * render method
+     * @return {ReactElement} markup
+     * @private
+     */
     render() {
-        /**
+      /**
        * @type {ReactElement}
        */
         return (
