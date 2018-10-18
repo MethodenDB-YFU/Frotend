@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import { Link } from 'react-router-dom';
-import { Row, Col, Input, Table, Badge, Icon } from 'antd';
+import { Row, Col, Input, Table, Badge, Icon, Tooltip } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
 
@@ -10,9 +10,10 @@ const Search = Input.Search;
  * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
  */
 const columns = [{
-    title: <Icon type="key" theme="outlined" />,
+    title: <Tooltip title="Verpflichtend"><Icon type="key" theme="outlined" /></Tooltip>,
     dataIndex: 'required',
     key: 'required',
+    width: 40,
     render: (required) => <span><Badge status={required ? 'error' : 'success'} /></span>,
 }, {
     title: 'Name',
