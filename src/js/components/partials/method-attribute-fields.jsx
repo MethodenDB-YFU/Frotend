@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Select, Button, Input } from 'antd';
+import { Row, Col, Form, Select } from 'antd';
+import { urlHelper } from '../../helpers';
+import {urlConstants} from '../../constants';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -24,8 +26,8 @@ export class MethodAttributeFields extends Component {
          * @property {string} seminarGoalsPlaceholder placeholder for seminar goals select
          */
         this.state = {
-            seminarTypes: '',
-            seminarGoals: '',
+            seminarTypes: [],
+            seminarGoals: [],
             methodTypes: '',
             methodLevels: '',
             selectedSeminar: '',
@@ -35,69 +37,74 @@ export class MethodAttributeFields extends Component {
         
         this.onSelectSeminarType = this.onSelectSeminarType.bind(this);
         this.onDeselectSeminarType = this.onDeselectSeminarType.bind(this);
+        this.buildOption = this.buildOption.bind(this);
+        this.extractGoals = this.extractGoals.bind(this);
     }
     
+
+    buildOption(data) {
+        let options = data.map((item) => {
+            return (
+                <Option key={item.id} value={item.id}>{item.name}</Option>
+            );              
+        });
+        return options;
+    }
+
+    extractGoals(seminarType) {
+        let goals = seminarType.map(type => type.goals);
+        return goals;
+    }
+
     /**
      * load the options for the select-fields
      */
     componentDidMount() {
         // fetching the seminar types including their goals
-        fetch('http://localhost:1234/api/seminars/types')
+        const fetchParams = urlHelper.buildFetchParams(urlConstants.getTypes);
+        fetch(fetchParams.url, fetchParams.request)
             .then(results => {
                 return results.json();
             }).then(data => {
-                let i = 0;
-                let seminarTypes = data.map((type) => {
-                    let options = (
-                        <Option key={i} value={type.id}>{type.name}</Option>
-                    );
-                    i++;
-                    return options;
-                });
-                
-                console.log(seminarTypes);
-                
-                // mapping the seminar goals to the seminar-type id so when the seminar type is selected
-                // only those goals can be selected which are availabel for the seminar type.
-                let seminarGoals = data.map((type) => {
-                    return type.seminar_goals.map((goal) => {
-                        return (
-                            <Option key={goal.id} value={goal.id}>{goal.name}</Option>
-                        );
-                    });
+                let types = data.map((type) => {
+                    let methodJson = {
+                        id: type.id,
+                        name: type.name,
+                        goals: type.goals
+                    };
+                    return methodJson;
                 });
                 
                 this.setState({
-                    seminarTypes: seminarTypes,
-                    seminarGoals: seminarGoals
+                    seminarTypes: types
                 });
             });
         
-        // fetching the method types
-        fetch('http://localhost:1234/api/methods/types')
-            .then(results => {
-                return results.json();
-            }).then(data => {
-                let methodTypes = data.map((type) => {
-                    return (
-                        <Option key={type.id} value={type.id}>{type.name}</Option>
-                    );
-                });
-                this.setState({methodTypes: methodTypes});
-            });
+        // // fetching the method types
+        // fetch('http://localhost:1234/api/methods/types')
+        //     .then(results => {
+        //         return results.json();
+        //     }).then(data => {
+        //         let methodTypes = data.map((type) => {
+        //             return (
+        //                 <Option key={type.id} value={type.id}>{type.name}</Option>
+        //             );
+        //         });
+        //         this.setState({methodTypes: methodTypes});
+        //     });
         
-        // fetching the method levels
-        fetch('http://localhost:1234/api/methods/levels')
-            .then(results => {
-                return results.json();
-            }).then(data => {
-                let methodLevels = data.map((level) => {
-                    return (
-                        <Option key={level.id} value={level.id}>{level.name}</Option>
-                    );
-                });
-                this.setState({methodLevels: methodLevels});
-            });
+        // // fetching the method levels
+        // fetch('http://localhost:1234/api/methods/levels')
+        //     .then(results => {
+        //         return results.json();
+        //     }).then(data => {
+        //         let methodLevels = data.map((level) => {
+        //             return (
+        //                 <Option key={level.id} value={level.id}>{level.name}</Option>
+        //             );
+        //         });
+        //         this.setState({methodLevels: methodLevels});
+        //     });
     }
     
     /**
@@ -107,7 +114,11 @@ export class MethodAttributeFields extends Component {
      * @param {ReactElement} option
      */
     onSelectSeminarType(value, option) {
+        let type = this.state.seminarTypes.filter(item => item.id == value);
+        let goals = type.map(item => item.goals)[0];
+
         this.setState({
+            seminarGoals: goals,
             selectedSeminar: option.key,
             seminarGoalsDisabled: false,
             seminarGoalsPlaceholder: 'Bitte erst ein Seminar auswählen!'
@@ -134,74 +145,60 @@ export class MethodAttributeFields extends Component {
      * @private
      */
     render() {
-        const {getFieldDecorator} = this.props.form;
+        // const {getFieldDecorator} = this.props.form;
         
         return (
             <div className={this.props.className}>
-                <Row>
-                    <Col span={24}>
-                        <FormItem label="Methodenname">
-                            {getFieldDecorator('methodName')(
-                                <Input placeholder="Methodenname" />
-                            )}
-                        </FormItem>
-                    </Col>
-                </Row>
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem label="Seminar">
-                            {getFieldDecorator('seminarTyp')(
-                                <Select
-                                    placeholder="Seminar auswählen..."
-                                    notFoundContent="Es existieren keine Seminare"
-                                    onSelect={this.onSelectSeminarType}
-                                    onDeselect={this.onDeselectSeminarType} >
-                                    {this.state.seminarTypes}
-                                </Select>
-                            )}
+                            <Select
+                                showSearch
+                                placeholder="Seminar auswählen..."
+                                notFoundContent="Es existieren keine Seminare"
+                                onSelect={this.onSelectSeminarType}
+                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                optionFilterProp="children"
+                                onDeselect={this.onDeselectSeminarType} >
+                                {this.buildOption(this.state.seminarTypes)}
+                            </Select>
                         </FormItem>
                     </Col>
                     <Col span={8}>
                         <FormItem label="Typ">
-                            {getFieldDecorator('methodTyp')(
-                                <Select
-                                    placeholder="Methodentyp auswählen..."
-                                    notFoundContent="Es existieren keine Methodenypen" >
-                                    {this.state.methodTypes}
-                                </Select>
-                            )}
+                            <Select
+                                placeholder="Methodentyp auswählen..."
+                                notFoundContent="Es existieren keine Methodenypen" >
+                                {this.state.methodTypes}
+                            </Select>
                         </FormItem>
                     </Col>
                     <Col span={8}>
                         <FormItem label="Level">
-                            {getFieldDecorator('methodLevel')(
-                                <Select
-                                    placeholder="Level auswählen..."
-                                    notFoundContent="Es existieren keine Level">
-                                    {this.state.methodLevels}
-                                </Select>
-                            )}
+                            <Select
+                                placeholder="Level auswählen..."
+                                notFoundContent="Es existieren keine Level">
+                                {this.state.methodLevels}
+                            </Select>
                         </FormItem>
                     </Col>
                 </Row>
                 <Row>
                     <Col span={24}>
                         <FormItem label="Seminarziele">
-                            {getFieldDecorator('seminarGoal')(
-                                <Select
-                                    mode="multiple"
-                                    disabled={this.state.seminarGoalsDisabled}
-                                    placeholder={this.state.seminarGoalsPlaceholder}
-                                    notFoundContent="Es existieren keine Seminarziele">
-                                    {this.state.seminarGoals[this.state.selectedSeminar]}
-                                </Select>
-                            )}
+                            <Select
+                                showSearch
+                                mode="multiple"
+                                disabled={this.state.seminarGoalsDisabled}
+                                placeholder={this.state.seminarGoalsPlaceholder}
+                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                optionFilterProp="children"
+                                notFoundContent="Es existieren keine Seminarziele">
+                                {this.buildOption(this.state.seminarGoals)}
+                            </Select>
                         </FormItem>
                     </Col>
                 </Row>
-                <FormItem>
-                    <Button className="next-step" type="primary" onClick={this.props.nextStep}>Weiter</Button>
-                </FormItem>
             </div>
         );
     }

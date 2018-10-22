@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Steps, Row, Col, Form } from 'antd';
+import { Steps, Row, Col, Form, Button, Icon } from 'antd';
 import { MethodAttributeFields } from '../partials/method-attribute-fields';
 import { MethodContentField } from '../partials/method-content-field';
 import { MethodAttachmentField } from '../partials/method-attachment-field';
@@ -8,6 +8,20 @@ import { MethodAttachmentField } from '../partials/method-attachment-field';
  * @type {Steps.Step}
  */
 const Step = Steps.Step;
+
+const steps = [{
+    title: 'Inhalt',
+    content: <MethodContentField/>,
+    icon: 'form'
+}, {
+    title: 'Anhänge',
+    content: <MethodAttachmentField/>,
+    icon: 'book'
+}, {
+    title: 'Metadaten',
+    content: <MethodAttributeFields/>,
+    icon: 'tags'
+}];
 
 /**
  * form to generate a new method
@@ -28,7 +42,6 @@ export class MethodForm extends Component {
         
         this.nextStep = this.nextStep.bind(this);
         this.prevStep = this.prevStep.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     /**
@@ -42,22 +55,22 @@ export class MethodForm extends Component {
      * navigating one step forward in the method form
      * @param {MouseEvent} e 
      */
-    nextStep(e) {
-        e.preventDefault();
-        const currentStep = this.state.currentStep;
+    nextStep() {
+        // e.preventDefault();
+        const currentStep = this.state.currentStep + 1;
         
-        this.setState({currentStep: currentStep + 1});
+        this.setState({currentStep: currentStep});
     }
     
     /**
      * navigating one step back in the method form
      * @param {MouseEvent} e 
      */
-    prevStep(e) {
-        e.preventDefault();
-        const currentStep = this.state.currentStep;
+    prevStep() {
+        // e.preventDefault();
+        const currentStep = this.state.currentStep - 1;
         
-        this.setState({currentStep: currentStep - 1});
+        this.setState({currentStep: currentStep});
     }
     
     /**
@@ -85,20 +98,8 @@ export class MethodForm extends Component {
         /**
          * @type {number}
          */
-        const currentStep = this.state;
-        /**
-         * @type {Array.<string>}
-         */
-        const attributeState  = ['', 'hide', 'hide'];
-        /**
-         * @type {Array.<string>}
-         */
-        const contentState    = ['hide', '', 'hide'];
-        /**
-         * @type {Array.<string>}
-         */
-        const attachmentState = ['hide', 'hide', ''];
-
+        const { currentStep } = this.state;
+        
         return (
             <div>
                 <Row>
@@ -109,28 +110,31 @@ export class MethodForm extends Component {
                 <Row>
                     <Col span={10} offset={7}>
                         <Steps current={currentStep}>
-                            <Step title="Metadaten" />
-                            <Step title="Inhalt" />
-                            <Step title="Anhänge" />
+                            {steps.map(item => <Step key={item.title} title={item.title} icon={<Icon type={item.icon} theme="outlined" />} />)}
                         </Steps>
                     </Col>
                 </Row>
                 <Form layout="vertical" onSubmit={this.handleSubmit}>
-                    <MethodAttributeFields
-                        className={attributeState[currentStep]}
-                        form={this.props.form}
-                        nextStep={this.nextStep}
-                        prevStep={this.prevStep} />
-                    <MethodContentField
-                        className={contentState[currentStep]}
-                        form={this.props.form}
-                        nextStep={this.nextStep}
-                        prevStep={this.prevStep} />
-                    <MethodAttachmentField
-                        className={attachmentState[currentStep]}
-                        form={this.props.form}
-                        prevStep={this.prevStep} />
+                    <div className="steps-content">{steps[currentStep].content}</div>
                 </Form>
+                <div className="steps-action">
+                    {
+                        currentStep < steps.length - 1
+                        && <Button type="primary" onClick={() => this.nextStep()}>Weiter</Button>
+                    }
+                    {
+                        currentStep === steps.length - 1
+                        && <Button type="primary" onClick={() => console.log('Processing complete!')}>Speichern</Button>
+                    }
+                    {
+                        currentStep > 0
+                        && (
+                            <Button style={{ marginLeft: 8 }} onClick={() => this.prevStep()}>
+                            Zurück
+                            </Button>
+                        )
+                    }                   
+                </div>
             </div>
         );
     }

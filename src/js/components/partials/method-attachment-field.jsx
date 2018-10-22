@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Row, Col, Upload, Icon, Button, message } from 'antd';
+import { Form, Row, Col, Upload, Icon, message } from 'antd';
 
 const Dragger = Upload.Dragger;
 const FormItem = Form.Item;
@@ -37,27 +37,20 @@ export class MethodAttachmentField extends Component {
      * @private
      */
     render() {
-        const {getFieldDecorator} = this.props.form;
 
         return (
             <div className={this.props.className}>
                 <Row>
                     <Col span={24}>
                         <FormItem>
-                            {getFieldDecorator('methodAttachments')(
-                                <Dragger {...draggerProps}>
-                                    <p className="ant-upload-drag-icon"><Icon type="inbox" /></p>
-                                    <p className="ant-upload-text">Klick oder zieh eine Datei in diesen Bereich zum Hochladen</p>
-                                    <p className="ant-upload-hint">Es können ein oder mehrere Dateien hochgeladen werden.</p>
-                                </Dragger>
-                            )}
+                            <Dragger {...draggerProps}>
+                                <p className="ant-upload-drag-icon"><Icon type="inbox" /></p>
+                                <p className="ant-upload-text">Klick oder zieh eine Datei in diesen Bereich zum Hochladen</p>
+                                <p className="ant-upload-hint">Es können ein oder mehrere Dateien hochgeladen werden.</p>
+                            </Dragger>
                         </FormItem>
                     </Col>
                 </Row>
-                <FormItem>
-                    <Button className="next-step" type="primary" htmlType="submit">Speichern</Button>
-                    <Button onClick={this.props.prevStep}>Zurück</Button>
-                </FormItem>
             </div>
         );
     }
