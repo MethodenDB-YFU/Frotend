@@ -6,47 +6,6 @@ import {urlConstants} from '../../constants';
 const Search = Input.Search;
 
 /**
- * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
- */
-
-
-// const expandedRowRender = () => {
-//     const columns = [{
-//         title: 'Required',
-//         key: 'required',
-//         render: () => <span><Badge status="error" /></span>
-//     }, {
-//         title: 'Name', 
-//         dataIndex: 'name',
-//         key: 'name'
-//     }, {
-//         title: 'Beschreibung',
-//         dataIndex: 'explanation',
-//         key: 'explanation'
-//     }];
-
-//     const data = [];
-//     for (let i = 0; i<4; i++) {
-//         data.push({
-//             key: i,
-//             name: 'Ziel',
-//             required: (i % 2 == 0) ? true : false,
-//             explanation: 'Foo bar lah blah'
-//         });
-//     }
-
-//     return(
-//         <Table
-//             columns={columns}
-//             dataSource={data}
-//             pagination={false}
-//             scroll={{y:100}}
-//             size="small"
-//         />
-//     ); 
-// };
-
-/**
  * container to display an overview of all available methods
  * @extends Component
  */

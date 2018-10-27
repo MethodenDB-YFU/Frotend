@@ -104,4 +104,4 @@ export class GoalsOverviewContainer extends Component {
     }
 }
 
-GoalsOverviewContainer.displayName = 'Seminarziehle Overview Container';
+GoalsOverviewContainer.displayName = 'Seminarziele Overview Container';
