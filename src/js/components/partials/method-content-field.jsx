@@ -12,7 +12,13 @@ export class MethodContentField extends Component {
     constructor(props) {
         super(props);
         
+        this.state = {
+            title: '',
+            content: ''
+        };
+
         this.handleEditorChange = this.handleEditorChange.bind(this);
+        this.handleTitleChange = this.handleTitleChange.bind(this);
     }
     
     /**
@@ -20,7 +26,24 @@ export class MethodContentField extends Component {
      * so we copy the written content when ever something changes in the editor
      */
     handleEditorChange(e) {
-        document.getElementById('methodDescription').value = e.target.getContent();
+        this.setState({
+            content: e.target.getContent()
+        });
+    }
+
+    componentWillUnmount() {
+        let data = {
+            'title': this.state.title,
+            'content': this.state.content
+        };
+
+        this.props.handleForm(data);
+    }
+
+    handleTitleChange(e) {
+        this.setState({
+            title: e.target.value
+        });
     }
 
     /**
@@ -36,7 +59,7 @@ export class MethodContentField extends Component {
                 <Row>
                     <Col span={24}>
                         <FormItem label="Methodenname">
-                            <Input placeholder="Methodenname" size="large"/>
+                            <Input placeholder="Methodenname" size="large" onChange={this.handleTitleChange}/>
                         </FormItem>
                         <FormItem>
                             <Editor

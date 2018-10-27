@@ -29,6 +29,17 @@ const draggerProps = {
 export class MethodAttachmentField extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            attachments: []
+        };
+    }
+
+    componentWillUnmount() {
+        let attachments = {
+            attachments: this.state.attachments
+        };
+        this.props.handleForm(attachments);
     }
 
     /**
