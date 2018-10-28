@@ -54,7 +54,7 @@ export class MethodAttributeFields extends Component {
         
         this.onSelectSeminarType = this.onSelectSeminarType.bind(this);
         this.onDeselectSeminarType = this.onDeselectSeminarType.bind(this);
-        this.buildOption = this.buildOption.bind(this);
+        this.buildOptions = this.buildOptions.bind(this);
         this.extractGoals = this.extractGoals.bind(this);
         this.handleLevelSelect = this.handleLevelSelect.bind(this);
         this.handleLevelDeselect = this.handleLevelDeselect.bind(this);
@@ -65,7 +65,7 @@ export class MethodAttributeFields extends Component {
     }
     
 
-    buildOption(data) {
+    buildOptions(data) {
         let options = data.map((item) => {
             return (
                 <Option key={item.id} value={item.id}>{item.name}</Option>
@@ -197,6 +197,20 @@ export class MethodAttributeFields extends Component {
                     methodLevels: methodLevels
                 });
             });
+
+        this.setState({
+            selectedSeminar: this.props.status.seminarType,
+            selectedLevels: this.props.status.methodLevels,
+            selectedTypes: this.props.status.methodTypes,
+            selectedGoals: this.props.status.seminarGoals
+        });
+
+        if (this.props.status.seminarType) {
+            this.setState({
+                seminarGoals: this.props.status.seminarType.goals,
+                seminarGoalsDisabled: false
+            });
+        }
     }
     
     /**
@@ -206,8 +220,8 @@ export class MethodAttributeFields extends Component {
      * @param {ReactElement} option
      */
     onSelectSeminarType(value) {
-        let type = this.state.seminarTypes.filter(item => item.id == value);
-        let goals = type.map(item => item.goals)[0];
+        let type = this.state.seminarTypes.filter(item => item.id == value)[0];
+        let goals = type.goals;
 
         this.setState({
             seminarGoals: goals,
@@ -239,7 +253,12 @@ export class MethodAttributeFields extends Component {
      */
     render() {
         // const {getFieldDecorator} = this.props.form;
-        
+
+        const selectedSeminar = (this.state.selectedSeminar) ? this.state.selectedSeminar.id : undefined;
+        const selectedTypes = (this.state.selectedTypes) ? this.state.selectedTypes.map(item => item.id) : undefined;
+        const selectedLevels = (this.state.selectedLevels) ? this.state.selectedLevels.map(item => item.id) : undefined;
+        const selectedGoals = (this.state.selectedGoals) ? this.state.selectedGoals.map(item => item.id) : undefined;
+
         return (
             <div className={this.props.className}>
                 <Row gutter={16}>
@@ -248,12 +267,13 @@ export class MethodAttributeFields extends Component {
                             <Select
                                 showSearch
                                 placeholder="Seminar auswählen..."
+                                value={selectedSeminar}
                                 notFoundContent="Es existieren keine Seminare"
                                 onSelect={this.onSelectSeminarType}
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 optionFilterProp="children"
                                 onDeselect={this.onDeselectSeminarType} >
-                                {this.buildOption(this.state.seminarTypes)}
+                                {this.buildOptions(this.state.seminarTypes)}
                             </Select>
                         </FormItem>
                     </Col>
@@ -261,11 +281,12 @@ export class MethodAttributeFields extends Component {
                         <FormItem label="Typ">
                             <Select
                                 mode="multiple"
+                                value={selectedTypes}
                                 placeholder="Methodentyp auswählen..."
                                 notFoundContent="Es existieren keine Methodenypen" 
                                 onSelect={this.handleTypeSelect}
                                 onDeselect={this.handleTypeDeselect}>
-                                {this.buildOption(this.state.methodTypes)}
+                                {this.buildOptions(this.state.methodTypes)}
                             </Select>
                         </FormItem>
                     </Col>
@@ -273,11 +294,12 @@ export class MethodAttributeFields extends Component {
                         <FormItem label="Level">
                             <Select
                                 mode="multiple"
+                                value={selectedLevels}
                                 placeholder="Level auswählen..."
                                 notFoundContent="Es existieren keine Level"
                                 onSelect={this.handleLevelSelect}
                                 onDeselect={this.handleLevelDeselect}>
-                                {this.buildOption(this.state.methodLevels)}
+                                {this.buildOptions(this.state.methodLevels)}
                             </Select>
                         </FormItem>
                     </Col>
@@ -288,14 +310,15 @@ export class MethodAttributeFields extends Component {
                             <Select
                                 showSearch
                                 mode="multiple"
+                                value={selectedGoals}
                                 disabled={this.state.seminarGoalsDisabled}
                                 placeholder={this.state.seminarGoalsPlaceholder}
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 optionFilterProp="children"
                                 onSelect={this.handleGoalSelect}
                                 onDeselect={this.handleGoalDeselect}
-                                notFoundContent="Es existieren keine Seminarziele">
-                                {this.buildOption(this.state.seminarGoals)}
+                                notFoundContent="Es existieren keine Ziele für dieses Seminar">
+                                {this.buildOptions(this.state.seminarGoals)}
                             </Select>
                         </FormItem>
                     </Col>

@@ -31,6 +31,12 @@ export class MethodContentField extends Component {
         });
     }
 
+    handleTitleChange(e) {
+        this.setState({
+            title: e.target.value
+        });
+    }
+
     componentWillUnmount() {
         let data = {
             'title': this.state.title,
@@ -40,9 +46,10 @@ export class MethodContentField extends Component {
         this.props.handleForm(data);
     }
 
-    handleTitleChange(e) {
+    componentDidMount() {
         this.setState({
-            title: e.target.value
+            title: this.props.status.title,
+            content: this.props.status.content
         });
     }
 
@@ -53,22 +60,22 @@ export class MethodContentField extends Component {
      */
     render() {
         // const {getFieldDecorator } = this.props.form;
-        
+        const { title, content } = this.state;
         return (
             <div className={this.props.className}>
                 <Row>
                     <Col span={24}>
                         <FormItem label="Methodenname">
-                            <Input placeholder="Methodenname" size="large" onChange={this.handleTitleChange}/>
+                            <Input placeholder="Methodenname" value={title} size="large" onChange={this.handleTitleChange}/>
                         </FormItem>
                         <FormItem>
                             <Editor
+                                initialValue={content}
                                 init={{
                                     plugins: 'autolink image link lists paste table',
                                     menubar: '',
                                     toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist indent outdent | link image | table',
                                     height: 400,
-                                    content_css: '/css/paper-layout.css',
                                     body_class: 'paper-style',
                                     style_formats: [
                                         { title: 'Heading 1', block: 'h1' },

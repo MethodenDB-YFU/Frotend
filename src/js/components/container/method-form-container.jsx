@@ -25,7 +25,15 @@ export class MethodForm extends Component {
          */
         this.state = {
             currentStep: 0,
-            method: {}
+            method: {
+                title: '',
+                content: '',
+                attachments: [],
+                seminarType: '',
+                seminarGoals: [],
+                methodLevels: [],
+                methodTypes: []
+            }
         };
         
         this.nextStep = this.nextStep.bind(this);
@@ -72,8 +80,8 @@ export class MethodForm extends Component {
 
     handleForm(data) {
         let method = {
-            title: data.title ? data.title : method.title,
-            content: data.content ? data.content : method.content
+            title: data.title,
+            content: data.content
         };
         console.log('method', method);
         console.log('data', data);
