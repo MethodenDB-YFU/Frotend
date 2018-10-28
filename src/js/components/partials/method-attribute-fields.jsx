@@ -20,6 +20,10 @@ const mapKeyToAttribute = (list, key) => {
     return list.find(item => item.id == key);
 };
 
+const sortByName = (list) => {
+    return list.sort((a, b) => a.name < b.name ? -1 : 1);
+};
+
 /**
  * form fields to describe the method with some meta data
  * @module components/partials/MethodAttributeFields
@@ -117,7 +121,7 @@ export class MethodAttributeFields extends Component {
         const type = mapKeyToAttribute(this.state.methodTypes, key);
         const types = delAttribute(this.state.selectedTypes, type);
         this.setState({
-            selectedLevels: types
+            selectedTypes: types
         });
     }
 
@@ -272,7 +276,7 @@ export class MethodAttributeFields extends Component {
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 optionFilterProp="children"
                                 onDeselect={this.onDeselectSeminarType} >
-                                {this.buildOptions(this.state.seminarTypes)}
+                                {this.buildOptions(sortByName(this.state.seminarTypes))}
                             </Select>
                         </FormItem>
                     </Col>
@@ -283,9 +287,11 @@ export class MethodAttributeFields extends Component {
                                 value={selectedTypes}
                                 placeholder="Methodentyp auswählen..."
                                 notFoundContent="Es existieren keine Methodenypen" 
+                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                optionFilterProp="children"
                                 onSelect={this.handleTypeSelect}
                                 onDeselect={this.handleTypeDeselect}>
-                                {this.buildOptions(this.state.methodTypes)}
+                                {this.buildOptions(sortByName(this.state.methodTypes))}
                             </Select>
                         </FormItem>
                     </Col>
@@ -296,9 +302,11 @@ export class MethodAttributeFields extends Component {
                                 value={selectedLevels}
                                 placeholder="Level auswählen..."
                                 notFoundContent="Es existieren keine Level"
+                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                optionFilterProp="children"
                                 onSelect={this.handleLevelSelect}
                                 onDeselect={this.handleLevelDeselect}>
-                                {this.buildOptions(this.state.methodLevels)}
+                                {this.buildOptions(sortByName(this.state.methodLevels))}
                             </Select>
                         </FormItem>
                     </Col>
@@ -317,7 +325,7 @@ export class MethodAttributeFields extends Component {
                                 onSelect={this.handleGoalSelect}
                                 onDeselect={this.handleGoalDeselect}
                                 notFoundContent="Es existieren keine Ziele für dieses Seminar">
-                                {this.buildOptions(this.state.seminarGoals)}
+                                {this.buildOptions(sortByName(this.state.seminarGoals))}
                             </Select>
                         </FormItem>
                     </Col>
