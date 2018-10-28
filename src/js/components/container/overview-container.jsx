@@ -1,31 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Input, Table } from 'antd';
+import { Row, Col, Input, Table, Tag } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
-
-/**
- * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
- */
-const columns = [{
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text, record) => <Link to={'/method/show/'+record.key}>{text}</Link>
-//    render: text => <a href="#">{text}</a>
-}, {
-    title: 'Seminar',
-    dataIndex: 'seminar',
-    key: 'seminar'
-}, {
-    title: 'Typ',
-    dataIndex: 'typ',
-    key: 'typ'
-}, {
-    title: 'Level',
-    dataIndex: 'level',
-    key: 'level'
-}];
 
 /**
  * container to display an overview of all available methods
@@ -36,11 +13,16 @@ export class OverviewContainer extends Component {
         super(props);
         
         this.state = {
+            levels: [],
+            types: [],
+            data: [],
             methods: [],
             tableLoading: true
         };
+
+        this.updateData = this.updateData.bind(this);
     }
-    
+
     /**
      * loading all methods when method overview is loaded
      */
@@ -51,15 +33,19 @@ export class OverviewContainer extends Component {
             .then(results => {
                 return results.json();
             })
-            .catch(error => console.error('Fetch Error =\n', error))
+            .catch((error) => {
+                console.error('Foo', error);
+            })
             .then(data => {
                 let methods = data.map((method) => {
                     let methodJson = {
                         key: method.id,
                         name: method.title,
-                        seminar: method.seminar_type.name,
-                        typ: method.method_types[0].name,
-                        level: method.method_levels[0].name
+                        seminar: method.seminar_type,
+                        types: method.method_types,
+                        levels: method.method_levels,
+                        attachments: method.attachments,
+                        goals: method.seminar_goals
                     };
                     return methodJson;
                 });
@@ -69,9 +55,25 @@ export class OverviewContainer extends Component {
                     methods: methods,
                     tableLoading: false
                 });
+                this.updateData(methods);
             })
-            .catch(error => console.error('Fetch Error =\n', error));
+            .catch((error) => {
+                console.error('Fetch Error =\n', error);
+            });
+
     }
+
+    updateData(newData) {
+        // filter duplicate values
+        let types = [ ... new Set(newData.flatMap(item => item.types.map(item => item.name)))];
+        let levels = [... new Set(newData.flatMap(item => item.levels.map(item => item.name)))]; 
+
+        this.setState({
+            data: newData,
+            types: types.sort((a, b) => b.name - a.name),
+            levels: levels.sort((a, b) => b.name - a.name)
+        });
+    };
 
     /**
      * render method
@@ -79,6 +81,47 @@ export class OverviewContainer extends Component {
      * @private
      */
     render() {
+
+        /**
+         * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
+         */
+        const columns = [{
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text, record) => <Link to={'/method/show/'+record.key}>{text}</Link>,
+            sorter: (a, b) => a.name < b.name ? -1 : 1,
+            onFilter: (value, record) => record.name.indexOf(value) === 0
+        }, {
+            title: 'Typ',
+            dataIndex: 'types',
+            key: 'types',
+            filters: this.state.types.map(item => ({text: item, value: item})),
+            render: (tags) => (
+                <span>
+                    {tags.map(tag => <Tag key={tag.id}>{tag.name}</Tag>)}
+                </span>
+            )
+        }, {
+            //ToDo: Render Icon with Tooltip that shows attachment titles.
+            title: 'Level',
+            dataIndex: 'levels',
+            key: 'levels',
+            render: (tags) => (
+                <span>
+                    {tags.map(tag => <Tag key={tag.id}>{tag.name}</Tag>)}
+                </span>
+            )
+        }, {
+            title: 'Anhänge',
+            dataIndex: 'attachments',
+            key: 'attachments', 
+            render: (attachments) => (
+                <span>
+                    {attachments.size}
+                </span>
+            )
+        }];
         /**
          * @type {ReactElement}
          */
@@ -94,7 +137,7 @@ export class OverviewContainer extends Component {
                         <Input size="large" placeholder="Albatross" addonAfter={createBtn} />
                     </Col>
                 </Row>
-                <Table columns={columns} dataSource={this.state.methods} loading={this.state.tableLoading} />
+                <Table columns={columns} dataSource={this.state.data} loading={this.state.tableLoading} />
             </div>
         );
     }
