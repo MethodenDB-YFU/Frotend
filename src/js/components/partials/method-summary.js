@@ -15,10 +15,16 @@ export class MethodSummary extends Component {
         this.setState({
             method: this.props.status
         });
-        console.log(this.props.status);
     }
     
     render() {
+
+        const RawHTML = ({children, className = ''}) => 
+            <div className={className} dangerouslySetInnerHTML={{ __html: children.replace(/\n/g, '<br />')}} />;
+
+        const { seminarGoals } = this.props.status;
+        const { content } = this.props.status;
+        
         return (
             <div>
                 <Row>
@@ -32,17 +38,21 @@ export class MethodSummary extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={24}>
+                    <Col span={9} offset={3}>
+                        <h3>Ziele</h3>
                         <ul>
-                            {
-                                console.log(this.state.method.seminarGoals)
-                                // this.state.method.seminarGoals.map(item => 
-                                //     <li key={item.id}>{item.name}</li>
-                                // )
-                            }
+                            {seminarGoals.map(item=> (<li key={item.id}>{item.name}</li>))}
                         </ul>
                     </Col>
+                    <Col span={9}>
+
+                    </Col>
                 </Row>
+                <Row>
+                    <Col span={18} offset={3}>
+                        <RawHTML>{content}</RawHTML>
+                    </Col>
+                </Row> 
             </div>
         );
     }

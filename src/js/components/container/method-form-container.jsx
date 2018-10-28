@@ -4,6 +4,8 @@ import { MethodAttributeFields } from '../partials/method-attribute-fields';
 import { MethodContentField } from '../partials/method-content-field';
 import { MethodAttachmentField } from '../partials/method-attachment-field';
 import { MethodSummary } from '../partials/method-summary';
+import { urlHelper } from '../../helpers';
+import { urlConstants } from '../../constants';
 
 /**
  * @type {Steps.Step}
@@ -26,9 +28,9 @@ export class MethodForm extends Component {
         this.state = {
             currentStep: 0,
             method: {
+                attachments: [],
                 title: '',
                 content: '',
-                attachments: [],
                 seminarType: '',
                 seminarGoals: [],
                 methodLevels: [],
@@ -41,6 +43,8 @@ export class MethodForm extends Component {
         this.handleMethodContent = this.handleMethodContent.bind(this);
         this.handleMethodAttributes = this.handleMethodAttributes.bind(this);
         this.handleAttachments = this.handleAttachments.bind(this);
+        this.saveMethod = this.saveMethod.bind(this);
+        this.buildPayload = this.buildPayload.bind(this);
     }
 
     /**
@@ -61,7 +65,7 @@ export class MethodForm extends Component {
 
     handleAttachments(attachments) {
         let method = this.state.method;
-        method.attachments = attachments;
+        method.attachments = attachments.attachments;
         this.setState({
             method: method
         });
@@ -78,13 +82,31 @@ export class MethodForm extends Component {
         });
     }
 
-    handleForm(data) {
-        let method = {
-            title: data.title,
-            content: data.content
+    handleForm() {
+    }
+
+    buildPayload() {
+        return {
+            attachments: this.state.method.attachments,
+            title: this.state.method.title,
+            content: this.state.method.content,
+            seminar_type: this.state.method.seminarType.id,
+            seminar_goals: this.state.method.seminarGoals.map((item) => item.id),
+            method_levels: this.state.method.methodLevels,
+            method_types: this.state.method.methodTypes
         };
-        console.log('method', method);
-        console.log('data', data);
+    }
+
+    saveMethod() {
+        const payload = this.buildPayload();
+
+        let fetchParams = urlHelper.buildFetchParams(urlConstants.createMethod, '', payload);
+        fetch(fetchParams.url, fetchParams.request)
+            .then(results => {
+                return results.json();
+            }).then(data => {
+                console.log(data);
+            });
     }
     
     /**
@@ -148,7 +170,7 @@ export class MethodForm extends Component {
             icon: 'tags'
         }, {
             title: 'Zusammenfassung',
-            content: <MethodSummary handleForm={this.handleMethodSummary} status={this.state.method}/>,
+            content: <MethodSummary status={this.state.method}/>,
             icon: 'eye'
         }];
         
@@ -182,7 +204,7 @@ export class MethodForm extends Component {
                             }
                             {
                                 currentStep === steps.length - 1
-                                && <Button type="primary" onClick={() => console.log('Processing complete!')}>Speichern</Button>
+                                && <Button type="primary" onClick={() => this.saveMethod()}>Speichern</Button>
                             }
                             {
                                 currentStep > 0

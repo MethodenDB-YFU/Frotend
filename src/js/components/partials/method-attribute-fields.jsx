@@ -80,7 +80,6 @@ export class MethodAttributeFields extends Component {
     }
 
     componentWillUnmount() {
-        console.log(this.state.selectedGoals);
         let attributes = {
             seminarType: this.state.selectedSeminar,
             seminarGoals: this.state.selectedGoals,
