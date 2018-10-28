@@ -91,7 +91,7 @@ export class RolesOverviewContainer extends Component {
             onFilter: (value, record) => record.role_type.indexOf(value) === 0,
             render: role_type => (
                 <span>
-                    {<Tag color="purple" key={role_type}>{role_type}</Tag>}
+                    {<Tag key={role_type}>{role_type}</Tag>}
                 </span>
             )
         }];
