@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Input, Table, Tag } from 'antd';
+import { Row, Col, Input, Table, Tag, Icon, Tooltip } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
+
+const Search = Input.Search;
 
 /**
  * container to display an overview of all available methods
@@ -21,6 +23,7 @@ export class OverviewContainer extends Component {
         };
 
         this.updateData = this.updateData.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
     /**
@@ -63,6 +66,11 @@ export class OverviewContainer extends Component {
 
     }
 
+    handleSearch(searchText) {
+        const filtered = this.state.methods.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+        this.updateData(filtered);
+    };
+
     updateData(newData) {
         // filter duplicate values
         let types = [ ... new Set(newData.flatMap(item => item.types.map(item => item.name)))];
@@ -91,12 +99,13 @@ export class OverviewContainer extends Component {
             key: 'name',
             render: (text, record) => <Link to={'/method/show/'+record.key}>{text}</Link>,
             sorter: (a, b) => a.name < b.name ? -1 : 1,
-            onFilter: (value, record) => record.name.indexOf(value) === 0
+            onFilter: (value, record) => record.name.filter(item => item.key == value),
         }, {
             title: 'Typ',
             dataIndex: 'types',
             key: 'types',
             filters: this.state.types.map(item => ({text: item, value: item})),
+            onFilter: (value, record) => record.types.map(item => item.name === value).includes(true),
             render: (tags) => (
                 <span>
                     {tags.map(tag => <Tag key={tag.id}>{tag.name}</Tag>)}
@@ -107,6 +116,8 @@ export class OverviewContainer extends Component {
             title: 'Level',
             dataIndex: 'levels',
             key: 'levels',
+            filters: this.state.levels.map(item => ({text: item, value: item})),
+            onFilter: (value, record) => record.levels.map(item => item.name === value).includes(true),
             render: (tags) => (
                 <span>
                     {tags.map(tag => <Tag key={tag.id}>{tag.name}</Tag>)}
@@ -118,7 +129,9 @@ export class OverviewContainer extends Component {
             key: 'attachments', 
             render: (attachments) => (
                 <span>
-                    {attachments.size}
+                    {
+                        attachments.length > 0 && <Tooltip title={attachments.map(item => item.title).join(', ')}><Icon type="file-add" theme="outlined"/></Tooltip>
+                    }
                 </span>
             )
         }];
@@ -134,7 +147,7 @@ export class OverviewContainer extends Component {
                         <h1>Methodenübersicht</h1>
                     </Col>
                     <Col span={12}>
-                        <Input size="large" placeholder="Albatross" addonAfter={createBtn} />
+                        <Search onSearch={this.handleSearch} size="large" placeholder="Albatross" addonAfter={createBtn} />
                     </Col>
                 </Row>
                 <Table columns={columns} dataSource={this.state.data} loading={this.state.tableLoading} />
