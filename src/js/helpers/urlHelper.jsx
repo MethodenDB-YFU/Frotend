@@ -57,7 +57,7 @@ function buildHeader() {
         'Content-Type': 'application/json', 
         'Accept': 'application/json',
         //'Authorization' : 'Bearer'
-        'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
+        //'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
     };
     if(USE_BEARER === 'true') {
         if(userToken)
