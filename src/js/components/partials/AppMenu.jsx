@@ -7,7 +7,7 @@ import store from '../../store';
 import { connect } from 'react-redux';
 import { history } from '../../helpers';
 import { userService } from '../../middleware';
-import Logo from '../../../images/logo/logo.js';
+import Logo from '../../../images/logo/Logo.js';
 import '../../../less/styles.less';
 
 const MenuItem = Menu.Item;
@@ -20,7 +20,7 @@ export class AppMenuComponent extends Component {
     constructor(props) {
         super(props);
         /**
-         * 
+         *
          */
         this.state = {
             user: props.user,
@@ -57,7 +57,7 @@ export class AppMenuComponent extends Component {
                 } else {
                     if(typeof user.user.loggedIn != 'undefined'){
                         userLoggdIn = user.user.loggedIn;
-                    }    
+                    }
                 }
             }
         }
@@ -97,7 +97,7 @@ export class AppMenuComponent extends Component {
     }
     /**
      * handle klick un menu item
-     * @param {string} param0 
+     * @param {string} param0
      */
     onMenuClick ( { key } ) {
     /* { item, key, selectedKeys } */
@@ -184,8 +184,8 @@ function mapDispatchToProps (dispatch) {
 };
 
 /**
- * 
- * @param {Object} state 
+ *
+ * @param {Object} state
  */
 function mapStateToProps(state) {
     let { user} = state;
@@ -199,4 +199,4 @@ function mapStateToProps(state) {
 }
 
 const connectedAppMenuPage = connect(mapStateToProps,mapDispatchToProps)(AppMenuComponent);
-export { connectedAppMenuPage as AppMenu }; 
+export { connectedAppMenuPage as AppMenu };

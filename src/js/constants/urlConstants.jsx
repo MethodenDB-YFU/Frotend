@@ -1,37 +1,37 @@
 /**
- * 
+ *
  */
 export const urlConstants = {
     /* methoden services */
-    getAllMethods: { service: 'methoden', name:'getAllMethods'},
-    createMethod: { service: 'methoden', name:'createMethod'},
-    getAllMethodLevels: { service: 'methoden', name:'getAllMethodLevels'},
-    createMethodLevel: { service: 'methoden', name:'createMethodLevel'},
-    updateMethodLevel: { service: 'methoden', name:'updateMethodLevel'},
-    getAllMethodTypes: { service: 'methoden', name:'getAllMethodTypes'},
-    createMethodType: { service: 'methoden', name:'createMethodType'},
-    updateMethodType: { service: 'methoden', name:'updateMethodType'},
-    deleteMethod:{ service: 'methoden', name:'deleteMethod'},
-    getMethod: { service: 'methoden', name:'getMethod'},
-    updateMethod: { service: 'methoden', name:'updateMethod'},
+    getAllMethods: { service: 'methoden', name:'getAllMethods', sendUserId: true},
+    createMethod: { service: 'methoden', name:'createMethod', sendUserId: true},
+    getAllMethodLevels: { service: 'methoden', name:'getAllMethodLevels', sendUserId: true},
+    createMethodLevel: { service: 'methoden', name:'createMethodLevel', sendUserId: true},
+    updateMethodLevel: { service: 'methoden', name:'updateMethodLevel', sendUserId: true},
+    getAllMethodTypes: { service: 'methoden', name:'getAllMethodTypes', sendUserId: true},
+    createMethodType: { service: 'methoden', name:'createMethodType', sendUserId: true},
+    updateMethodType: { service: 'methoden', name:'updateMethodType', sendUserId: true},
+    deleteMethod:{ service: 'methoden', name:'deleteMethod', sendUserId: true},
+    getMethod: { service: 'methoden', name:'getMethod', sendUserId: true},
+    updateMethod: { service: 'methoden', name:'updateMethod', sendUserId: true},
     /* goals services */
-    getGoals: { service: 'goals', name:'getGoals'},
-    createGoal: { service: 'goals', name:'createGoal'},
-    deleteGoal: { service: 'goals', name:'deleteGoal'},
-    getGoal: { service: 'goals', name:'getGoal'},
-    updateGoal: { service: 'goals', name:'updateGoal'},
+    getGoals: { service: 'goals', name:'getGoals', sendUserId: true},
+    createGoal: { service: 'goals', name:'createGoal', sendUserId: true},
+    deleteGoal: { service: 'goals', name:'deleteGoal', sendUserId: true},
+    getGoal: { service: 'goals', name:'getGoal', sendUserId: true},
+    updateGoal: { service: 'goals', name:'updateGoal', sendUserId: true},
     /* roles services */
-    getRoles: { service: 'roles', name:'getRoles'},
-    createRole: { service: 'roles', name:'createRole'},
-    deleteRole: { service: 'roles', name:'deleteRole'},
-    getRole: { service: 'roles', name:'getRole'},
-    updateRole: { service: 'roles', name:'updateRole'},
+    getRoles: { service: 'roles', name:'getRoles', sendUserId: true},
+    createRole: { service: 'roles', name:'createRole', sendUserId: true},
+    deleteRole: { service: 'roles', name:'deleteRole', sendUserId: true},
+    getRole: { service: 'roles', name:'getRole', sendUserId: true},
+    updateRole: { service: 'roles', name:'updateRole', sendUserId: true},
     /* Type services */
-    getTypes: { service: 'types', name:'getTypes'},
-    createType: { service: 'types', name:'createType'},
-    deleteType: { service: 'types', name:'deleteType'},
-    getType: { service: 'types', name:'getType'},
-    updateType: { service: 'types', name:'updateType'},
+    getTypes: { service: 'types', name:'getTypes', sendUserId: false},
+    createType: { service: 'types', name:'createType', sendUserId: false},
+    deleteType: { service: 'types', name:'deleteType', sendUserId: false},
+    getType: { service: 'types', name:'getType', sendUserId: false},
+    updateType: { service: 'types', name:'updateType', sendUserId: false},
 
     /* URLs for methoden service */
     methoden: {
@@ -39,15 +39,15 @@ export const urlConstants = {
 
         getAllMethods: { url: '/api/methods', method: 'GET',  hasParameter: false},
         createMethod: { url: '/api/methods', method: 'POST',  hasParameter: false},
-    
+
         getAllMethodLevels: { url: '/api/methods/levels', method: 'GET', hasParameter: false},
         createMethodLevel: { url: '/api/methods/levels', method: 'POST', hasParameter: false},
         updateMethodLevel: { url: '/api/methods/types/', method: 'PUT', hasParameter: true},
-    
+
         getAllMethodTypes: { url: '/api/methods/types', method: 'GET', hasParameter: false},
         createMethodType: { url: '/api/methods/types', method: 'POST', hasParameter: false},
         updateMethodType: { url: '/api/methods/types/', method: 'PUT', hasParameter: true},
-    
+
         deleteMethod: { url: '/api/methods/', method: 'DELETE', hasParameter: true},
         getMethod: { url: '/api/methods/', method: 'GET', hasParameter: true},
         updateMethod: { url: '/api/methods/', method: 'PUT', hasParameter: true}

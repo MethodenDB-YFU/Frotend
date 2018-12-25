@@ -24,7 +24,7 @@ function buildURL(service, parameter = null) {
     return url;
 }
 
-function buildHeader() {
+function buildHeader(sendUserId) {
     const state = store.getState();
     const user = state.user.user;
     console.log('buildHeader:user',state.user);
@@ -54,10 +54,10 @@ function buildHeader() {
         //'Access-Control-Allow-Origin': '*',
         //'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
         //'Access-Control-Allow-Headers': 'Content-Type, Accept, X-User-ID',
-        'Content-Type': 'application/json', 
+        'Content-Type': 'application/json',
         'Accept': 'application/json',
         //'Authorization' : 'Bearer'
-        'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
+        //'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
     };
     if(USE_BEARER === true) {
         if(userToken)
@@ -65,18 +65,16 @@ function buildHeader() {
                 'Authorization' : 'Bearer '+userToken
             };
     }
-    /*
-    if(userId)
+    if(sendUserId)
         header = { ...header,
-            'X-User-ID': userId
+            'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
         };
-        */
     return header;
 }
 
 function buildFetchParams(service, parameter = null, data = {}) {
     const url = buildURL(service, parameter);
-    const header = buildHeader();
+    const header = buildHeader(service.sendUserId);
     const services = urlConstants[service.service];
     const ackService = services[service.name];
     let fetchParams = {};
