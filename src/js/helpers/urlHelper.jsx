@@ -53,11 +53,10 @@ function buildHeader(sendUserId) {
     let header = {
         //'Access-Control-Allow-Origin': '*',
         //'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-        //'Access-Control-Allow-Headers': 'Content-Type, Accept, X-User-ID',
+        //'Access-Control-Allow-Headers': 'Content-Type, Accept',
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         //'Authorization' : 'Bearer'
-        //'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
     };
     if(USE_BEARER === true) {
         if(userToken)
@@ -66,9 +65,7 @@ function buildHeader(sendUserId) {
             };
     }
     if(sendUserId)
-        header = { ...header,
-            'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
-        };
+        header = { ...header };
     return header;
 }
 

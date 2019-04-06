@@ -28,7 +28,7 @@ module.exports = {
                 enforce: "pre",
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                loader: "eslint-loader"
+                use: [ { loader: "eslint-loader" } ]
             },
             {
                 test: /\.(js|jsx)$/,
@@ -56,7 +56,8 @@ module.exports = {
                   {loader: "less-loader",
                     options: {
                       modifyVars: themeVariables,
-                      root: path.resolve(__dirname, './')
+                      root: path.resolve(__dirname, './'),
+                      javascriptEnabled: true
                     }
                   }
                 ]

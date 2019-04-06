@@ -12,6 +12,18 @@ import { urlConstants } from '../../constants';
  */
 const Step = Steps.Step;
 
+//@todo figure out how to move to different file!
+const translations = {
+    step_content: 'Inhalt',
+    step_attachments: 'Anänge',
+    step_metadata: 'Metadaten',
+    step_summary: 'Zusammenfassung',
+    page_title: 'Neue Methode Erstellen',
+    next: 'Weiter',
+    previous: 'Zurück',
+    save: 'Speichern',
+};
+
 /**
  * form to generate a new method
  * @extends Component
@@ -22,8 +34,8 @@ export class MethodForm extends Component {
         super(props);
         
         /**
-         * @type {object}
-         * @property {number} currentStep set step in formular
+         * @property {number} currentStep set step in form
+         * @method {object} method object that's being worked on
          */
         this.state = {
             currentStep: 0,
@@ -49,11 +61,13 @@ export class MethodForm extends Component {
 
     /**
      * initialy disables submit button
+     * @todo figure out if this is still needed
      */
     componentDidMount() {
         this.props.form.validateFields();
     }
 
+    //@todo unite with other handle* methods
     handleMethodContent(content) {
         let method = this.state.method;
         method.title = content.title;
@@ -63,6 +77,7 @@ export class MethodForm extends Component {
         });
     }
 
+    //@todo unite with other handle* methods
     handleAttachments(attachments) {
         let method = this.state.method;
         method.attachments = attachments.attachments;
@@ -71,6 +86,7 @@ export class MethodForm extends Component {
         });
     }
 
+    //@todo unite with other handle* methods
     handleMethodAttributes(attributes) {
         let method = this.state.method;
         method.seminarType = attributes.seminarType;
@@ -82,9 +98,7 @@ export class MethodForm extends Component {
         });
     }
 
-    handleForm() {
-    }
-
+    //@todo figure out if this can be done more nicely
     buildPayload() {
         return {
             attachments: this.state.method.attachments,
@@ -97,9 +111,9 @@ export class MethodForm extends Component {
         };
     }
 
+    //@todo backend changes needed (X-User-ID header)
     saveMethod() {
         const payload = this.buildPayload();
-
         let fetchParams = urlHelper.buildFetchParams(urlConstants.createMethod, '', payload);
         fetch(fetchParams.url, fetchParams.request)
             .then(results => {
@@ -113,9 +127,7 @@ export class MethodForm extends Component {
      * navigating one step forward in the method form
      */
     nextStep() {
-        // e.preventDefault();
         const currentStep = this.state.currentStep + 1;
-        
         this.setState({currentStep: currentStep});
     }
     
@@ -123,27 +135,8 @@ export class MethodForm extends Component {
      * navigating one step back in the method form
      */
     prevStep() {
-        // e.preventDefault();
         const currentStep = this.state.currentStep - 1;
-        
         this.setState({currentStep: currentStep});
-    }
-    
-    /**
-     * handle the steps, when user submits the form
-     * @param {MouseEvent} e 
-     */
-    handleSubmit(e) {
-        e.preventDefault();        
-        this.props.form.setFieldsValue({'methodDescription': document.getElementById('methodDescription').value});
-        
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-            } else {
-                console.log('Received error: ', err);
-            }
-        });
     }
     
     /**
@@ -156,20 +149,21 @@ export class MethodForm extends Component {
          */
         const { currentStep } = this.state;
 
+        //@todo how to create documentation for this?
         const steps = [{
-            title: 'Inhalt',
+            title: translations.step_content,
             content: <MethodContentField handleForm={this.handleMethodContent} status={this.state.method}/>,
             icon: 'form'
         }, {
-            title: 'Anhänge',
+            title: translations.step_attachments,
             content: <MethodAttachmentField handleForm={this.handleAttachments} status={this.state.method}/>,
             icon: 'book'
         }, {
-            title: 'Metadaten',
+            title: translations.step_metadata,
             content: <MethodAttributeFields handleForm={this.handleMethodAttributes} status={this.state.method}/>,
             icon: 'tags'
         }, {
-            title: 'Zusammenfassung',
+            title: translations.step_summary,
             content: <MethodSummary status={this.state.method}/>,
             icon: 'eye'
         }];
@@ -178,19 +172,25 @@ export class MethodForm extends Component {
             <div>
                 <Row>
                     <Col span={24}>
-                        <h2>Neue Methode erstellen</h2>
+                        <h2>{ translations.page_title }</h2>
                     </Col>
                 </Row>
                 <Row>
                     <Col span={14} offset={5}>
                         <Steps current={currentStep}>
-                            {steps.map(item => <Step key={item.title} title={item.title} icon={<Icon type={item.icon} theme="outlined" />} />)}
+                            {
+                                steps.map(item =>
+                                    <Step
+                                        key={item.title}
+                                        title={item.title}
+                                        icon={<Icon type={item.icon} theme="outlined" />} />)
+                            }
                         </Steps>
                     </Col>
                 </Row>
                 <Row>
                     <Col span={24}>
-                        <Form layout="vertical" onSubmit={this.handleSubmit}>
+                        <Form layout="vertical" onSubmit={this.saveMethod()}>
                             <div className="steps-content">{steps[currentStep].content}</div>
                         </Form>
                     </Col>
@@ -200,19 +200,26 @@ export class MethodForm extends Component {
                         <div className="steps-action">
                             {
                                 currentStep < steps.length - 1
-                                && <Button type="primary" onClick={() => this.nextStep()}>Weiter</Button>
+                                && <Button
+                                    style={{ float: 'right' }}
+                                    type="primary"
+                                    onClick={() => this.nextStep()}>{translations.next}
+                                </Button>
                             }
                             {
                                 currentStep === steps.length - 1
-                                && <Button type="primary" onClick={() => this.saveMethod()}>Speichern</Button>
+                                && <Button
+                                    style={{ float: 'right' }}
+                                    type="primary"
+                                    onClick={() => this.saveMethod()}>{translations.save}
+                                </Button>
                             }
                             {
                                 currentStep > 0
-                                && (
-                                    <Button style={{ marginLeft: 8 }} onClick={() => this.prevStep()}>
-                                    Zurück
-                                    </Button>
-                                )
+                                && <Button
+                                    style={{ marginLeft: 8 }}
+                                    onClick={() => this.prevStep()}>{translations.previous}
+                                </Button>
                             }                   
                         </div>
                     </Col>

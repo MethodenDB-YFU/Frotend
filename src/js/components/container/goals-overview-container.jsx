@@ -1,22 +1,33 @@
 import React, { Component } from 'react';
-// import { Link } from 'react-router-dom';
 import { Row, Col, Input, Table, Badge, Icon, Tooltip } from 'antd';
 import { urlHelper } from '../../helpers';
-import {urlConstants} from '../../constants';
+import { urlConstants } from '../../constants';
+import { tableHelpers } from '../../helpers';
 
 const Search = Input.Search;
 
+//@todo figure out how to move to different file!
+const translations = {
+    search_placeholder: 'Kommunikation',
+    search_prefix: 'Suche',
+    page_title: 'Seminarziele Übersicht',
+    required: 'Verpflichtend',
+    name: 'Name',
+    explanation_placeholder: 'Hier könnte eine Erklärung stehen.',
+};
+
+
 /**
- * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
+ * @type {Array.<{title:string, dataIndex:string, key:string, width:integer, render: (text: any, record: T, index: number) => ReactNode>}
  */
 const columns = [{
-    title: <Tooltip title="Verpflichtend"><Icon type="key" theme="outlined" /></Tooltip>,
+    title: <Tooltip title={ translations.required }><Icon type="key" theme="outlined" /></Tooltip>,
     dataIndex: 'required',
     key: 'required',
     width: 40,
     render: (required) => <span><Badge status={required ? 'error' : 'success'} /></span>,
 }, {
-    title: 'Name',
+    title: translations.name,
     dataIndex: 'name',
     key: 'name',
     sorter: (a,b) => a.name < b.name ? -1 : 1
@@ -40,8 +51,7 @@ export class GoalsOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        const filtered = this.state.goals.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
-        this.updateData(filtered);
+        this.updateData(tableHelpers.filterByName(searchText, this.state.goals));
     };
 
     updateData(newData) {
@@ -92,16 +102,24 @@ export class GoalsOverviewContainer extends Component {
             <div>
                 <Row>
                     <Col span={12}>
-                        <h1>Seminarziele Übersicht</h1>
+                        <h1>{ translations.page_title }</h1>
                     </Col>
                     <Col span={12}>
-                        <Search placeholder="Kommunikation" addonBefore='Suche' onSearch={this.handleSearch}/>
+                        <Search
+                            placeholder={ translations.search_placeholder }
+                            addonBefore={ translations.search_prefix }
+                            onSearch={this.handleSearch}/>
                     </Col>
                 </Row>
-                <Table columns={columns} expandedRowRender={goal => <p style={{ margin: 0 }}> {goal.explanation || 'Hier könnte eine Erklärung stehen.'}</p>} dataSource={this.state.data} loading={this.state.tableLoading} size="small"/>
+                <Table
+                    columns={columns}
+                    expandedRowRender={goal => <p style={{ margin: 0 }}> {goal.explanation || translations.explanation_placeholder}</p>}
+                    dataSource={this.state.data}
+                    loading={this.state.tableLoading}
+                    size="small"/>
             </div>
         );
     }
 }
 
-GoalsOverviewContainer.displayName = 'Seminarziele Overview Container';
+GoalsOverviewContainer.displayName = 'Seminar Goals Overview Container';

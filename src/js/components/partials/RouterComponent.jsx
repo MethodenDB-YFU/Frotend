@@ -14,9 +14,6 @@ import { MethodFormContainer } from '../container/method-form-container';
 import { MethodDetailContainer } from '../container/method-detail-container';
 import { LogonFormContainer } from '../container/logon-container';
 import { CartContainer } from '../container/method-cart-container';
-import { GoalFormContainer} from '../container/goal-form-container';
-import { TypesDetailContainer } from '../container/types-detail-container';
-import { RoleDetailContainer} from '../container/roles-detail-container';
 import { CallbackPage} from '../container/callback_page';
 import { SeminarsContainer } from '../container/seminars-container';
 //import { NOTINITIALIZED } from 'dns';
@@ -74,9 +71,6 @@ export default class RouterComponentPart extends Component {
                         <Route path="/seminar/type" exact component={() => (<SeminarsContainer activeTab="type"/>)}/>
                         <Route path="/seminar/role" exact component={() => (<SeminarsContainer activeTab="role"/>)}/>
                         <Route path="/seminar/goal" exact component={() => (<SeminarsContainer activeTab="goal"/>)}/>
-                        <Route path="/goals/new" exact component={GoalFormContainer}/>
-                        <Route path="/types/show/:id" exact component={TypesDetailContainer}/>
-                        <Route path="/roles/show/:id" exact component={RoleDetailContainer}/>
                         <Route path="/callback" component={CallbackPage}/>
                     </div>
                 </Router>

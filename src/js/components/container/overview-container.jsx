@@ -3,8 +3,20 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Input, Table, Tag, Icon, Tooltip } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
+import { tableHelpers } from '../../helpers';
 
 const Search = Input.Search;
+
+//@todo figure out how to move to different file!
+const translations = {
+    page_title: 'Methodenübersicht',
+    name: 'Name',
+    type: 'Typ',
+    level: 'Level',
+    attachments: 'Anhänge',
+    create_method: 'Methode erstellen',
+    search_placeholder: 'Albatross',
+};
 
 /**
  * container to display an overview of all available methods
@@ -31,7 +43,6 @@ export class OverviewContainer extends Component {
      */
     componentDidMount() {
         const fetchParams = urlHelper.buildFetchParams(urlConstants.getAllMethods);
-        //fetch('http://localhost:1234/api/methods')
         fetch(fetchParams.url, fetchParams.request)
             .then(results => {
                 return results.json();
@@ -52,8 +63,7 @@ export class OverviewContainer extends Component {
                     };
                     return methodJson;
                 });
-                
-                // display loaded methods and remove loading-animation
+
                 this.setState({
                     methods: methods,
                     tableLoading: false
@@ -67,17 +77,17 @@ export class OverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        const filtered = this.state.methods.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+        const filtered = tableHelpers.filterByName(searchText, this.state.methods);
         this.updateData(filtered);
     };
 
-    updateData(newData) {
-        // filter duplicate values
-        let types = [ ... new Set(newData.flatMap(item => item.types.map(item => item.name)))];
-        let levels = [... new Set(newData.flatMap(item => item.levels.map(item => item.name)))]; 
+    updateData(data) {
+        // filter duplicate values so that filters only show available options
+        let types = [ ... new Set(data.flatMap(item => item.types.map(item => item.name)))];
+        let levels = [... new Set(data.flatMap(item => item.levels.map(item => item.name)))];
 
         this.setState({
-            data: newData,
+            data: data,
             types: types.sort((a, b) => b.name - a.name),
             levels: levels.sort((a, b) => b.name - a.name)
         });
@@ -90,18 +100,15 @@ export class OverviewContainer extends Component {
      */
     render() {
 
-        /**
-         * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
-         */
         const columns = [{
-            title: 'Name',
+            title: translations.name,
             dataIndex: 'name',
             key: 'name',
             render: (text, record) => <Link to={'/method/show/'+record.key}>{text}</Link>,
             sorter: (a, b) => a.name < b.name ? -1 : 1,
             onFilter: (value, record) => record.name.filter(item => item.key == value),
         }, {
-            title: 'Typ',
+            title: translations.type,
             dataIndex: 'types',
             key: 'types',
             filters: this.state.types.map(item => ({text: item, value: item})),
@@ -112,8 +119,7 @@ export class OverviewContainer extends Component {
                 </span>
             )
         }, {
-            //ToDo: Render Icon with Tooltip that shows attachment titles.
-            title: 'Level',
+            title: translations.level,
             dataIndex: 'levels',
             key: 'levels',
             filters: this.state.levels.map(item => ({text: item, value: item})),
@@ -124,7 +130,7 @@ export class OverviewContainer extends Component {
                 </span>
             )
         }, {
-            title: 'Anhänge',
+            title: translations.attachments,
             dataIndex: 'attachments',
             key: 'attachments', 
             render: (attachments) => (
@@ -138,19 +144,32 @@ export class OverviewContainer extends Component {
         /**
          * @type {ReactElement}
          */
-        const createBtn = (<Link to="/method/new">Methode erstellen</Link>);
+        const createBtn = (<Link to="/method/new">{translations.create_method}</Link>);
         
         return (
             <div>
                 <Row>
                     <Col span={12}>
-                        <h1>Methodenübersicht</h1>
+                        <h1>{translations.page_title}</h1>
                     </Col>
                     <Col span={12}>
-                        <Search onSearch={this.handleSearch} size="large" placeholder="Albatross" addonAfter={createBtn} />
+                        <Search
+                            onSearch={this.handleSearch}
+                            size="large"
+                            placeholder={translations.search_placeholder}
+                            addonAfter={createBtn} />
                     </Col>
                 </Row>
-                <Table columns={columns} dataSource={this.state.data} loading={this.state.tableLoading} />
+                <Row>
+                    <Col span={24}>
+                         &nbsp;
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <Table columns={columns} dataSource={this.state.data} loading={this.state.tableLoading} />
+                    </Col>
+                </Row>
             </div>
         );
     }
