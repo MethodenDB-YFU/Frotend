@@ -2,17 +2,15 @@ import React, { Component } from 'react';
 import { Row, Col, Input, Table, Tag } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
-import { tableHelpers } from '../../helpers';
+import { utils } from '../../helpers';
+import { translations } from '../../translations';
 
 const Search = Input.Search;
 
-const translations = {
-    name: 'Name',
-    role_type: 'Rollen Typ',
+Object.assign(translations, {
     page_title: 'Seminar Rollen',
     search_placeholder: 'Leiter',
-    search_prefix: 'Suche',
-};
+});
 
 /**
  * container to display an overview of all available methods
@@ -33,7 +31,7 @@ export class RolesOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        const filtered = tableHelpers.filterByName(searchText, this.state.roles);
+        const filtered = utils.filterByName(searchText, this.state.roles);
         this.updateData(filtered);
     };
 

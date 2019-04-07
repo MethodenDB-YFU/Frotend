@@ -6,23 +6,16 @@ import { MethodAttachmentField } from '../partials/method-attachment-field';
 import { MethodSummary } from '../partials/method-summary';
 import { urlHelper } from '../../helpers';
 import { urlConstants } from '../../constants';
+import { translations } from '../../translations';
 
 /**
  * @type {Steps.Step}
  */
 const Step = Steps.Step;
 
-//@todo figure out how to move to different file!
-const translations = {
-    step_content: 'Inhalt',
-    step_attachments: 'Anänge',
-    step_metadata: 'Metadaten',
-    step_summary: 'Zusammenfassung',
+Object.assign(translations, {
     page_title: 'Neue Methode Erstellen',
-    next: 'Weiter',
-    previous: 'Zurück',
-    save: 'Speichern',
-};
+});
 
 const buildPayload = (data) => {
     return {

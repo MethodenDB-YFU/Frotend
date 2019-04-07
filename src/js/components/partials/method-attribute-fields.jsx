@@ -2,26 +2,13 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Select } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
+import { utils } from '../../helpers';
+import { translations } from '../../translations';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-const addAttribute = (list, attribute) => [...list, attribute];
-const delAttribute = (list, attribute) => {
-    const removedIndex = list.findIndex(item => item.id === attribute.id);
-    return [
-        ...list.slice(0, removedIndex),
-        ...list.slice(removedIndex+1)
-    ];
-};
-
-const mapKeyToAttribute = (list, key) => {
-    return list.find(item => item.id === key);
-};
-
-const sortByName = (list) => {
-    return list.sort((a, b) => a.name < b.name ? -1 : 1);
-};
+const { sortByName, mapKeyToAttribute, addAttribute, delAttribute } = utils;
 
 const buildOptions = (data) => {
     return data.map((item) => {
@@ -29,21 +16,6 @@ const buildOptions = (data) => {
             <Option key={item.id} value={item.id}>{item.name}</Option>
         );
     });
-};
-
-const translations = {
-    seminar: 'Seminar',
-    type: 'Typ',
-    level: 'Level',
-    seminar_goals: 'Seminarziele',
-    seminar_select_placeholder: 'Seminar auswählen...',
-    no_seminars_found: 'Es existieren keine Seminare',
-    method_type_select_placeholder: 'Methodentyp auswählen...',
-    no_method_types_found: 'Es existieren keine Methodentypen',
-    method_level_select_placeholder: 'Methoden-Level auswählen...',
-    no_method_levels_found: 'Es existieren keine Methoden-Level',
-    seminar_goals_select_placeholder: 'Seminarziele auswählen...',
-    no_seminar_goals_found: 'Es existieren keine Seminarziele für das ausgwählte Seminar',
 };
 
 /**

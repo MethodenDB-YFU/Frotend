@@ -2,19 +2,15 @@ import React, { Component } from 'react';
 import { Row, Col, Input, Table } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
-import { tableHelpers } from '../../helpers';
+import { utils } from '../../helpers';
+import { translations } from '../../translations';
 
 const Search = Input.Search;
 
-const translations = {
-    name: 'Name',
-    category: 'Kategorie',
-    section: 'Sektion',
+Object.assign(translations, {
     page_title: 'Seminartypen',
     search_placeholder: 'VBT',
-    search_prefix: 'Suche',
-    unknown: 'Unbekannt',
-};
+});
 
 /**
  * container to display an overview of all available methods
@@ -37,7 +33,7 @@ export class TypesOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        const filtered = tableHelpers.filterByName(searchText, this.state.types);
+        const filtered = utils.filterByName(searchText, this.state.types);
         this.updateData(filtered);
     };
 

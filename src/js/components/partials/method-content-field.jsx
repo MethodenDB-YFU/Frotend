@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Input } from 'antd';
 import { Editor } from '@tinymce/tinymce-react';
+import { translations } from '../../translations';
 
 const FormItem = Form.Item;
-
-const translations = {
-    method_name: 'Methodenname',
-};
 
 const tinymce_config = {
     plugins: 'autolink image link lists paste table',

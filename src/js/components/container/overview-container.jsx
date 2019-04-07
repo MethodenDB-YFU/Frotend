@@ -3,20 +3,15 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Input, Table, Tag, Icon, Tooltip } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
-import { tableHelpers } from '../../helpers';
+import { utils } from '../../helpers';
+import { translations } from '../../translations';
 
 const Search = Input.Search;
 
-//@todo figure out how to move to different file!
-const translations = {
+Object.assign(translations, {
     page_title: 'Methodenübersicht',
-    name: 'Name',
-    type: 'Typ',
-    level: 'Level',
-    attachments: 'Anhänge',
-    create_method: 'Methode erstellen',
     search_placeholder: 'Albatross',
-};
+});
 
 /**
  * container to display an overview of all available methods
@@ -77,7 +72,7 @@ export class OverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        const filtered = tableHelpers.filterByName(searchText, this.state.methods);
+        const filtered = utils.filterByName(searchText, this.state.methods);
         this.updateData(filtered);
     };
 

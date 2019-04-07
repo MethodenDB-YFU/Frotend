@@ -2,19 +2,16 @@ import React, { Component } from 'react';
 import { Row, Col, Input, Table, Badge, Icon, Tooltip } from 'antd';
 import { urlHelper } from '../../helpers';
 import { urlConstants } from '../../constants';
-import { tableHelpers } from '../../helpers';
+import { utils } from '../../helpers';
+import { translations } from '../../translations';
 
 const Search = Input.Search;
 
-//@todo figure out how to move to different file!
-const translations = {
+
+Object.assign(translations, {
     search_placeholder: 'Kommunikation',
-    search_prefix: 'Suche',
     page_title: 'Seminarziele Übersicht',
-    required: 'Verpflichtend',
-    name: 'Name',
-    explanation_placeholder: 'Hier könnte eine Erklärung stehen.',
-};
+});
 
 /**
  * @type {Array.<{title:ReactNode, dataIndex:string, key:string, width:integer, render: (text: any, record: T, index: number) => ReactNode>}
@@ -50,7 +47,7 @@ export class GoalsOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        this.updateData(tableHelpers.filterByName(searchText, this.state.goals));
+        this.updateData(utils.filterByName(searchText, this.state.goals));
     };
 
     updateData(newData) {

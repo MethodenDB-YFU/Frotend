@@ -4,6 +4,7 @@ import { history } from '../../helpers';
 import { TypesOverviewContainer} from './types-overview-container';
 import { GoalsOverviewContainer} from './goals-overview-container';
 import { RolesOverviewContainer} from './roles-overview-container';
+import { translations } from '../../translations';
 
 const TabPane = Tabs.TabPane;
 
@@ -49,9 +50,9 @@ export class SeminarsContainer extends Component {
                     tabPosition='left'
                     onTabClick={this.onTabPaneClick.bind(this)}
                 >
-                    <TabPane tab="Seminartypen" key="type"><TypesOverviewContainer /></TabPane>
-                    <TabPane tab="Seminarziele" key="goal"><GoalsOverviewContainer /></TabPane>
-                    <TabPane tab="Seminarrollen" key="role"><RolesOverviewContainer /></TabPane>
+                    <TabPane tab={translations.seminar_types} key="type"><TypesOverviewContainer /></TabPane>
+                    <TabPane tab={translations.seminar_goals} key="goal"><GoalsOverviewContainer /></TabPane>
+                    <TabPane tab={translations.seminar_roles} key="role"><RolesOverviewContainer /></TabPane>
                 </Tabs>
             </div>
         );
