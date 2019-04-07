@@ -24,6 +24,18 @@ const translations = {
     save: 'Speichern',
 };
 
+const buildPayload = (data) => {
+    return {
+        attachments: data.attachments,
+        title: data.title,
+        content: data.content,
+        seminar_type: data.seminarType.id,
+        seminar_goals: data.seminarGoals.map((item) => item.id),
+        method_levels: data.methodLevels,
+        method_types: data.methodTypes
+    };
+};
+
 /**
  * form to generate a new method
  * @extends Component
@@ -54,7 +66,6 @@ export class MethodForm extends Component {
         this.prevStep = this.prevStep.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.saveMethod = this.saveMethod.bind(this);
-        this.buildPayload = this.buildPayload.bind(this);
     }
 
     /**
@@ -62,7 +73,7 @@ export class MethodForm extends Component {
      * @todo figure out if this is still needed
      */
     componentDidMount() {
-        this.props.form.validateFields();
+        //this.props.form.validateFields();
     }
 
     handleUpdate(method) {
@@ -71,22 +82,9 @@ export class MethodForm extends Component {
         });
     }
 
-    //@todo figure out if this can be done more nicely
-    buildPayload() {
-        return {
-            attachments: this.state.method.attachments,
-            title: this.state.method.title,
-            content: this.state.method.content,
-            seminar_type: this.state.method.seminarType.id,
-            seminar_goals: this.state.method.seminarGoals.map((item) => item.id),
-            method_levels: this.state.method.methodLevels,
-            method_types: this.state.method.methodTypes
-        };
-    }
-
     //@todo backend changes needed (X-User-ID header)
     saveMethod() {
-        const payload = this.buildPayload();
+        const payload = buildPayload(this.state.method);
         let fetchParams = urlHelper.buildFetchParams(urlConstants.createMethod, '', payload);
         fetch(fetchParams.url, fetchParams.request)
             .then(results => {
@@ -157,7 +155,7 @@ export class MethodForm extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        <Form layout="vertical" onSubmit={this.saveMethod()}>
+                        <Form layout="vertical">
                             <div className="steps-content">{steps[currentStep].content}</div>
                         </Form>
                     </Col>

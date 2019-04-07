@@ -2,8 +2,19 @@ import React, { Component } from 'react';
 import { Row, Col, Input, Table } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
+import { tableHelpers } from '../../helpers';
 
 const Search = Input.Search;
+
+const translations = {
+    name: 'Name',
+    category: 'Kategorie',
+    section: 'Sektion',
+    page_title: 'Seminartypen',
+    search_placeholder: 'VBT',
+    search_prefix: 'Suche',
+    unknown: 'Unbekannt',
+};
 
 /**
  * container to display an overview of all available methods
@@ -26,7 +37,7 @@ export class TypesOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        const filtered = this.state.types.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+        const filtered = tableHelpers.filterByName(searchText, this.state.types);
         this.updateData(filtered);
     };
 
@@ -55,8 +66,8 @@ export class TypesOverviewContainer extends Component {
                     let methodJson = {
                         key: type.id,
                         name: type.name,
-                        category: type.category ? type.category : 'Unbekannt',
-                        section: type.section ? type.section : 'Unbekannt'
+                        category: type.category || translations.unknown,
+                        section: type.section || translations.unknown
                     };
                     return methodJson;
                 });
@@ -79,12 +90,12 @@ export class TypesOverviewContainer extends Component {
     render() {
 
         const columns = [{
-            title: 'Name',
+            title: translations.name,
             dataIndex: 'name',
             key: 'name',
             sorter: (a,b) => a.name < b.name ? -1 : 1
         }, {
-            title: 'Kategorie',
+            title: translations.category,
             dataIndex: 'category',
             key: 'category',
             filters: this.state.categories.map(item => ({text: item, value: item})),
@@ -92,7 +103,7 @@ export class TypesOverviewContainer extends Component {
             onFilter: (value, record) => record.category.indexOf(value) === 0,
 
         }, {
-            title: 'Section',
+            title: translations.section,
             dataIndex: 'section',
             key: 'section',
             filters: this.state.sections.map(item => ({text: item, value: item})),
@@ -107,12 +118,12 @@ export class TypesOverviewContainer extends Component {
             <div>
                 <Row>
                     <Col span={12}>
-                        <h1>Seminartypen Übersicht</h1>
+                        <h1>{translations.page_title}</h1>
                     </Col>
                     <Col span={12}>
                         <Search 
-                            placeholder="VBT" 
-                            addonBefore="Suche" 
+                            placeholder={translations.search_placeholder}
+                            addonBefore={translations.search_prefix}
                             onSearch={this.handleSearch}/>
                     </Col>
                 </Row>
@@ -122,4 +133,4 @@ export class TypesOverviewContainer extends Component {
     }
 }
 
-TypesOverviewContainer.displayName = 'Seminartypes Overview Container';
+TypesOverviewContainer.displayName = 'Seminar Types Overview Container';

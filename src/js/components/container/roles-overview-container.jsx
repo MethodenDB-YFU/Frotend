@@ -2,9 +2,17 @@ import React, { Component } from 'react';
 import { Row, Col, Input, Table, Tag } from 'antd';
 import { urlHelper } from '../../helpers';
 import {urlConstants} from '../../constants';
+import { tableHelpers } from '../../helpers';
 
 const Search = Input.Search;
 
+const translations = {
+    name: 'Name',
+    role_type: 'Rollen Typ',
+    page_title: 'Seminar Rollen',
+    search_placeholder: 'Leiter',
+    search_prefix: 'Suche',
+};
 
 /**
  * container to display an overview of all available methods
@@ -25,7 +33,7 @@ export class RolesOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        const filtered = this.state.roles.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+        const filtered = tableHelpers.filterByName(searchText, this.state.roles);
         this.updateData(filtered);
     };
 
@@ -49,12 +57,11 @@ export class RolesOverviewContainer extends Component {
                 return results.json();
             }).then(data => {
                 let roles = data.map((role) => {
-                    let methodJson = {
+                    return {
                         key: role.id,
                         name: role.name,
                         role_type: role.role_type
                     };
-                    return methodJson;
                 });
                 
                 this.updateData(roles);
@@ -73,17 +80,13 @@ export class RolesOverviewContainer extends Component {
    * @private
    */
     render() {
-
-        /**
-         * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
-         */
         const columns = [{
-            title: 'Name',
+            title: translations.name,
             dataIndex: 'name',
             key: 'name',
             sorter: (a, b) => a.name < b.name ? -1 : 1,
         }, {
-            title: 'Rollen Typ',
+            title: translations.role_type,
             dataIndex: 'role_type',
             key: 'role_type',
             filters: this.state.role_types.map(item => ({text: item, value: item})),
@@ -103,10 +106,13 @@ export class RolesOverviewContainer extends Component {
             <div>
                 <Row>
                     <Col span={12}>
-                        <h1>Seminarollen Übersicht</h1>
+                        <h1>{translations.page_title}</h1>
                     </Col>
                     <Col span={12}>
-                        <Search placeholder="Leiter" addonBefore='Suche' onSearch={this.handleSearch}/>
+                        <Search
+                            placeholder={translations.search_placeholder}
+                            addonBefore={translations.search_prefix}
+                            onSearch={this.handleSearch}/>
                     </Col>
                 </Row>
                 <Table columns={columns} dataSource={this.state.data} loading={this.state.tableLoading} size="small"/>
@@ -115,4 +121,4 @@ export class RolesOverviewContainer extends Component {
     }
 }
 
-RolesOverviewContainer.displayName = 'Seminarrollen Overview Container';
+RolesOverviewContainer.displayName = 'Seminar Roles Overview Container';

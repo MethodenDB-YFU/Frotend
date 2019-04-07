@@ -13,7 +13,6 @@ const tinymce_config = {
     menubar: '',
     toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist indent outdent | link image | table',
     height: 400,
-    body_class: 'paper-style',
     style_formats: [
         { title: 'Heading 1', block: 'h1' },
         { title: 'Heading 2', block: 'h2' },
@@ -82,7 +81,10 @@ export class MethodContentField extends Component {
                 <Row>
                     <Col span={24}>
                         <FormItem label={translations.method_name}>
-                            <Input placeholder={translations.method_name} value={title} size="large" onChange={this.handleTitleChange}/>
+                            <Input
+                                placeholder={translations.method_name}
+                                value={title} size="large"
+                                onChange={this.handleTitleChange}/>
                         </FormItem>
                         <FormItem>
                             <Editor

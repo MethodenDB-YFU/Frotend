@@ -16,9 +16,8 @@ const translations = {
     explanation_placeholder: 'Hier könnte eine Erklärung stehen.',
 };
 
-
 /**
- * @type {Array.<{title:string, dataIndex:string, key:string, width:integer, render: (text: any, record: T, index: number) => ReactNode>}
+ * @type {Array.<{title:ReactNode, dataIndex:string, key:string, width:integer, render: (text: any, record: T, index: number) => ReactNode>}
  */
 const columns = [{
     title: <Tooltip title={ translations.required }><Icon type="key" theme="outlined" /></Tooltip>,

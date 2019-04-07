@@ -23,45 +23,21 @@ export class GoalForm extends Component {
             seminarTypes: ''
         };
     }
-    /**
-     * initialy disables submit button
-     */
-    componentDidMount() {
-        this.props.form.validateFields();
-        const fetchParams = urlHelper.buildFetchParams(urlConstants.getTypes);
-        fetch(fetchParams.url, fetchParams.request)
-            .then(results => {
-                return results.json();
-            }).then(data => {
-                let i = 0;
-                let seminarTypes = data.map((type) => {
-                    let options = (
-                        <Option key={i} value={type.id}>{type.name}</Option>
-                    );
-                    i++;
-                    return options;
-                });
-                this.setState({
-                    seminarTypes: seminarTypes
-                });
-            });
-        this.onSelectSeminarType = this.onSelectSeminarType.bind(this);
-        this.onDeselectSeminarType = this.onDeselectSeminarType.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+
     /**
      * 
      * @param {*} value 
      * @param {*} option 
      */
     onSelectSeminarType(value, option) {
-        console.log('onSelectSeminarType:value',value);
-        console.log('onSelectSeminarType:option',option);
+        console.log('handleSeminarTypeSelect:value',value);
+        console.log('handleSeminarTypeSelect:option',option);
         this.setState({
             typeId: option.key,
             typeName: option.props.children
         });
     }
+
     /**
      * 
      * @param {*} value 
@@ -73,6 +49,7 @@ export class GoalForm extends Component {
             typeName: ''
         });
     }
+
     /**
      * 
      * @param {Object} e 
@@ -99,6 +76,33 @@ export class GoalForm extends Component {
                 console.log('Received error: ', err);
             }
         });
+    }
+
+    /**
+     * initialy disables submit button
+     */
+    componentDidMount() {
+        this.props.form.validateFields();
+        const fetchParams = urlHelper.buildFetchParams(urlConstants.getTypes);
+        fetch(fetchParams.url, fetchParams.request)
+            .then(results => {
+                return results.json();
+            }).then(data => {
+            let i = 0;
+            let seminarTypes = data.map((type) => {
+                let options = (
+                    <Option key={i} value={type.id}>{type.name}</Option>
+                );
+                i++;
+                return options;
+            });
+            this.setState({
+                seminarTypes: seminarTypes
+            });
+        });
+        this.onSelectSeminarType = this.onSelectSeminarType.bind(this);
+        this.onDeselectSeminarType = this.onDeselectSeminarType.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
  
     /**

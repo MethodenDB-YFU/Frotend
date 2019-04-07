@@ -8,16 +8,15 @@ const Option = Select.Option;
 
 const addAttribute = (list, attribute) => [...list, attribute];
 const delAttribute = (list, attribute) => {
-    const removedIndex = list.findIndex(item => item.id == attribute.id);
-    let attributes = [
+    const removedIndex = list.findIndex(item => item.id === attribute.id);
+    return [
         ...list.slice(0, removedIndex),
         ...list.slice(removedIndex+1)
     ];
-    return attributes;
 };
 
 const mapKeyToAttribute = (list, key) => {
-    return list.find(item => item.id == key);
+    return list.find(item => item.id === key);
 };
 
 const sortByName = (list) => {
@@ -25,12 +24,11 @@ const sortByName = (list) => {
 };
 
 const buildOptions = (data) => {
-    let options = data.map((item) => {
+    return data.map((item) => {
         return (
             <Option key={item.id} value={item.id}>{item.name}</Option>
         );
     });
-    return options;
 };
 
 const translations = {
@@ -64,8 +62,10 @@ export class MethodAttributeFields extends Component {
          * @property {ReactNode} methodTypes selectable method types
          * @property {ReactNode} methodLevels selectable method levels
          * @property {string} selectedSeminar id of selected seminar
+         * @property {object} selectedLevels id of selected method levels
+         * @property {object} selectedTypes id of selected method types
+         * @property {object} selectedGoals id of selected method goals
          * @property {bool} seminarGoalsDisabled state of seminar goals select field (*default is true*)
-         * @property {string} seminarGoalsPlaceholder placeholder for seminar goals select
          */
         this.state = {
             seminarTypes: [],
@@ -141,10 +141,9 @@ export class MethodAttributeFields extends Component {
      * When a seminar type is selected the related goals become available.
      * @see https://ant.design/components/select/#API
      * @param {string} value
-     * @param {ReactElement} option
      */
     handleSeminarTypeSelect(value) {
-        let type = this.state.seminarTypes.filter(item => item.id == value)[0];
+        let type = this.state.seminarTypes.filter(item => item.id === value)[0];
         let goals = type.goals;
 
         this.setState({
@@ -179,14 +178,12 @@ export class MethodAttributeFields extends Component {
                 return results.json();
             }).then(data => {
                 let seminarTypes = data.map((type) => {
-                    let methodJson = {
+                    return {
                         id: type.id,
                         name: type.name,
                         goals: type.goals
                     };
-                    return methodJson;
                 });
-                
                 this.setState({
                     seminarTypes: seminarTypes
                 });
@@ -236,6 +233,7 @@ export class MethodAttributeFields extends Component {
             selectedGoals: this.props.status.seminarGoals
         });
 
+        // if there's a seminar type passed via props, we can show its  goals.
         if (this.props.status.seminarType) {
             this.setState({
                 seminarGoals: this.props.status.seminarType.goals,
@@ -260,6 +258,7 @@ export class MethodAttributeFields extends Component {
     render() {
         // const {getFieldDecorator} = this.props.form;
 
+        // builds the already selected
         const selectedSeminar = (this.state.selectedSeminar) ? this.state.selectedSeminar.id : undefined;
         const selectedTypes = (this.state.selectedTypes) ? this.state.selectedTypes.map(item => item.id) : undefined;
         const selectedLevels = (this.state.selectedLevels) ? this.state.selectedLevels.map(item => item.id) : undefined;
