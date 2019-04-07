@@ -1,28 +1,39 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Row, Col, Input, Table } from 'antd';
+import { Row, Col, Input, Table, Badge, Icon, Tooltip } from 'antd';
 import { urlHelper } from '../../helpers';
-import {urlConstants} from '../../constants';
+import { urlConstants } from '../../constants';
+import { utils } from '../../helpers';
+import { translations } from '../../translations';
+
+const Search = Input.Search;
+
+
+Object.assign(translations, {
+    search_placeholder: 'Kommunikation',
+    page_title: 'Seminarziele Übersicht',
+});
 
 /**
- * @type {Array.<{title:string, dataIndex:string, key:string, render: (text: any, record: T, index: number) => ReactNode>}
+ * @type {Array.<{title:ReactNode, dataIndex:string, key:string, width:integer, render: (text: any, record: T, index: number) => ReactNode>}
  */
 const columns = [{
-    title: 'Name',
+    title: <Tooltip title={ translations.required }><Icon type="key" theme="outlined" /></Tooltip>,
+    dataIndex: 'required',
+    key: 'required',
+    width: 40,
+    render: (required) => <span><Badge status={required ? 'error' : 'success'} /></span>,
+}, {
+    title: translations.name,
     dataIndex: 'name',
     key: 'name',
-    render: (text, record) => <Link to={'/goals/show/'+record.key}>{text}</Link>
-}, {
-    title: 'Beschreibung',
-    dataIndex: 'explanation',
-    key: 'explanation'
+    sorter: (a,b) => a.name < b.name ? -1 : 1
 }];
 
 /**
  * container to display an overview of all available methods
  * @extends Component
  */
-export class GoalesOverviewContainer extends Component {
+export class GoalsOverviewContainer extends Component {
     constructor(props) {
         super(props);
         
@@ -30,7 +41,20 @@ export class GoalesOverviewContainer extends Component {
             goals: [],
             tableLoading: true
         };
+
+        this.handleSearch = this.handleSearch.bind(this);
+        this.updateData = this.updateData.bind(this);
     }
+
+    handleSearch(searchText) {
+        this.updateData(utils.filterByName(searchText, this.state.goals));
+    };
+
+    updateData(newData) {
+        this.setState({
+            data: newData,
+        });
+    };
   
     /**
    * loading all methods when method overview is loaded
@@ -45,11 +69,14 @@ export class GoalesOverviewContainer extends Component {
                     let methodJson = {
                         key: goal.id,
                         name: goal.name,
-                        explanation: goal.explanation
+                        explanation: goal.explanation,
+                        required: goal.required
                     };
                     return methodJson;
                 });
-                
+
+                this.updateData(goals);
+                                
                 // display loaded methods and remove loading-animation
                 this.setState({
                     goals: goals,
@@ -66,23 +93,29 @@ export class GoalesOverviewContainer extends Component {
     render() {
         /**
        * @type {ReactElement}
-       */
-        const createBtn = (<Link to="/goals/new">Ziele erstellen</Link>);
-      
+       */      
         return (
             <div>
                 <Row>
                     <Col span={12}>
-                        <h1>Seminarziele Übersicht</h1>
+                        <h1>{ translations.page_title }</h1>
                     </Col>
                     <Col span={12}>
-                        <Input size="large" placeholder="Kommunikation" addonAfter={createBtn} />
+                        <Search
+                            placeholder={ translations.search_placeholder }
+                            addonBefore={ translations.search_prefix }
+                            onSearch={this.handleSearch}/>
                     </Col>
                 </Row>
-                <Table columns={columns} dataSource={this.state.goals} loading={this.state.tableLoading} />
+                <Table
+                    columns={columns}
+                    expandedRowRender={goal => <p style={{ margin: 0 }}> {goal.explanation || translations.explanation_placeholder}</p>}
+                    dataSource={this.state.data}
+                    loading={this.state.tableLoading}
+                    size="small"/>
             </div>
         );
     }
 }
 
-GoalesOverviewContainer.displayName = 'Seminarziehle Overview Container';
+GoalsOverviewContainer.displayName = 'Seminar Goals Overview Container';

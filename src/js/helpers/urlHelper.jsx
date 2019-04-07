@@ -8,7 +8,7 @@ export const urlHelper = {
     buildFetchParams
 };
 
-let USE_BEARER = false;
+let USE_BEARER = true;
 
 function buildURL(service, parameter = null) {
     const services = urlConstants[service.service];
@@ -24,7 +24,7 @@ function buildURL(service, parameter = null) {
     return url;
 }
 
-function buildHeader() {
+function buildHeader(sendUserId) {
     const state = store.getState();
     const user = state.user.user;
     console.log('buildHeader:user',state.user);
@@ -53,30 +53,25 @@ function buildHeader() {
     let header = {
         //'Access-Control-Allow-Origin': '*',
         //'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-        //'Access-Control-Allow-Headers': 'Content-Type, Accept, X-User-ID',
-        'Content-Type': 'application/json', 
+        //'Access-Control-Allow-Headers': 'Content-Type, Accept',
+        'Content-Type': 'application/json',
         'Accept': 'application/json',
         //'Authorization' : 'Bearer'
-        'X-User-ID': 'ec7869c0-1853-4592-8835-0477953e781a'
     };
-    if(USE_BEARER === 'true') {
+    if(USE_BEARER === true) {
         if(userToken)
             header = { ...header,
                 'Authorization' : 'Bearer '+userToken
             };
     }
-    /*
-    if(userId)
-        header = { ...header,
-            'X-User-ID': userId
-        };
-        */
+    if(sendUserId)
+        header = { ...header };
     return header;
 }
 
 function buildFetchParams(service, parameter = null, data = {}) {
     const url = buildURL(service, parameter);
-    const header = buildHeader();
+    const header = buildHeader(service.sendUserId);
     const services = urlConstants[service.service];
     const ackService = services[service.name];
     let fetchParams = {};

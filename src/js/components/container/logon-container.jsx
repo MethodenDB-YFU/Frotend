@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form,  Icon, Input, Button, Row, Col, Card } from 'antd';
-import Yfu_logo from '../../../images/logo/yfu_logo';
+import YfuLogo from '../../../images/logo/yfu-logo';
 import { connect } from 'react-redux';
 
 //import { userActions } from '../../actions/userActions';
@@ -80,12 +80,12 @@ export class LogonContainer  extends Component{
         const suffix = userName ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
          */
         return (
-            
+
             <div>
                 <Form layout="vertical" onSubmit={this.handleSubmit} className="login-form">
                     <Row>
                         <Col span={12} offset={6}>
-                            <Card bordered={false} loading={this.state.tableLoading}  cover={<Yfu_logo/>}>
+                            <Card bordered={false} loading={this.state.tableLoading}  cover={<YfuLogo/>}>
                                 <Meta title={logonTitle} />
                                 { showForm && <FormItem>
                                     {getFieldDecorator('username', {
@@ -127,7 +127,7 @@ function mapStateToProps(state) {
 // ReactDOM.render(<WrappedLogonContainer />, mountNode);
 const LogonForm = Form.create()(LogonContainer);
 const connectedLoginPage = connect(mapStateToProps)(LogonForm);
-export { connectedLoginPage as LogonFormContainer }; 
+export { connectedLoginPage as LogonFormContainer };
 //export const LogonFormContainer = Form.create()(LogonContainer);
 //export const LogonFormContainer = Form.create()(LogonContainer);
 // LogonContainer.displayName = 'Anmelde Container';

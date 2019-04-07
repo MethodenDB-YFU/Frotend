@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import store from '../../store';
-import { PrivateRoute } from './PrivateRoute';
+//import { PrivateRoute } from './PrivateRoute';
 import { history } from '../../helpers';
 import ReactLoading from 'react-loading';
 //import {mapOidc2User} from '../../middleware';
@@ -14,13 +14,8 @@ import { MethodFormContainer } from '../container/method-form-container';
 import { MethodDetailContainer } from '../container/method-detail-container';
 import { LogonFormContainer } from '../container/logon-container';
 import { CartContainer } from '../container/method-cart-container';
-import { TypesOverviewContainer} from '../container/types-overview-container';
-import { RolesOverviewContainer} from '../container/roles-overview-container';
-import { GoalesOverviewContainer} from '../container/goals-overview-container';
-import { GoalFormContainer} from '../container/goal-form-container';
-import { TypesDetailContainer } from '../container/types-detail-container';
-import { RoleDetailContainer} from '../container/roles-detail-container';
 import { CallbackPage} from '../container/callback_page';
+import { SeminarsContainer } from '../container/seminars-container';
 //import { NOTINITIALIZED } from 'dns';
 //import { NotFound} from '../container/NotFound';
 
@@ -65,18 +60,17 @@ export default class RouterComponentPart extends Component {
             this.isLoading() 
                 ? <center><ReactLoading type="spinningBubbles" color="#642869"  /></center>
                 :<Router history={history}>
-                    <div style={{background: '#fff', padding: 24, minHeight: 280 }}>
-                        <PrivateRoute path="/" exact component={OverviewContainer} />
+                    <div style={{background: '#fff', padding: 24, minHeight: 400 }}>
+                        <Route path="/" exact component={OverviewContainer}/>
+                        <Route path="/method" exact component={OverviewContainer}/>
                         <Route path="/method/new" exact component={MethodFormContainer}/>
                         <Route path="/method/show/:id" component={MethodDetailContainer}/>
                         <Route path="/cart" exact component={CartContainer}/>
                         <Route path="/logon" exact component={LogonFormContainer}/>
-                        <Route path="/seminar/type" exact component={TypesOverviewContainer}/>
-                        <Route path="/seminar/role" exact component={RolesOverviewContainer}/>
-                        <Route path="/seminar/goal" exact component={GoalesOverviewContainer}/>
-                        <Route path="/goals/new" exact component={GoalFormContainer}/>
-                        <Route path="/types/show/:id" exact component={TypesDetailContainer}/>
-                        <Route path="/roles/show/:id" exact component={RoleDetailContainer}/>
+                        <Route path="/seminar" exact component={() => (<SeminarsContainer activeTab="type"/>)}/>
+                        <Route path="/seminar/type" exact component={() => (<SeminarsContainer activeTab="type"/>)}/>
+                        <Route path="/seminar/role" exact component={() => (<SeminarsContainer activeTab="role"/>)}/>
+                        <Route path="/seminar/goal" exact component={() => (<SeminarsContainer activeTab="goal"/>)}/>
                         <Route path="/callback" component={CallbackPage}/>
                     </div>
                 </Router>

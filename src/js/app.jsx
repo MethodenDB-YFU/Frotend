@@ -68,7 +68,7 @@ export default class App extends Component {
                 </Header>
                 <Content>
                     <RouterComponent></RouterComponent>
-                </Content>}
+                </Content>
             </Layout>
         );
     }

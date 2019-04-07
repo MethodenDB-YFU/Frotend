@@ -7,11 +7,10 @@ import store from '../../store';
 import { connect } from 'react-redux';
 import { history } from '../../helpers';
 import { userService } from '../../middleware';
-import Logo from '../../../images/logo/logo.js';
+import Logo from '../../../images/logo/Logo.js';
 import '../../../less/styles.less';
 
 const MenuItem = Menu.Item;
-const SubMenu = Menu.SubMenu;
 /**
  * form fields to describe the method with some meta data
  * @module components/partials/AppMenu
@@ -21,7 +20,7 @@ export class AppMenuComponent extends Component {
     constructor(props) {
         super(props);
         /**
-         * 
+         *
          */
         this.state = {
             user: props.user,
@@ -58,7 +57,7 @@ export class AppMenuComponent extends Component {
                 } else {
                     if(typeof user.user.loggedIn != 'undefined'){
                         userLoggdIn = user.user.loggedIn;
-                    }    
+                    }
                 }
             }
         }
@@ -98,32 +97,24 @@ export class AppMenuComponent extends Component {
     }
     /**
      * handle klick un menu item
-     * @param {string} param0 
+     * @param {string} param0
      */
     onMenuClick ( { key } ) {
     /* { item, key, selectedKeys } */
         //console.log('onMenuClick:e', key);
+        this.setState({selectedKeys: [key]});
         switch (key) {
         case 'method':
             history.push('/');
             break;
         case 'seminar':
-            // history.push('/');
+            history.push('/seminar');
             break;
         case 'cart':
             history.push('/cart');
             break;
         case 'logon':
             this.gotoLogoff();
-            break;
-        case 'seminartype':
-            history.push('/seminar/type');
-            break;
-        case 'seminarrole':
-            history.push('/seminar/role');
-            break;
-        case 'seminargoal':
-            history.push('/seminar/goal');
             break;
         }
     }
@@ -154,14 +145,11 @@ export class AppMenuComponent extends Component {
                     theme="light"
                     mode="horizontal"
                     defaultSelectedKeys={['method']}
+                    selectedKeys={this.state.selectedKeys}
                     style={{lineHeight: '62px' }}
                 >
                     <MenuItem key="method">Methoden</MenuItem>
-                    <SubMenu key="sub1" title='Seminar'>
-                        <MenuItem key="seminartype">Typen</MenuItem>
-                        <MenuItem key="seminargoal">Ziele</MenuItem>
-                        <MenuItem key="seminarrole">Rollen</MenuItem>
-                    </SubMenu>
+                    <MenuItem key="seminar">Seminar</MenuItem>
                 </Menu>
             </div>
             <div className="yfu-menu-right">
@@ -196,8 +184,8 @@ function mapDispatchToProps (dispatch) {
 };
 
 /**
- * 
- * @param {Object} state 
+ *
+ * @param {Object} state
  */
 function mapStateToProps(state) {
     let { user} = state;
@@ -211,4 +199,4 @@ function mapStateToProps(state) {
 }
 
 const connectedAppMenuPage = connect(mapStateToProps,mapDispatchToProps)(AppMenuComponent);
-export { connectedAppMenuPage as AppMenu }; 
+export { connectedAppMenuPage as AppMenu };

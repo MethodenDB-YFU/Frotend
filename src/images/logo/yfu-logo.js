@@ -5,7 +5,7 @@
 */
 import React from 'react';
 
-export default function Yfu_logo(props) {
+export default function YfuLogo(props) {
     return (
         <svg width={450} height={90} xmlns="http://www.w3.org/2000/svg" {...props}>
             <metadata id="metadata129">image/svg+xml</metadata>

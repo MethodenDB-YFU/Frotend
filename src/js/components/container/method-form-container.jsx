@@ -1,13 +1,33 @@
 import React, { Component } from 'react';
-import { Steps, Row, Col, Form } from 'antd';
+import { Steps, Row, Col, Form, Button, Icon } from 'antd';
 import { MethodAttributeFields } from '../partials/method-attribute-fields';
 import { MethodContentField } from '../partials/method-content-field';
 import { MethodAttachmentField } from '../partials/method-attachment-field';
+import { MethodSummary } from '../partials/method-summary';
+import { urlHelper } from '../../helpers';
+import { urlConstants } from '../../constants';
+import { translations } from '../../translations';
 
 /**
  * @type {Steps.Step}
  */
 const Step = Steps.Step;
+
+Object.assign(translations, {
+    page_title: 'Neue Methode Erstellen',
+});
+
+const buildPayload = (data) => {
+    return {
+        attachments: data.attachments,
+        title: data.title,
+        content: data.content,
+        seminar_type: data.seminarType.id,
+        seminar_goals: data.seminarGoals.map((item) => item.id),
+        method_levels: data.methodLevels,
+        method_types: data.methodTypes
+    };
+};
 
 /**
  * form to generate a new method
@@ -19,62 +39,62 @@ export class MethodForm extends Component {
         super(props);
         
         /**
-         * @type {object}
-         * @property {number} currentStep set step in formular
+         * @property {number} currentStep set step in form
+         * @method {object} method object that's being worked on
          */
         this.state = {
-            currentStep: 0
+            currentStep: 0,
+            method: {
+                attachments: [],
+                title: '',
+                content: '',
+                seminarType: '',
+                seminarGoals: [],
+                methodLevels: [],
+                methodTypes: []
+            }
         };
         
         this.nextStep = this.nextStep.bind(this);
         this.prevStep = this.prevStep.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
+        this.saveMethod = this.saveMethod.bind(this);
     }
 
     /**
      * initialy disables submit button
+     * @todo figure out if this is still needed
      */
     componentDidMount() {
-        this.props.form.validateFields();
+        //this.props.form.validateFields();
     }
-    
-    /**
-     * navigating one step forward in the method form
-     * @param {MouseEvent} e 
-     */
-    nextStep(e) {
-        e.preventDefault();
-        const currentStep = this.state.currentStep;
-        
-        this.setState({currentStep: currentStep + 1});
-    }
-    
-    /**
-     * navigating one step back in the method form
-     * @param {MouseEvent} e 
-     */
-    prevStep(e) {
-        e.preventDefault();
-        const currentStep = this.state.currentStep;
-        
-        this.setState({currentStep: currentStep - 1});
-    }
-    
-    /**
-     * handle the steps, when user submits the form
-     * @param {MouseEvent} e 
-     */
-    handleSubmit(e) {
-        e.preventDefault();        
-        this.props.form.setFieldsValue({'methodDescription': document.getElementById('methodDescription').value});
-        
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-            } else {
-                console.log('Received error: ', err);
-            }
+
+    handleUpdate(method) {
+        this.setState({
+            method: method,
         });
+    }
+
+    //@todo backend changes needed (X-User-ID header)
+    saveMethod() {
+        const payload = buildPayload(this.state.method);
+        let fetchParams = urlHelper.buildFetchParams(urlConstants.createMethod, '', payload);
+        fetch(fetchParams.url, fetchParams.request)
+            .then(results => {
+                return results.json();
+            }).then(data => {
+                console.log(data);
+            });
+    }
+
+    nextStep() {
+        const currentStep = this.state.currentStep + 1;
+        this.setState({currentStep: currentStep});
+    }
+
+    prevStep() {
+        const currentStep = this.state.currentStep - 1;
+        this.setState({currentStep: currentStep});
     }
     
     /**
@@ -85,52 +105,83 @@ export class MethodForm extends Component {
         /**
          * @type {number}
          */
-        const currentStep = this.state;
-        /**
-         * @type {Array.<string>}
-         */
-        const attributeState  = ['', 'hide', 'hide'];
-        /**
-         * @type {Array.<string>}
-         */
-        const contentState    = ['hide', '', 'hide'];
-        /**
-         * @type {Array.<string>}
-         */
-        const attachmentState = ['hide', 'hide', ''];
+        const { currentStep } = this.state;
 
+        //@todo how to create documentation for this?
+        const steps = [{
+            title: translations.step_content,
+            content: <MethodContentField handleForm={this.handleUpdate} status={this.state.method}/>,
+            icon: 'form'
+        }, {
+            title: translations.step_attachments,
+            content: <MethodAttachmentField handleForm={this.handleUpdate} status={this.state.method}/>,
+            icon: 'book'
+        }, {
+            title: translations.step_metadata,
+            content: <MethodAttributeFields handleForm={this.handleUpdate} status={this.state.method}/>,
+            icon: 'tags'
+        }, {
+            title: translations.step_summary,
+            content: <MethodSummary status={this.state.method}/>,
+            icon: 'eye'
+        }];
+        
         return (
             <div>
                 <Row>
                     <Col span={24}>
-                        <h2>Neue Methode erstellen</h2>
+                        <h2>{ translations.page_title }</h2>
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={10} offset={7}>
+                    <Col span={16} offset={3}>
                         <Steps current={currentStep}>
-                            <Step title="Metadaten" />
-                            <Step title="Inhalt" />
-                            <Step title="Anhänge" />
+                            {
+                                steps.map(item =>
+                                    <Step
+                                        key={item.title}
+                                        title={item.title}
+                                        icon={<Icon type={item.icon} theme="outlined" />} />)
+                            }
                         </Steps>
                     </Col>
                 </Row>
-                <Form layout="vertical" onSubmit={this.handleSubmit}>
-                    <MethodAttributeFields
-                        className={attributeState[currentStep]}
-                        form={this.props.form}
-                        nextStep={this.nextStep}
-                        prevStep={this.prevStep} />
-                    <MethodContentField
-                        className={contentState[currentStep]}
-                        form={this.props.form}
-                        nextStep={this.nextStep}
-                        prevStep={this.prevStep} />
-                    <MethodAttachmentField
-                        className={attachmentState[currentStep]}
-                        form={this.props.form}
-                        prevStep={this.prevStep} />
-                </Form>
+                <Row>
+                    <Col span={24}>
+                        <Form layout="vertical">
+                            <div className="steps-content">{steps[currentStep].content}</div>
+                        </Form>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <div className="steps-action">
+                            {
+                                currentStep < steps.length - 1
+                                && <Button
+                                    style={{ float: 'right' }}
+                                    type="primary"
+                                    onClick={() => this.nextStep()}>{translations.next}
+                                </Button>
+                            }
+                            {
+                                currentStep === steps.length - 1
+                                && <Button
+                                    style={{ float: 'right' }}
+                                    type="primary"
+                                    onClick={() => this.saveMethod()}>{translations.save}
+                                </Button>
+                            }
+                            {
+                                currentStep > 0
+                                && <Button
+                                    style={{ marginLeft: 8 }}
+                                    onClick={() => this.prevStep()}>{translations.previous}
+                                </Button>
+                            }                   
+                        </div>
+                    </Col>
+                </Row>
             </div>
         );
     }
