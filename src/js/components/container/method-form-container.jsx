@@ -52,9 +52,7 @@ export class MethodForm extends Component {
         
         this.nextStep = this.nextStep.bind(this);
         this.prevStep = this.prevStep.bind(this);
-        this.handleMethodContent = this.handleMethodContent.bind(this);
-        this.handleMethodAttributes = this.handleMethodAttributes.bind(this);
-        this.handleAttachments = this.handleAttachments.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
         this.saveMethod = this.saveMethod.bind(this);
         this.buildPayload = this.buildPayload.bind(this);
     }
@@ -67,34 +65,9 @@ export class MethodForm extends Component {
         this.props.form.validateFields();
     }
 
-    //@todo unite with other handle* methods
-    handleMethodContent(content) {
-        let method = this.state.method;
-        method.title = content.title;
-        method.content = content.content;
+    handleUpdate(method) {
         this.setState({
-            method: method
-        });
-    }
-
-    //@todo unite with other handle* methods
-    handleAttachments(attachments) {
-        let method = this.state.method;
-        method.attachments = attachments.attachments;
-        this.setState({
-            method: method
-        });
-    }
-
-    //@todo unite with other handle* methods
-    handleMethodAttributes(attributes) {
-        let method = this.state.method;
-        method.seminarType = attributes.seminarType;
-        method.seminarGoals = attributes.seminarGoals;
-        method.methodLevels = attributes.methodLevels;
-        method.methodTypes = attributes.methodTypes;
-        this.setState({
-            method: method
+            method: method,
         });
     }
 
@@ -122,18 +95,12 @@ export class MethodForm extends Component {
                 console.log(data);
             });
     }
-    
-    /**
-     * navigating one step forward in the method form
-     */
+
     nextStep() {
         const currentStep = this.state.currentStep + 1;
         this.setState({currentStep: currentStep});
     }
-    
-    /**
-     * navigating one step back in the method form
-     */
+
     prevStep() {
         const currentStep = this.state.currentStep - 1;
         this.setState({currentStep: currentStep});
@@ -152,15 +119,15 @@ export class MethodForm extends Component {
         //@todo how to create documentation for this?
         const steps = [{
             title: translations.step_content,
-            content: <MethodContentField handleForm={this.handleMethodContent} status={this.state.method}/>,
+            content: <MethodContentField handleForm={this.handleUpdate} status={this.state.method}/>,
             icon: 'form'
         }, {
             title: translations.step_attachments,
-            content: <MethodAttachmentField handleForm={this.handleAttachments} status={this.state.method}/>,
+            content: <MethodAttachmentField handleForm={this.handleUpdate} status={this.state.method}/>,
             icon: 'book'
         }, {
             title: translations.step_metadata,
-            content: <MethodAttributeFields handleForm={this.handleMethodAttributes} status={this.state.method}/>,
+            content: <MethodAttributeFields handleForm={this.handleUpdate} status={this.state.method}/>,
             icon: 'tags'
         }, {
             title: translations.step_summary,
@@ -176,7 +143,7 @@ export class MethodForm extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={14} offset={5}>
+                    <Col span={16} offset={3}>
                         <Steps current={currentStep}>
                             {
                                 steps.map(item =>

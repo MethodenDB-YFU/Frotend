@@ -24,14 +24,13 @@ export class MethodSummary extends Component {
 
         const { seminarGoals } = this.props.status;
         const { content } = this.props.status;
+
+        const translations = {
+            goals: 'Ziele',
+        };
         
         return (
             <div>
-                <Row>
-                    <Col span={24}>
-                        <h2>Zusammenfassung</h2>
-                    </Col>
-                </Row>
                 <Row>
                     <Col span={24}>
                         <h3>{this.state.method.title}</h3>
@@ -39,7 +38,7 @@ export class MethodSummary extends Component {
                 </Row>
                 <Row>
                     <Col span={9} offset={3}>
-                        <h3>Ziele</h3>
+                        <h3>{translations.goals}</h3>
                         <ul>
                             {seminarGoals.map(item=> (<li key={item.id}>{item.name}</li>))}
                         </ul>

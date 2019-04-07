@@ -4,6 +4,25 @@ import { Editor } from '@tinymce/tinymce-react';
 
 const FormItem = Form.Item;
 
+const translations = {
+    method_name: 'Methodenname',
+};
+
+const tinymce_config = {
+    plugins: 'autolink image link lists paste table',
+    menubar: '',
+    toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist indent outdent | link image | table',
+    height: 400,
+    body_class: 'paper-style',
+    style_formats: [
+        { title: 'Heading 1', block: 'h1' },
+        { title: 'Heading 2', block: 'h2' },
+        { title: 'Heading 3', block: 'h3' },
+        { title: 'Text', block: 'p' }
+    ],
+    statusbar: false
+};
+
 /**
  * form field to add the important content of the method
  * @extends Component
@@ -38,12 +57,9 @@ export class MethodContentField extends Component {
     }
 
     componentWillUnmount() {
-        let data = {
-            'title': this.state.title,
-            'content': this.state.content
-        };
-
-        this.props.handleForm(data);
+        this.props.status.title = this.state.title;
+        this.props.status.content = this.state.content;
+        this.props.handleForm(this.props.status);
     }
 
     componentDidMount() {
@@ -59,32 +75,19 @@ export class MethodContentField extends Component {
      * @private
      */
     render() {
-        // const {getFieldDecorator } = this.props.form;
         const { title, content } = this.state;
+
         return (
             <div className={this.props.className}>
                 <Row>
                     <Col span={24}>
-                        <FormItem label="Methodenname">
-                            <Input placeholder="Methodenname" value={title} size="large" onChange={this.handleTitleChange}/>
+                        <FormItem label={translations.method_name}>
+                            <Input placeholder={translations.method_name} value={title} size="large" onChange={this.handleTitleChange}/>
                         </FormItem>
                         <FormItem>
                             <Editor
                                 initialValue={content}
-                                init={{
-                                    plugins: 'autolink image link lists paste table',
-                                    menubar: '',
-                                    toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist indent outdent | link image | table',
-                                    height: 400,
-                                    body_class: 'paper-style',
-                                    style_formats: [
-                                        { title: 'Heading 1', block: 'h1' },
-                                        { title: 'Heading 2', block: 'h2' },
-                                        { title: 'Heading 3', block: 'h3' },
-                                        { title: 'Text', block: 'p' }
-                                    ],
-                                    statusbar: false
-                                }}
+                                init={tinymce_config}
                                 onChange={this.handleEditorChange}
                             />
                         </FormItem>

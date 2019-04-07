@@ -24,6 +24,30 @@ const sortByName = (list) => {
     return list.sort((a, b) => a.name < b.name ? -1 : 1);
 };
 
+const buildOptions = (data) => {
+    let options = data.map((item) => {
+        return (
+            <Option key={item.id} value={item.id}>{item.name}</Option>
+        );
+    });
+    return options;
+};
+
+const translations = {
+    seminar: 'Seminar',
+    type: 'Typ',
+    level: 'Level',
+    seminar_goals: 'Seminarziele',
+    seminar_select_placeholder: 'Seminar auswählen...',
+    no_seminars_found: 'Es existieren keine Seminare',
+    method_type_select_placeholder: 'Methodentyp auswählen...',
+    no_method_types_found: 'Es existieren keine Methodentypen',
+    method_level_select_placeholder: 'Methoden-Level auswählen...',
+    no_method_levels_found: 'Es existieren keine Methoden-Level',
+    seminar_goals_select_placeholder: 'Seminarziele auswählen...',
+    no_seminar_goals_found: 'Es existieren keine Seminarziele für das ausgwählte Seminar',
+};
+
 /**
  * form fields to describe the method with some meta data
  * @module components/partials/MethodAttributeFields
@@ -53,44 +77,16 @@ export class MethodAttributeFields extends Component {
             selectedTypes: [],
             selectedGoals: [],
             seminarGoalsDisabled: true,
-            seminarGoalsPlaceholder: 'Bitte erst ein Seminar auswählen!'
         };
-        
-        this.onSelectSeminarType = this.onSelectSeminarType.bind(this);
-        this.onDeselectSeminarType = this.onDeselectSeminarType.bind(this);
-        this.buildOptions = this.buildOptions.bind(this);
-        this.extractGoals = this.extractGoals.bind(this);
+
+        this.handleSeminarTypeSelect = this.handleSeminarTypeSelect.bind(this);
+        this.handleSeminarTypeDeselect = this.handleSeminarTypeDeselect.bind(this);
         this.handleLevelSelect = this.handleLevelSelect.bind(this);
         this.handleLevelDeselect = this.handleLevelDeselect.bind(this);
         this.handleTypeSelect = this.handleTypeSelect.bind(this);
         this.handleTypeDeselect = this.handleTypeDeselect.bind(this);
         this.handleGoalSelect = this.handleGoalSelect.bind(this);
         this.handleGoalDeselect = this.handleGoalDeselect.bind(this);
-    }
-    
-
-    buildOptions(data) {
-        let options = data.map((item) => {
-            return (
-                <Option key={item.id} value={item.id}>{item.name}</Option>
-            );              
-        });
-        return options;
-    }
-
-    extractGoals(seminarType) {
-        let goals = seminarType.map(type => type.goals);
-        return goals;
-    }
-
-    componentWillUnmount() {
-        let attributes = {
-            seminarType: this.state.selectedSeminar,
-            seminarGoals: this.state.selectedGoals,
-            methodLevels: this.state.selectedLevels,
-            methodTypes: this.state.selectedTypes
-        };
-        this.props.handleForm(attributes);
     }
 
     handleLevelSelect(key) {
@@ -140,6 +136,38 @@ export class MethodAttributeFields extends Component {
             selectedGoals: goals
         });
     }
+
+    /**
+     * When a seminar type is selected the related goals become available.
+     * @see https://ant.design/components/select/#API
+     * @param {string} value
+     * @param {ReactElement} option
+     */
+    handleSeminarTypeSelect(value) {
+        let type = this.state.seminarTypes.filter(item => item.id == value)[0];
+        let goals = type.goals;
+
+        this.setState({
+            seminarGoals: goals,
+            selectedSeminar: type,
+            seminarGoalsDisabled: false,
+        });
+    }
+
+    /**
+     * When a seminar type is deselected the goals-select becomes inactive.
+     * @see https://ant.design/components/select/#API
+     * @param {string} value
+     * @param {ReactElement} option
+     */
+    handleSeminarTypeDeselect(value, option) { //eslint-disable-line no-unused-vars
+        this.setState({
+            selectedSeminar: {},
+            seminarGoals: [],
+            seminarGoalsDisabled: true,
+        });
+    }
+
     /**
      * load the options for the select-fields
      */
@@ -215,38 +243,13 @@ export class MethodAttributeFields extends Component {
             });
         }
     }
-    
-    /**
-     * When a seminar type is selected the related goals become available.
-     * @see https://ant.design/components/select/#API
-     * @param {string} value
-     * @param {ReactElement} option
-     */
-    onSelectSeminarType(value) {
-        let type = this.state.seminarTypes.filter(item => item.id == value)[0];
-        let goals = type.goals;
 
-        this.setState({
-            seminarGoals: goals,
-            selectedSeminar: type,
-            seminarGoalsDisabled: false,
-            seminarGoalsPlaceholder: 'Bitte erst ein Seminar auswählen!'
-        });
-    }
-    
-    /**
-     * When a seminar type is deselected the goals-select becomes inactive.
-     * @see https://ant.design/components/select/#API
-     * @param {string} value
-     * @param {ReactElement} option
-     */
-    onDeselectSeminarType(value, option) { //eslint-disable-line no-unused-vars
-        this.setState({
-            selectedSeminar: {},
-            seminarGoals: [],
-            seminarGoalsDisabled: true,
-            seminarGoalsPlaceholder: 'Seminarziel(e) auswählen...!'
-        });
+    componentWillUnmount() {
+        this.props.status.seminarType = this.state.selectedSeminar;
+        this.props.status.seminarGoals = this.state.selectedGoals;
+        this.props.status.methodLevels = this.state.selectedLevels;
+        this.props.status.methodTypes = this.state.selectedTypes;
+        this.props.handleForm(this.props.status);
     }
 
     /**
@@ -266,66 +269,66 @@ export class MethodAttributeFields extends Component {
             <div className={this.props.className}>
                 <Row gutter={16}>
                     <Col span={8}>
-                        <FormItem label="Seminar">
+                        <FormItem label={translations.seminar}>
                             <Select
                                 showSearch
-                                placeholder="Seminar auswählen..."
+                                placeholder={translations.seminar_select_placeholder}
                                 value={selectedSeminar}
-                                notFoundContent="Es existieren keine Seminare"
-                                onSelect={this.onSelectSeminarType}
+                                notFoundContent={translations.no_seminars_found}
+                                onSelect={this.handleSeminarTypeSelect}
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 optionFilterProp="children"
-                                onDeselect={this.onDeselectSeminarType} >
-                                {this.buildOptions(sortByName(this.state.seminarTypes))}
+                                onDeselect={this.handleSeminarTypeDeselect} >
+                                {buildOptions(sortByName(this.state.seminarTypes))}
                             </Select>
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem label="Typ">
+                        <FormItem label={translations.type}>
                             <Select
                                 mode="multiple"
                                 value={selectedTypes}
-                                placeholder="Methodentyp auswählen..."
-                                notFoundContent="Es existieren keine Methodenypen" 
+                                placeholder={translations.method_type_select_placeholder}
+                                notFoundContent={translations.no_method_types_found}
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 optionFilterProp="children"
                                 onSelect={this.handleTypeSelect}
                                 onDeselect={this.handleTypeDeselect}>
-                                {this.buildOptions(sortByName(this.state.methodTypes))}
+                                {buildOptions(sortByName(this.state.methodTypes))}
                             </Select>
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem label="Level">
+                        <FormItem label={translations.level}>
                             <Select
                                 mode="multiple"
                                 value={selectedLevels}
-                                placeholder="Level auswählen..."
-                                notFoundContent="Es existieren keine Level"
+                                placeholder={translations.method_level_select_placeholder}
+                                notFoundContent={translations.no_method_levels_found}
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 optionFilterProp="children"
                                 onSelect={this.handleLevelSelect}
                                 onDeselect={this.handleLevelDeselect}>
-                                {this.buildOptions(sortByName(this.state.methodLevels))}
+                                {buildOptions(sortByName(this.state.methodLevels))}
                             </Select>
                         </FormItem>
                     </Col>
                 </Row>
                 <Row>
                     <Col span={24}>
-                        <FormItem label="Seminarziele">
+                        <FormItem label={translations.seminar_goals}>
                             <Select
                                 showSearch
                                 mode="multiple"
                                 value={selectedGoals}
                                 disabled={this.state.seminarGoalsDisabled}
-                                placeholder={this.state.seminarGoalsPlaceholder}
+                                placeholder={translations.seminar_goals_select_placeholder}
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 optionFilterProp="children"
                                 onSelect={this.handleGoalSelect}
                                 onDeselect={this.handleGoalDeselect}
-                                notFoundContent="Es existieren keine Ziele für dieses Seminar">
-                                {this.buildOptions(sortByName(this.state.seminarGoals))}
+                                notFoundContent={translations.no_seminar_goals_found}>
+                                {buildOptions(sortByName(this.state.seminarGoals))}
                             </Select>
                         </FormItem>
                     </Col>

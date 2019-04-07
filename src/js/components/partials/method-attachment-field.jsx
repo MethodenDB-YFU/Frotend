@@ -36,10 +36,8 @@ export class MethodAttachmentField extends Component {
     }
 
     componentWillUnmount() {
-        let attachments = {
-            attachments: this.state.attachments
-        };
-        this.props.handleForm(attachments);
+        this.props.status.attachments = this.state.attachments;
+        this.props.handleForm(this.props.status);
     }
 
     /**
