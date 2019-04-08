@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
-import { Form, Row, Col, Input } from 'antd';
-import { Editor } from '@tinymce/tinymce-react';
+import { Form, Input } from 'antd';
+import { Editor } from '../../shared/editor';
 import { translations } from '../../translations';
 
 const FormItem = Form.Item;
 
-const tinymce_config = {
-    plugins: 'autolink image link lists paste table',
-    menubar: '',
-    toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist indent outdent | link image | table',
-    height: 400,
-    style_formats: [
-        { title: 'Heading 1', block: 'h1' },
-        { title: 'Heading 2', block: 'h2' },
-        { title: 'Heading 3', block: 'h3' },
-        { title: 'Text', block: 'p' }
-    ],
-    statusbar: false
+const content_placeholder = {
+    blocks: [
+        {
+            type: 'header',
+            data: {
+                text: 'Einleitung',
+                level: 1
+            }
+        }, {
+            type: 'paragraph',
+            data: {
+                text: 'Hier kommt die Beschreibung der Methode mit Bildern ... hin. Ziele kommen erst im nächsten Schritt.'
+            }
+        }],
+    time: 1554662088814,
+    version: '2.12.4'
 };
 
 /**
@@ -28,21 +32,17 @@ export class MethodContentField extends Component {
         super(props);
         
         this.state = {
-            title: '',
-            content: ''
+            title: this.props.status.title,
+            content: this.props.status.content || content_placeholder,
         };
 
         this.handleEditorChange = this.handleEditorChange.bind(this);
         this.handleTitleChange = this.handleTitleChange.bind(this);
     }
     
-    /**
-     * TinyMCE creates an iframe and doesn't copy the written content to the hidden textarea which React sees,
-     * so we copy the written content when ever something changes in the editor
-     */
-    handleEditorChange(e) {
+    handleEditorChange(content) {
         this.setState({
-            content: e.target.getContent()
+            content: content,
         });
     }
 
@@ -58,13 +58,6 @@ export class MethodContentField extends Component {
         this.props.handleForm(this.props.status);
     }
 
-    componentDidMount() {
-        this.setState({
-            title: this.props.status.title,
-            content: this.props.status.content
-        });
-    }
-
     /**
      * render method
      * @return {ReactElement} markup
@@ -75,23 +68,19 @@ export class MethodContentField extends Component {
 
         return (
             <div className={this.props.className}>
-                <Row>
-                    <Col span={24}>
-                        <FormItem label={translations.method_name}>
-                            <Input
-                                placeholder={translations.method_name}
-                                value={title} size="large"
-                                onChange={this.handleTitleChange}/>
-                        </FormItem>
-                        <FormItem>
-                            <Editor
-                                initialValue={content}
-                                init={tinymce_config}
-                                onChange={this.handleEditorChange}
-                            />
-                        </FormItem>
-                    </Col>
-                </Row>
+                <FormItem label={translations.method_name}>
+                    <Input
+                        placeholder={translations.method_name}
+                        value={title} size="large"
+                        onChange={this.handleTitleChange}
+                    />
+                </FormItem>
+                <FormItem>
+                    <Editor
+                        data={content}
+                        onChange={this.handleEditorChange}
+                    />
+                </FormItem>
             </div>
         );
     }
