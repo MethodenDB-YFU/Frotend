@@ -149,7 +149,7 @@ export class MethodForm extends Component {
                 <Row>
                     <Col span={24}>
                         <Form layout="vertical">
-                            <div className="steps-content">{steps[currentStep].content}</div>
+                            <div className={`steps-content steps-content-${currentStep+1}`}>{steps[currentStep].content}</div>
                         </Form>
                     </Col>
                 </Row>
