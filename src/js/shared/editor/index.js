@@ -8,53 +8,14 @@ import Delimiter from '@editorjs/delimiter';
 import Quote from '@editorjs/quote';
 import Warning from '@editorjs/warning';
 import Paragraph from '@editorjs/paragraph';
+import Image from '@editorjs/image';
 
 /*
-const initialData = {
-    time : new Date().getTime()/1000,
-    blocks : [{
-        type: 'header',
-        data: {
-            text: 'Einleitung',
-            level: 1,
-        }
-    }, {
-        type: 'paragraph',
-        data: {
-            text: 'Hier kommt die Beschreibung der Methode mit Bildern ... hin. Ziele kommen erst im nächhsten Schritt.',
-        }
-    }],
-    version : '2.12.4'
-};
-*/
-
-
-
-
-//@todo image support!
-/*const config = {
-    header: Header,
-    list: List,
-    link: Link,
-    table: {
-        class: Table,
-        inlineToolbar: true
-    },
-    delimiter: Delimiter,
-    quote: {
-        class: Quote,
-        inlineToolbar: ['bold'],
-    },
-    warning: {
-        class: Warning,
-        inlineToolbar: true,
-    },
-    paragraph: {
-        class: Paragraph,
-        inlineToolbar: true,
-    },
-};*/
-
+    @todo image support
+    @todo move editor config out of component
+    @todo allow config override from calling component
+    @todo styling
+ */
 
 /**
  * form field to add attachments to the method like graphics or texts
@@ -78,9 +39,18 @@ export class Editor extends Component {
             holderId: 'editorjs',
             onChange: () => { this.save(); },
             tools: {
-                header: Header,
-                list: List,
-                link: Link,
+                header: {
+                    class: Header,
+                    inlineToolbar: ['italic'],
+                },
+                list: {
+                    class: List,
+                    inlineToolbar: true,
+                },
+                link: {
+                    class: Link,
+                    inlineToolbar: true,
+                },
                 table: {
                     class: Table,
                     inlineToolbar: true
@@ -92,12 +62,17 @@ export class Editor extends Component {
                 },
                 warning: {
                     class: Warning,
-                    inlineToolbar: true,
+                    inlineToolbar: ['italic', 'bold'],
                 },
                 paragraph: {
                     class: Paragraph,
                     inlineToolbar: true,
                 },
+                image: {
+                    class: Image,
+                    inlineToolbar: true,
+                },
+
             },
             data: this.props.data,
         });
