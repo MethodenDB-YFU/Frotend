@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import {Tabs} from 'antd';
-import { AttachmentEditor } from './attachment-editor';
-import {translations} from '../../translations';
-import {addAttribute, getAttribute, containsAttribute, updateAttribute} from '../../helpers';
+import {translations} from '../../../translations';
+import { addAttribute, updateAttribute, containsAttribute, getAttribute } from '../../../helpers';
+import { TitleContentEditor } from '../shared/title-content-editor';
 import v4 from 'uuid';
 
 const TabPane = Tabs.TabPane;
 
 const newAttachment = [{
     id: 'active',
-    title: translations.create_attachment,
+    title: translations.add_attachment,
     content: {
         blocks: [{
             type: 'header',
@@ -25,7 +25,7 @@ const newAttachment = [{
  * form field to add attachments to the method like graphics or texts
  * @extends Component
  */
-export class MethodAttachmentField extends Component {
+export class AttachmentEditor extends Component {
     constructor(props) {
         super(props);
 
@@ -86,7 +86,7 @@ export class MethodAttachmentField extends Component {
      */
     componentDidMount() {
         this.setState({
-            attachments: this.props.status.attachments,
+            attachments: this.props.method.attachments,
             current: newAttachment[0],
         });
     }
@@ -95,8 +95,8 @@ export class MethodAttachmentField extends Component {
      * before component unmounts we need to make sure, all attachments have a UUID as ID and are appended to master list
      */
     componentWillUnmount() {
-        this.props.status.attachments = this.state.attachments;
-        this.props.handleForm(this.props.status);
+        this.props.method.attachments = this.state.attachments;
+        this.props.handleForm(this.props.method);
     }
 
     /**
@@ -119,7 +119,13 @@ export class MethodAttachmentField extends Component {
                             if (att.id === this.state.current.id) { return false; };
                             return (
                                 <TabPane tab={att.title} key={att.id}>
-                                    <AttachmentEditor data={att} handleUpdate={this.handleUpdate}/>
+                                    <TitleContentEditor
+                                        placeholderTitle={translations.attachment_title}
+                                        handleUpdate={this.handleUpdate}
+                                        // className={}
+                                        title={att.title}
+                                        content={att.content}
+                                    />
                                 </TabPane>
                             );
                         }
@@ -127,7 +133,14 @@ export class MethodAttachmentField extends Component {
                         )
                     }
                     <TabPane tab={this.state.current.title} key={newAttachment[0].id}>
-                        <AttachmentEditor data={newAttachment[0]} handleUpdate={this.handleUpdate}/>
+                        <TitleContentEditor
+                            placeholderTitle={translations.new_attachment}
+                            handleUpdate={this.handleUpdate}
+                            // className={}
+                            title={this.state.current.title}
+                            content={newAttachment[0]}
+                        />
+
                     </TabPane>
                     <TabPane tab={translations.create_attachment} key='new'/>
                 </Tabs>

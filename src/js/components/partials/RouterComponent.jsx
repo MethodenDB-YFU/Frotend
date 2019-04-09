@@ -10,7 +10,7 @@ import { userService } from '../../middleware';
 import { loginUser, checkLoginStatus } from '../../actions/loginActions';
 
 import { OverviewContainer } from '../container/overview-container';
-import { MethodFormContainer } from '../container/method-form-container';
+import { MethodEditor } from '../../pages/method-editor';
 import { MethodDetailContainer } from '../container/method-detail-container';
 import { LogonFormContainer } from '../container/logon-container';
 import { CartContainer } from '../container/method-cart-container';
@@ -63,7 +63,7 @@ export default class RouterComponentPart extends Component {
                     <div style={{background: '#fff', padding: 24, minHeight: 400 }}>
                         <Route path="/" exact component={OverviewContainer}/>
                         <Route path="/method" exact component={OverviewContainer}/>
-                        <Route path="/method/new" exact component={MethodFormContainer}/>
+                        <Route path="/method/new" exact component={MethodEditor}/>
                         <Route path="/method/show/:id" component={MethodDetailContainer}/>
                         <Route path="/cart" exact component={CartContainer}/>
                         <Route path="/logon" exact component={LogonFormContainer}/>
