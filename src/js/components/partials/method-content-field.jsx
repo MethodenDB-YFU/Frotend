@@ -1,23 +1,8 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Input } from 'antd';
-import { Editor } from '@tinymce/tinymce-react';
 import { translations } from '../../translations';
 
 const FormItem = Form.Item;
-
-const tinymce_config = {
-    plugins: 'autolink image link lists paste table',
-    menubar: '',
-    toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist indent outdent | link image | table',
-    height: 400,
-    style_formats: [
-        { title: 'Heading 1', block: 'h1' },
-        { title: 'Heading 2', block: 'h2' },
-        { title: 'Heading 3', block: 'h3' },
-        { title: 'Text', block: 'p' }
-    ],
-    statusbar: false
-};
 
 /**
  * form field to add the important content of the method
@@ -35,11 +20,7 @@ export class MethodContentField extends Component {
         this.handleEditorChange = this.handleEditorChange.bind(this);
         this.handleTitleChange = this.handleTitleChange.bind(this);
     }
-    
-    /**
-     * TinyMCE creates an iframe and doesn't copy the written content to the hidden textarea which React sees,
-     * so we copy the written content when ever something changes in the editor
-     */
+
     handleEditorChange(e) {
         this.setState({
             content: e.target.getContent()
@@ -86,7 +67,7 @@ export class MethodContentField extends Component {
                         <FormItem>
                             <Editor
                                 initialValue={content}
-                                init={tinymce_config}
+
                                 onChange={this.handleEditorChange}
                             />
                         </FormItem>
