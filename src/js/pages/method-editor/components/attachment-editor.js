@@ -7,6 +7,16 @@ import v4 from 'uuid';
 
 const TabPane = Tabs.TabPane;
 
+const blocks = {
+    blocks: [{
+        type: 'header',
+        data: {
+            text: 'Neuer Anhang',
+            level: 1
+        }
+    }]
+};
+
 const newAttachment = [{
     id: 'active',
     title: translations.add_attachment,
@@ -31,7 +41,11 @@ export class AttachmentEditor extends Component {
 
         this.state = {
             attachments: [],
-            current: {},
+            current: {
+                id: 'active',
+                title: translations.add_attachment,
+                content: blocks,
+            },
         };
 
         this.handleUpdate = this.handleUpdate.bind(this);
@@ -58,6 +72,8 @@ export class AttachmentEditor extends Component {
                 attachments: attachments,
                 current: newAttachment[0]
             });
+        } else if (key === 'active') {
+            return;
         } else {
             const current = getAttribute(this.state.attachments, key);
             this.setState({
@@ -70,26 +86,25 @@ export class AttachmentEditor extends Component {
      * @param attachment
      */
     handleUpdate(attachment) {
-        console.log(this.state);
+        // As the editor doesn't know about IDs, we need to repopulate here.
+        attachment.id = this.state.current.id;
+        this.setState({
+            current: attachment,
+        });
+
+
+
         // let attachments = this.state.attachments;
         // attachments = containsAttribute(attachments, attachment)
         //     ? updateAttribute(attachments, attachment)
         //     : addAttribute(attachments, attachment);
 
-        this.setState({
-            current: attachment
-        });
     }
 
     /**
      * @todo modify for update, i.e. figure out if current should really be newAttachment all the time.
      */
-    componentDidMount() {
-        this.setState({
-            attachments: this.props.method.attachments,
-            current: newAttachment[0],
-        });
-    }
+    componentDidMount() {}
 
     /**
      * before component unmounts we need to make sure, all attachments have a UUID as ID and are appended to master list
@@ -106,10 +121,12 @@ export class AttachmentEditor extends Component {
      */
     render() {
 
+        console.log('current id', this.state.current.id);
+
         return (
             <div className={this.props.className}>
                 <Tabs
-                    defaultActiveKey={newAttachment[0].id}
+                    // defaultActiveKey={newAttachment[0].id}
                     activeKey={this.state.current.id}
                     tabPosition='left'
                     onTabClick={this.onTabPaneClick.bind(this)}
@@ -132,6 +149,7 @@ export class AttachmentEditor extends Component {
 
                         )
                     }
+
                     <TabPane tab={this.state.current.title} key={newAttachment[0].id}>
                         <TitleContentEditor
                             placeholderTitle={translations.new_attachment}
