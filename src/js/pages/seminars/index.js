@@ -12,7 +12,7 @@ const TabPane = Tabs.TabPane;
  * container to display an overview of all available methods
  * @extends Component
  */
-export class SeminarsContainer extends Component {
+export class Seminars extends Component {
     constructor(props) {
         super(props);
 

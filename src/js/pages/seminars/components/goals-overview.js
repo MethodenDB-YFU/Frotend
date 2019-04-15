@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Input, Table, Badge, Icon, Tooltip } from 'antd';
-import { urlHelper } from '../../../helpers';
+import { urlHelper, filterByName } from '../../../helpers';
 import { urlConstants } from '../../../constants';
-import { filterByName } from '../../../helpers';
 import { translations as t} from '../../../translations';
 
 const Search = Input.Search;

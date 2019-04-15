@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
+import ReactLoading from 'react-loading';
+import store from '../../store';
 import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import store from '../../store';
-//import { PrivateRoute } from './PrivateRoute';
 import { history } from '../../helpers';
-import ReactLoading from 'react-loading';
-//import {mapOidc2User} from '../../middleware';
 import { userService } from '../../middleware';
 import { loginUser, checkLoginStatus } from '../../actions/loginActions';
 
 import { OverviewContainer } from '../container/overview-container';
 import { MethodEditor } from '../../pages/method-editor';
+import { Seminars } from '../../pages/seminars';
 import { MethodDetailContainer } from '../container/method-detail-container';
 import { LogonFormContainer } from '../container/logon-container';
 import { CartContainer } from '../container/method-cart-container';
-import { CallbackPage} from '../container/callback_page';
-import { SeminarsContainer } from '../../pages/seminars';
+import { CallbackPage } from '../container/callback_page';
+
 //import { NOTINITIALIZED } from 'dns';
 //import { NotFound} from '../container/NotFound';
+//import { PrivateRoute } from './PrivateRoute';
+//import { mapOidc2User } from '../../middleware';
 
 export default class RouterComponentPart extends Component {
     constructor(props) {
@@ -67,10 +68,10 @@ export default class RouterComponentPart extends Component {
                         <Route path="/method/show/:id" component={MethodDetailContainer}/>
                         <Route path="/cart" exact component={CartContainer}/>
                         <Route path="/logon" exact component={LogonFormContainer}/>
-                        <Route path="/seminar" exact component={() => (<SeminarsContainer activeTab="type"/>)}/>
-                        <Route path="/seminar/type" exact component={() => (<SeminarsContainer activeTab="type"/>)}/>
-                        <Route path="/seminar/role" exact component={() => (<SeminarsContainer activeTab="role"/>)}/>
-                        <Route path="/seminar/goal" exact component={() => (<SeminarsContainer activeTab="goal"/>)}/>
+                        <Route path="/seminar" exact component={() => (<Seminars activeTab="type"/>)}/>
+                        <Route path="/seminar/type" exact component={() => (<Seminars activeTab="type"/>)}/>
+                        <Route path="/seminar/role" exact component={() => (<Seminars activeTab="role"/>)}/>
+                        <Route path="/seminar/goal" exact component={() => (<Seminars activeTab="goal"/>)}/>
                         <Route path="/callback" component={CallbackPage}/>
                     </div>
                 </Router>
