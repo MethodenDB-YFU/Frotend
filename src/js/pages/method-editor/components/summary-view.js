@@ -2,33 +2,26 @@ import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 
 
-export class MethodSummary extends Component {    
-    constructor(props) {    
+export class SummaryView extends Component {
+    constructor(props) {
         super(props);
-    
-        this.state = {    
-            method: {}   
-        };    
+
+        this.state = {
+            method: this.props.method,
+        };
     }
 
-    componentDidMount() {
-        this.setState({
-            method: this.props.status
-        });
-    }
-    
     render() {
 
-        const RawHTML = ({children, className = ''}) => 
+        const RawHTML = ({children, className = ''}) =>
             <div className={className} dangerouslySetInnerHTML={{ __html: children.replace(/\n/g, '<br />')}} />;
 
-        const { seminarGoals } = this.props.status;
-        const { content } = this.props.status;
+        const { seminarGoals, content } = this.props.method;
 
         const translations = {
             goals: 'Ziele',
         };
-        
+
         return (
             <div>
                 <Row>
@@ -51,7 +44,7 @@ export class MethodSummary extends Component {
                     <Col span={18} offset={3}>
                         <RawHTML>{content}</RawHTML>
                     </Col>
-                </Row> 
+                </Row>
             </div>
         );
     }

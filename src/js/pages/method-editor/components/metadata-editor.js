@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { Row, Col, Form, Select } from 'antd';
-import { urlHelper } from '../../helpers';
-import {urlConstants} from '../../constants';
-import { utils } from '../../helpers';
-import { translations } from '../../translations';
+import { urlHelper } from '../../../helpers';
+import { urlConstants } from '../../../constants';
+import { sortByName, mapKeyToAttribute, addAttribute, delAttribute } from '../../../helpers';
+import { translations } from '../../../translations';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-
-const { sortByName, mapKeyToAttribute, addAttribute, delAttribute } = utils;
 
 const buildOptions = (data) => {
     return data.map((item) => {
@@ -23,10 +21,10 @@ const buildOptions = (data) => {
  * @module components/partials/MethodAttributeFields
  * @extends Component
  */
-export class MethodAttributeFields extends Component {
+export class MetadataEditor extends Component {
     constructor(props) {
         super(props);
-        
+
         /**
          * @type {object}
          * @property {ReactNode} seminarTypes selectable seminar types
@@ -160,7 +158,7 @@ export class MethodAttributeFields extends Component {
                     seminarTypes: seminarTypes
                 });
             });
-            
+
 
         // fetching the method types
         fetchParams = urlHelper.buildFetchParams(urlConstants.getAllMethodTypes);
@@ -179,8 +177,8 @@ export class MethodAttributeFields extends Component {
                     methodTypes: methodTypes
                 });
             });
-            
-        
+
+
         // fetching the method levels
         fetchParams = urlHelper.buildFetchParams(urlConstants.getAllMethodLevels);
         fetch(fetchParams.url, fetchParams.request)
@@ -199,27 +197,27 @@ export class MethodAttributeFields extends Component {
             });
 
         this.setState({
-            selectedSeminar: this.props.status.seminarType,
-            selectedLevels: this.props.status.methodLevels,
-            selectedTypes: this.props.status.methodTypes,
-            selectedGoals: this.props.status.seminarGoals
+            selectedSeminar: this.props.method.seminarType,
+            selectedLevels: this.props.method.methodLevels,
+            selectedTypes: this.props.method.methodTypes,
+            selectedGoals: this.props.method.seminarGoals
         });
 
         // if there's a seminar type passed via props, we can show its  goals.
-        if (this.props.status.seminarType) {
+        if (this.props.method.seminarType) {
             this.setState({
-                seminarGoals: this.props.status.seminarType.goals,
+                seminarGoals: this.props.method.seminarType.goals,
                 seminarGoalsDisabled: false
             });
         }
     }
 
     componentWillUnmount() {
-        this.props.status.seminarType = this.state.selectedSeminar;
-        this.props.status.seminarGoals = this.state.selectedGoals;
-        this.props.status.methodLevels = this.state.selectedLevels;
-        this.props.status.methodTypes = this.state.selectedTypes;
-        this.props.handleForm(this.props.status);
+        this.props.method.seminarType = this.state.selectedSeminar;
+        this.props.method.seminarGoals = this.state.selectedGoals;
+        this.props.method.methodLevels = this.state.selectedLevels;
+        this.props.method.methodTypes = this.state.selectedTypes;
+        this.props.handleForm(this.props.method);
     }
 
     /**

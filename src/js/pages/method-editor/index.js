@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Steps, Row, Col, Form, Button, Icon } from 'antd';
-import { MethodAttributeFields } from '../partials/method-attribute-fields';
-import { MethodContentField } from '../partials/method-content-field';
-import { MethodAttachmentField } from '../partials/method-attachment-field';
-import { MethodSummary } from '../partials/method-summary';
-import { urlHelper } from '../../helpers';
-import { urlConstants } from '../../constants';
-import { translations } from '../../translations';
+import {Button, Col, Form, Icon, Row, Steps} from 'antd';
+import {translations} from '../../translations';
+import {urlHelper} from '../../helpers';
+import {urlConstants} from '../../constants';
+import { ContentEditor } from './components/content-editor';
+import { AttachmentEditor } from './components/attachment-editor';
+import { MetadataEditor } from './components/metadata-editor';
+import { SummaryView } from './components/summary-view';
 
 /**
  * @type {Steps.Step}
@@ -29,15 +29,10 @@ const buildPayload = (data) => {
     };
 };
 
-/**
- * form to generate a new method
- * @extends Component
- * @todo maybe extend class to also edit a method
- */
-export class MethodForm extends Component {
+export class MethodEditor extends Component {
     constructor(props) {
         super(props);
-        
+
         /**
          * @property {number} currentStep set step in form
          * @method {object} method object that's being worked on
@@ -54,19 +49,11 @@ export class MethodForm extends Component {
                 methodTypes: []
             }
         };
-        
+
         this.nextStep = this.nextStep.bind(this);
         this.prevStep = this.prevStep.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.saveMethod = this.saveMethod.bind(this);
-    }
-
-    /**
-     * initialy disables submit button
-     * @todo figure out if this is still needed
-     */
-    componentDidMount() {
-        //this.props.form.validateFields();
     }
 
     handleUpdate(method) {
@@ -96,36 +83,29 @@ export class MethodForm extends Component {
         const currentStep = this.state.currentStep - 1;
         this.setState({currentStep: currentStep});
     }
-    
-    /**
-     * render method
-     * @return {ReactElement} markup
-     */
+
     render() {
-        /**
-         * @type {number}
-         */
+
         const { currentStep } = this.state;
 
-        //@todo how to create documentation for this?
         const steps = [{
             title: translations.step_content,
-            content: <MethodContentField handleForm={this.handleUpdate} status={this.state.method}/>,
+            content: <ContentEditor handleForm={this.handleUpdate} method={this.state.method}/>,
             icon: 'form'
         }, {
             title: translations.step_attachments,
-            content: <MethodAttachmentField handleForm={this.handleUpdate} status={this.state.method}/>,
+            content: <AttachmentEditor handleForm={this.handleUpdate} method={this.state.method}/>,
             icon: 'book'
         }, {
             title: translations.step_metadata,
-            content: <MethodAttributeFields handleForm={this.handleUpdate} status={this.state.method}/>,
+            content: <MetadataEditor handleForm={this.handleUpdate} method={this.state.method}/>,
             icon: 'tags'
         }, {
             title: translations.step_summary,
-            content: <MethodSummary status={this.state.method}/>,
+            content: <SummaryView method={this.state.method}/>,
             icon: 'eye'
         }];
-        
+
         return (
             <div>
                 <Row>
@@ -178,7 +158,7 @@ export class MethodForm extends Component {
                                     style={{ marginLeft: 8 }}
                                     onClick={() => this.prevStep()}>{translations.previous}
                                 </Button>
-                            }                   
+                            }
                         </div>
                     </Col>
                 </Row>
@@ -187,8 +167,9 @@ export class MethodForm extends Component {
     }
 }
 
+
 /**
  * container for the method form
  * @type Form
  */
-export const MethodFormContainer = Form.create()(MethodForm);
+// export const MethodEditor = Form.create()(MethodEditor);

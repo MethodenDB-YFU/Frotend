@@ -36,7 +36,7 @@ export class Editor extends Component {
 
     componentDidMount() {
         const editor = new EditorJS({
-            holderId: 'editorjs',
+            holderId: 'editorjs-'+this.props.id,
             onChange: () => { this.save(); },
             tools: {
                 header: {
@@ -98,7 +98,7 @@ export class Editor extends Component {
     render() {
         return (
             <div>
-                <div id="editorjs"></div>
+                <div id={'editorjs-'+this.props.id}></div>
             </div>
 
         );
