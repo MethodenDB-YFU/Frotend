@@ -15,7 +15,7 @@ import { MethodDetailContainer } from '../container/method-detail-container';
 import { LogonFormContainer } from '../container/logon-container';
 import { CartContainer } from '../container/method-cart-container';
 import { CallbackPage} from '../container/callback_page';
-import { SeminarsContainer } from '../container/seminars-container';
+import { SeminarsContainer } from '../../pages/seminars';
 //import { NOTINITIALIZED } from 'dns';
 //import { NotFound} from '../container/NotFound';
 

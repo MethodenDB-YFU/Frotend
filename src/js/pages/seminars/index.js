@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Tabs } from 'antd';
 import { history } from '../../helpers';
-import { TypesOverviewContainer} from './types-overview-container';
-import { GoalsOverviewContainer} from './goals-overview-container';
-import { RolesOverviewContainer} from './roles-overview-container';
+import { TypesOverviewContainer } from './components/types-overview';
+import { GoalsOverviewContainer } from './components/goals-overview';
+import { RolesOverviewContainer } from './components/roles-overview';
 import { translations } from '../../translations';
 
 const TabPane = Tabs.TabPane;
@@ -33,7 +33,7 @@ export class SeminarsContainer extends Component {
             break;
         }
     }
-  
+
     /**
      * render method
      * @return {ReactElement} markup
@@ -41,8 +41,8 @@ export class SeminarsContainer extends Component {
      */
     render() {
         /**
-       * @type {ReactElement}
-       */
+         * @type {ReactElement}
+         */
         return (
             <div>
                 <Tabs

@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { Row, Col, Input, Table, Badge, Icon, Tooltip } from 'antd';
-import { urlHelper } from '../../helpers';
-import { urlConstants } from '../../constants';
-import { utils } from '../../helpers';
-import { translations } from '../../translations';
+import { urlHelper } from '../../../helpers';
+import { urlConstants } from '../../../constants';
+import { filterByName } from '../../../helpers';
+import { translations as t} from '../../../translations';
 
 const Search = Input.Search;
 
-
-Object.assign(translations, {
+const translations = {...t,
     search_placeholder: 'Kommunikation',
-    page_title: 'Seminarziele Übersicht',
-});
+    page_title: 'Seminarziele Übersicht'
+};
 
 /**
  * @type {Array.<{title:ReactNode, dataIndex:string, key:string, width:integer, render: (text: any, record: T, index: number) => ReactNode>}
@@ -36,7 +35,7 @@ const columns = [{
 export class GoalsOverviewContainer extends Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
             goals: [],
             tableLoading: true
@@ -47,7 +46,7 @@ export class GoalsOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        this.updateData(utils.filterByName(searchText, this.state.goals));
+        this.updateData(filterByName(searchText, this.state.goals));
     };
 
     updateData(newData) {
@@ -55,10 +54,10 @@ export class GoalsOverviewContainer extends Component {
             data: newData,
         });
     };
-  
+
     /**
-   * loading all methods when method overview is loaded
-   */
+     * loading all methods when method overview is loaded
+     */
     componentDidMount() {
         const fetchParams = urlHelper.buildFetchParams(urlConstants.getGoals);
         fetch(fetchParams.url, fetchParams.request)
@@ -76,7 +75,7 @@ export class GoalsOverviewContainer extends Component {
                 });
 
                 this.updateData(goals);
-                                
+
                 // display loaded methods and remove loading-animation
                 this.setState({
                     goals: goals,
@@ -86,14 +85,14 @@ export class GoalsOverviewContainer extends Component {
     }
 
     /**
-   * render method
-   * @return {ReactElement} markup
-   * @private
-   */
+     * render method
+     * @return {ReactElement} markup
+     * @private
+     */
     render() {
         /**
-       * @type {ReactElement}
-       */      
+         * @type {ReactElement}
+         */
         return (
             <div>
                 <Row>
