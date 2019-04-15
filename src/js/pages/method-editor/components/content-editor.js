@@ -39,8 +39,6 @@ export class ContentEditor extends Component {
      * @private
      */
     render() {
-        //this logs once without and once with correct data. WHYyYY??
-        console.log('render', this.state);
 
         return (
             <div className={this.props.className}>
@@ -49,7 +47,6 @@ export class ContentEditor extends Component {
                         <TitleContentEditor
                             placeholderTitle={translations.method_title}
                             handleUpdate={this.handleUpdate}
-                            // className={}
                             title={this.state.title}
                             content={this.state.content}
                         />

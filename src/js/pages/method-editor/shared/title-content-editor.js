@@ -13,8 +13,9 @@ export class TitleContentEditor extends Component {
         super(props);
 
         this.state = {
+            id: this.props.id,
             title: this.props.title,
-            content: this.props.content
+            content: this.props.content,
         };
 
         this.handleContentChange = this.handleContentChange.bind(this);
@@ -30,8 +31,9 @@ export class TitleContentEditor extends Component {
             title: e.target.value,
         });
         this.props.handleUpdate({
+            id: this.state.id,
             title: e.target.value,
-            content: this.state.content
+            content: this.state.content,
         });
     }
 
@@ -44,8 +46,9 @@ export class TitleContentEditor extends Component {
             content: content,
         });
         this.props.handleUpdate({
+            id: this.state.id,
             title: this.state.title,
-            content: content
+            content: content,
         });
     }
 
@@ -55,7 +58,6 @@ export class TitleContentEditor extends Component {
      * @private
      */
     render() {
-
         return (
             <div className={this.props.className}>
                 <Row>
@@ -69,6 +71,8 @@ export class TitleContentEditor extends Component {
                         </FormItem>
                         <FormItem>
                             <Editor
+                                key={this.state.id}
+                                id={this.state.id}
                                 data={this.state.content}
                                 onChange={this.handleContentChange}
                             />

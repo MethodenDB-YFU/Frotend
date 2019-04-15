@@ -1,35 +1,11 @@
 import React, { Component } from 'react';
-import {Tabs} from 'antd';
-import {translations} from '../../../translations';
-import { addAttribute, updateAttribute, containsAttribute, getAttribute } from '../../../helpers';
+import { Tabs } from 'antd';
+import { translations } from '../../../translations';
+import { addAttribute, updateAttribute, delAttribute, getAttribute } from '../../../helpers';
 import { TitleContentEditor } from '../shared/title-content-editor';
 import v4 from 'uuid';
 
 const TabPane = Tabs.TabPane;
-
-const blocks = {
-    blocks: [{
-        type: 'header',
-        data: {
-            text: 'Neuer Anhang',
-            level: 1
-        }
-    }]
-};
-
-const newAttachment = [{
-    id: 'active',
-    title: translations.add_attachment,
-    content: {
-        blocks: [{
-            type: 'header',
-            data: {
-                text: 'Neuer Anhang',
-                level: 1
-            }
-        }]
-    },
-}];
 
 /**
  * form field to add attachments to the method like graphics or texts
@@ -40,79 +16,73 @@ export class AttachmentEditor extends Component {
         super(props);
 
         this.state = {
-            attachments: [],
-            current: {
-                id: 'active',
-                title: translations.add_attachment,
-                content: blocks,
-            },
+            attachments: this.props.method.attachments,
+            active: '',
         };
 
-        this.handleUpdate = this.handleUpdate.bind(this);
         this.onTabPaneClick = this.onTabPaneClick.bind(this);
+        this.onTabPaneEdit = this.onTabPaneEdit.bind(this);
+        this.addAttachment = this.addAttachment.bind(this);
+        this.removeAttachment = this.removeAttachment.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
     }
 
-    /**
-     * if new attachment is clicked we need to handle
-     * a) creation of a new key
-     * b) insertion of new attachment into master list
-     * @param key
-     */
-    onTabPaneClick(key) {
-        if (key === 'new') {
-            let current = this.state.current;
-            current.id = v4();
-
-            let attachments = this.state.attachments;
-            attachments = containsAttribute(attachments, current)
-                ? updateAttribute(attachments, current)
-                : addAttribute(attachments, current);
-
-            this.setState({
-                attachments: attachments,
-                current: newAttachment[0]
-            });
-        } else if (key === 'active') {
-            return;
-        } else {
-            const current = getAttribute(this.state.attachments, key);
-            this.setState({
-                current: current,
-            });
+    onTabPaneEdit(key, action) {
+        switch (action) {
+        case 'add':
+            this.addAttachment();
+            break;
+        case 'remove':
+            this.removeAttachment(key);
+            break;
         }
+    }
+
+    addAttachment() {
+        const active = v4();
+        const attachment = {
+            id: active,
+            title: translations.add_attachment,
+            content: {
+                blocks: [{
+                    type: 'header',
+                    data: {
+                        text: translations.new_attachment,
+                        level: 1
+                    }
+                }]
+            }
+        };
+
+        const attachments = addAttribute(this.state.attachments, attachment);
+
+        this.setState({attachments, active});
+    }
+
+    removeAttachment(key) {
+        const attachment = getAttribute(this.state.attachments, key);
+        const attachments = delAttribute(this.state.attachments, attachment);
+        this.setState({attachments});
+    }
+
+    onTabPaneClick(active) {
+        this.setState({active});
     }
 
     /**
      * @param attachment
      */
     handleUpdate(attachment) {
-        // As the editor doesn't know about IDs, we need to repopulate here.
-        attachment.id = this.state.current.id;
-        this.setState({
-            current: attachment,
-        });
-
-
-
-        // let attachments = this.state.attachments;
-        // attachments = containsAttribute(attachments, attachment)
-        //     ? updateAttribute(attachments, attachment)
-        //     : addAttribute(attachments, attachment);
-
+        const attachments = updateAttribute(this.state.attachments, attachment);
+        this.setState({attachments});
     }
 
-    /**
-     * @todo modify for update, i.e. figure out if current should really be newAttachment all the time.
-     */
-    componentDidMount() {}
-
-    /**
-     * before component unmounts we need to make sure, all attachments have a UUID as ID and are appended to master list
-     */
     componentWillUnmount() {
-        this.props.method.attachments = this.state.attachments;
-        this.props.handleForm(this.props.method);
+        let method = this.props.method;
+        method.attachments = this.state.attachments;
+        this.props.handleForm(method);
     }
+
 
     /**
      * render method
@@ -120,47 +90,26 @@ export class AttachmentEditor extends Component {
      * @private
      */
     render() {
-
-        console.log('current id', this.state.current.id);
-
         return (
             <div className={this.props.className}>
                 <Tabs
-                    // defaultActiveKey={newAttachment[0].id}
-                    activeKey={this.state.current.id}
+                    activeKey={this.state.active}
                     tabPosition='left'
-                    onTabClick={this.onTabPaneClick.bind(this)}
-                >
+                    onChange={this.onTabPaneClick}
+                    onEdit={this.onTabPaneEdit}
+                    type='editable-card'
+                    tabBarStyle={{minWidth: '180px'}}>
                     {
-                        this.state.attachments.map((att) => {
-                            if (att.id === this.state.current.id) { return false; };
-                            return (
-                                <TabPane tab={att.title} key={att.id}>
-                                    <TitleContentEditor
-                                        placeholderTitle={translations.attachment_title}
-                                        handleUpdate={this.handleUpdate}
-                                        // className={}
-                                        title={att.title}
-                                        content={att.content}
-                                    />
-                                </TabPane>
-                            );
-                        }
-
-                        )
+                        this.state.attachments.map((attachment) => <TabPane tab={attachment.title} key={attachment.id}>
+                            <TitleContentEditor
+                                id={attachment.id}
+                                key={attachment.id}
+                                title={attachment.title}
+                                content={attachment.content}
+                                handleUpdate={this.handleUpdate}
+                            />
+                        </TabPane>)
                     }
-
-                    <TabPane tab={this.state.current.title} key={newAttachment[0].id}>
-                        <TitleContentEditor
-                            placeholderTitle={translations.new_attachment}
-                            handleUpdate={this.handleUpdate}
-                            // className={}
-                            title={this.state.current.title}
-                            content={newAttachment[0]}
-                        />
-
-                    </TabPane>
-                    <TabPane tab={translations.create_attachment} key='new'/>
                 </Tabs>
             </div>
         );

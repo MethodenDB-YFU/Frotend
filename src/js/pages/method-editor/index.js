@@ -165,7 +165,7 @@ export class MethodEditor extends Component {
             </div>
         );
     }
-};
+}
 
 
 /**
