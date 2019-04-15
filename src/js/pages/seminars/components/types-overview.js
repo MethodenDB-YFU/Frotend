@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { Row, Col, Input, Table } from 'antd';
-import { urlHelper } from '../../helpers';
-import {urlConstants} from '../../constants';
-import { utils } from '../../helpers';
-import { translations } from '../../translations';
+import { urlHelper, filterByName } from '../../../helpers';
+import { urlConstants } from '../../../constants';
+import { translations as t } from '../../../translations';
 
 const Search = Input.Search;
 
-Object.assign(translations, {
+const translations = { ...t,
     page_title: 'Seminartypen',
     search_placeholder: 'VBT',
-});
+};
 
 /**
  * container to display an overview of all available methods
@@ -19,7 +18,7 @@ Object.assign(translations, {
 export class TypesOverviewContainer extends Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
             types: [],
             categories: [],
@@ -33,14 +32,14 @@ export class TypesOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        const filtered = utils.filterByName(searchText, this.state.types);
+        const filtered = filterByName(searchText, this.state.types);
         this.updateData(filtered);
     };
 
     updateData(newData) {
         // filter duplicate values
         let sections = [ ... new Set(newData.map(item => item.section))];
-        let categories = [... new Set(newData.map(item => item.category))]; 
+        let categories = [... new Set(newData.map(item => item.category))];
 
         this.setState({
             data: newData,
@@ -48,7 +47,7 @@ export class TypesOverviewContainer extends Component {
             sections: sections.sort(),
         });
     };
-  
+
     /**
      * loading all methods when method overview is loaded
      */
@@ -117,7 +116,7 @@ export class TypesOverviewContainer extends Component {
                         <h1>{translations.page_title}</h1>
                     </Col>
                     <Col span={12}>
-                        <Search 
+                        <Search
                             placeholder={translations.search_placeholder}
                             addonBefore={translations.search_prefix}
                             onSearch={this.handleSearch}/>

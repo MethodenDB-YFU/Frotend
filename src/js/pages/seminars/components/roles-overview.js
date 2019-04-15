@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { Row, Col, Input, Table, Tag } from 'antd';
-import { urlHelper } from '../../helpers';
-import {urlConstants} from '../../constants';
-import { utils } from '../../helpers';
-import { translations } from '../../translations';
+import { urlHelper, filterByName } from '../../../helpers';
+import { urlConstants } from '../../../constants';
+import { translations as t } from '../../../translations';
 
 const Search = Input.Search;
 
-Object.assign(translations, {
+const translations = {...t,
     page_title: 'Seminar Rollen',
     search_placeholder: 'Leiter',
-});
+};
 
 /**
  * container to display an overview of all available methods
@@ -19,7 +18,7 @@ Object.assign(translations, {
 export class RolesOverviewContainer extends Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
             roles: [],
             role_types: [],
@@ -31,7 +30,7 @@ export class RolesOverviewContainer extends Component {
     }
 
     handleSearch(searchText) {
-        const filtered = utils.filterByName(searchText, this.state.roles);
+        const filtered = filterByName(searchText, this.state.roles);
         this.updateData(filtered);
     };
 
@@ -44,10 +43,10 @@ export class RolesOverviewContainer extends Component {
             role_types: role_types
         });
     };
-  
+
     /**
-   * loading all methods when method overview is loaded
-   */
+     * loading all methods when method overview is loaded
+     */
     componentDidMount() {
         const fetchParams = urlHelper.buildFetchParams(urlConstants.getRoles);
         fetch(fetchParams.url, fetchParams.request)
@@ -61,7 +60,7 @@ export class RolesOverviewContainer extends Component {
                         role_type: role.role_type
                     };
                 });
-                
+
                 this.updateData(roles);
 
                 // display loaded methods and remove loading-animation
@@ -73,10 +72,10 @@ export class RolesOverviewContainer extends Component {
     }
 
     /**
-   * render method
-   * @return {ReactElement} markup
-   * @private
-   */
+     * render method
+     * @return {ReactElement} markup
+     * @private
+     */
     render() {
         const columns = [{
             title: translations.name,
@@ -98,8 +97,8 @@ export class RolesOverviewContainer extends Component {
         }];
 
         /**
-       * @type {ReactElement}
-       */      
+         * @type {ReactElement}
+         */
         return (
             <div>
                 <Row>
