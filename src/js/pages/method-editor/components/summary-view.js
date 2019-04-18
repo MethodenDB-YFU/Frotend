@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'antd';
+import { translations } from '../../../translations';
 
 
 export class SummaryView extends Component {
@@ -12,15 +13,11 @@ export class SummaryView extends Component {
     }
 
     render() {
-
         const RawHTML = ({children, className = ''}) =>
             <div className={className} dangerouslySetInnerHTML={{ __html: children.replace(/\n/g, '<br />')}} />;
 
         const { seminarGoals, content } = this.props.method;
 
-        const translations = {
-            goals: 'Ziele',
-        };
 
         return (
             <div>

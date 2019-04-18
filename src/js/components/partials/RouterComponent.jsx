@@ -68,7 +68,7 @@ export default class RouterComponentPart extends Component {
                         <Route path="/method/show/:id" component={MethodDetailContainer}/>
                         <Route path="/cart" exact component={CartContainer}/>
                         <Route path="/logon" exact component={LogonFormContainer}/>
-                        <Route path="/seminar" exact component={() => (<Seminars activeTab="type"/>)}/>
+                        <Route path="/seminar"      exact component={() => (<Seminars activeTab="type"/>)}/>
                         <Route path="/seminar/type" exact component={() => (<Seminars activeTab="type"/>)}/>
                         <Route path="/seminar/role" exact component={() => (<Seminars activeTab="role"/>)}/>
                         <Route path="/seminar/goal" exact component={() => (<Seminars activeTab="goal"/>)}/>

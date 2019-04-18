@@ -8,6 +8,7 @@ import v4 from 'uuid';
 const TabPane = Tabs.TabPane;
 
 /**
+ * @todo before creation the IDs need to be stripped. Otherwise the backend will return an error for detached objects
  * form field to add attachments to the method like graphics or texts
  * @extends Component
  */

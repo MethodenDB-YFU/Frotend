@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {Button, Col, Form, Icon, Row, Steps} from 'antd';
-import {translations} from '../../translations';
-import {urlHelper} from '../../helpers';
-import {urlConstants} from '../../constants';
+import { Button, Col, Form, Icon, Row, Steps } from 'antd';
+import { translations as t} from '../../translations';
+import { urlHelper } from '../../helpers';
+import { urlConstants } from '../../constants';
 import { ContentEditor } from './components/content-editor';
 import { AttachmentEditor } from './components/attachment-editor';
 import { MetadataEditor } from './components/metadata-editor';
@@ -13,9 +13,7 @@ import { SummaryView } from './components/summary-view';
  */
 const Step = Steps.Step;
 
-Object.assign(translations, {
-    page_title: 'Neue Methode Erstellen',
-});
+const translations = {...t, page_title: 'Neue Methode Erstellen'};
 
 const buildPayload = (data) => {
     return {
@@ -121,7 +119,8 @@ export class MethodEditor extends Component {
                                     <Step
                                         key={item.title}
                                         title={item.title}
-                                        icon={<Icon type={item.icon} theme="outlined" />} />)
+                                        icon={<Icon type={item.icon} theme="outlined" />}
+                                    />)
                             }
                         </Steps>
                     </Col>

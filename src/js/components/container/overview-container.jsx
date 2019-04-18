@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Input, Table, Tag, Icon, Tooltip } from 'antd';
-import { urlHelper } from '../../helpers';
-import {urlConstants} from '../../constants';
-import { utils } from '../../helpers';
+import { urlHelper, filterByName } from '../../helpers';
+import { urlConstants } from '../../constants';
 import { translations } from '../../translations';
+import { openNotification } from '../../shared/notification';
 
 const Search = Input.Search;
 
@@ -41,11 +41,7 @@ export class OverviewContainer extends Component {
         fetch(fetchParams.url, fetchParams.request)
             .then(results => {
                 return results.json();
-            })
-            .catch((error) => {
-                console.error('Foo', error);
-            })
-            .then(data => {
+            }).then(data => {
                 let methods = data.map((method) => {
                     let methodJson = {
                         key: method.id,
@@ -65,14 +61,17 @@ export class OverviewContainer extends Component {
                 });
                 this.updateData(methods);
             })
-            .catch((error) => {
-                console.error('Fetch Error =\n', error);
+            .catch(() => {
+                openNotification('error', 'Connection Error', 'Could not connect to Server');
+                this.setState({
+                    tableLoading: false,
+                });
             });
 
     }
 
     handleSearch(searchText) {
-        const filtered = utils.filterByName(searchText, this.state.methods);
+        const filtered = filterByName(searchText, this.state.methods);
         this.updateData(filtered);
     };
 
