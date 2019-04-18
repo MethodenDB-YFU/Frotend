@@ -12,18 +12,82 @@ const sanitize = (text) => {
 };
 
 
+// const validate = (text) => {
+//     /*
+//     only tags are <i>, </i>, <b>, </b> <a ...>, </a>
+//     number of open tags are equal to number of closing tags
+//     there is no closing tag before an opening tag
+//      */
+//     return text;
+// };
+//
+// const findFirstInlineTag = (text) => {
+//     const indices = [
+//         {
+//             tag: 'a',
+//             value: text.indexOf('<a')
+//         },
+//         {
+//             tag: 'b',
+//             value: text.indexOf('<b>')
+//         },
+//         {
+//             tag: 'i',
+//             value: text.indexOf('<i>')
+//         },
+//     ];
+//
+//     const first = indices.reduce((a,b) => {
+//         const one = (a.value === -1) ? b : a;
+//         const two = (b.value === -1) ? a : b;
+//         return (one.value < two.value) ? one : two;
+//     });
+//
+//     return (first.value === -1) ? null : first;
+// };
+
+
+// const containsInline = (text) => {
+//     const tags = ['<i>', '<b>', '<a', '</a>', '</b>', '</i>'];
+//     let includes = false;
+//     tags.map((tag) => {
+//         includes = includes ? true : text.includes(tag);
+//     });
+//     return includes;
+// };
+
+
 /**
  * @todo none of the methods can be called on existing react elements! :-(
  * @type {{link(*): *, bold(*): *, italic(*): *}}
  */
 const inline = {
+    process(text) {
+        //@todo "improve" (=reduce) the *full* toolbar? (How do I know which options where possible during creation?)
+
+        fullToolbar.map((fn) => {
+            text = inline[fn](text);
+        });
+        return text;
+    },
+
     italic(text) {
         const openTag = '<i>';
         const closeTag = '</i>';
 
+        // const test = 'one <i>italic <b>nested bold</b> end italic </i> two <i>three</i> four';
+
+        if (typeof text === 'object') {
+            return (text);
+        }
+
         return text.split(openTag).reduce(function(a, b) {
-            let tmp = b.split(closeTag);
-            return (<span>{a}{openTag}{tmp[0]}{closeTag}{tmp[1]}</span>);
+            const tmp = b.split(closeTag);
+            return (
+                <span>
+                    {inline.process(a)}<i>{inline.process(tmp[0])}</i>{inline.process(tmp[1])}
+                </span>
+            );
         });
     },
 
@@ -31,9 +95,17 @@ const inline = {
         const openTag = '<b>';
         const closeTag = '</b>';
 
+        if (typeof text === 'object') {
+            return (text);
+        }
+
         return text.split(openTag).reduce(function(a, b) {
             let tmp = b.split(closeTag);
-            return (<span>{a}{openTag}{tmp[0]}{closeTag}{tmp[1]}</span>);
+            return (
+                <span>
+                    {inline.process(a)}<b>{inline.process(tmp[0])}</b>{inline.process(tmp[1])}
+                </span>
+            );
         });
     },
 
@@ -45,11 +117,8 @@ const inline = {
 function Paragraph(props) {
     let { text } = props.data;
     const { key } = props;
-
-    text = sanitize(text);
-    fullToolbar.map((fn) => {
-        text = inline[fn](text);
-    });
+    
+    text = inline.process(sanitize(text));
 
     return (<p key={key}>{text}</p>);
 }
@@ -84,10 +153,12 @@ function Header(props) {
     let { text, level } = props.data;
     const { key } = props;
 
-    text = sanitize(text);
-    fullToolbar.map((fn) => {
-        text = inline[fn](text);
-    });
+    // text = sanitize(text);
+    // fullToolbar.map((fn) => {
+    //     text = inline[fn](text);
+    // });
+
+    text = inline.process(text);
 
 
     switch (level) {
