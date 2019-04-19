@@ -55,7 +55,7 @@ export class RoleDetailContainer extends Component {
                 </Row>
                 <Row>
                     <Col span={4}>
-                        <div className="DetailLable">Rolentyp:</div>
+                        <div>Rolentyp:</div>
                     </Col>
                     <Col span={20}>
                         <div>{this.state.seminarRole.role_type}</div>
