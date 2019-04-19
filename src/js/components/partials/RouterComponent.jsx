@@ -10,7 +10,7 @@ import { loginUser, checkLoginStatus } from '../../actions/loginActions';
 import { OverviewContainer } from '../container/overview-container';
 import { MethodEditor } from '../../pages/method-editor';
 import { Seminars } from '../../pages/seminars';
-import { MethodDetailContainer } from '../container/method-detail-container';
+import { MethodDetailContainer } from '../../pages/method-view';
 import { LogonFormContainer } from '../container/logon-container';
 import { CartContainer } from '../container/method-cart-container';
 import { CallbackPage } from '../container/callback_page';
