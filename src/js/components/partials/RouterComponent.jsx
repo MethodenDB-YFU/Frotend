@@ -10,7 +10,7 @@ import { loginUser, checkLoginStatus } from '../../actions/loginActions';
 import { OverviewContainer } from '../container/overview-container';
 import { MethodEditor } from '../../pages/method-editor';
 import { Seminars } from '../../pages/seminars';
-import { MethodDetailContainer } from '../container/method-detail-container';
+import { MethodDetailContainer } from '../../pages/method-view';
 import { LogonFormContainer } from '../container/logon-container';
 import { CartContainer } from '../container/method-cart-container';
 import { CallbackPage } from '../container/callback_page';
@@ -68,7 +68,7 @@ export default class RouterComponentPart extends Component {
                         <Route path="/method/show/:id" component={MethodDetailContainer}/>
                         <Route path="/cart" exact component={CartContainer}/>
                         <Route path="/logon" exact component={LogonFormContainer}/>
-                        <Route path="/seminar" exact component={() => (<Seminars activeTab="type"/>)}/>
+                        <Route path="/seminar"      exact component={() => (<Seminars activeTab="type"/>)}/>
                         <Route path="/seminar/type" exact component={() => (<Seminars activeTab="type"/>)}/>
                         <Route path="/seminar/role" exact component={() => (<Seminars activeTab="role"/>)}/>
                         <Route path="/seminar/goal" exact component={() => (<Seminars activeTab="goal"/>)}/>
