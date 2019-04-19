@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Spin } from 'antd';
 import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import List from '@editorjs/list';
@@ -9,7 +8,6 @@ import Delimiter from '@editorjs/delimiter';
 import Quote from '@editorjs/quote';
 import Warning from '@editorjs/warning';
 import Paragraph from '@editorjs/paragraph';
-import Image from '@editorjs/image';
 
 /*
     @todo image support
@@ -50,10 +48,6 @@ export const config = {
         class: Paragraph,
         inlineToolbar: true,
     },
-    image: {
-        class: Image,
-        inlineToolbar: true,
-    },
 };
 
 /**
@@ -67,7 +61,6 @@ export class Editor extends Component {
         this.state = {
             editor: null,
             content: '',
-            loading: true,
         };
 
         this.save = this.save.bind(this);
@@ -82,7 +75,6 @@ export class Editor extends Component {
         });
         this.setState({
             editor: editor,
-            loading: false,
         });
     }
 
@@ -105,10 +97,7 @@ export class Editor extends Component {
     render() {
         return (
             <div>
-                {this.state.loading
-                    ? <Spin/>
-                    : <div id={'editorjs-' + this.props.id}/>
-                }
+                <div id={'editorjs-' + this.props.id}/>
             </div>
 
         );

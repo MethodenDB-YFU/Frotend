@@ -1,5 +1,6 @@
 import React from 'react';
 import { fullToolbar } from '../../../editor';
+import { Divider } from 'antd';
 
 const sanitize = (text) => {
     // replace &nbsp; with space and .trim()
@@ -25,10 +26,10 @@ const inline = {
     },
 
     italic(text) {
+        if (typeof text === 'object') { console.log('object', text); return (text); }
+
         const openTag = '<i>';
         const closeTag = '</i>';
-
-        if (typeof text === 'object') { return (text); }
 
         return text.split(openTag).reduce(function(a, b) {
             const tmp = b.split(closeTag);
@@ -41,10 +42,11 @@ const inline = {
     },
 
     bold(text) {
+        if (typeof text === 'object') { return (text); }
+
         const openTag = '<b>';
         const closeTag = '</b>';
 
-        if (typeof text === 'object') { return (text); }
 
         return text.split(openTag).reduce(function(a, b) {
             let tmp = b.split(closeTag);
@@ -56,9 +58,25 @@ const inline = {
         });
     },
 
-    //@todo!
     link(text) {
-        return text;
+        if (typeof text === 'object') { return (text); }
+
+        const openTag = '<a ';
+        const closeTag = '</a>';
+
+        return text.split(openTag).reduce(function(prefix, link) {
+            if (!link.startsWith('href="')) { return text; }
+            const back = link.split(closeTag);
+            const suffix = back[1];
+            const tag = back[0].substring(6).split('">');
+            const url = tag[0];
+            const inner = tag[1];
+            return (
+                <span>
+                    {inline.process(prefix)}<a href={url}>{inline.process(inner)}</a>{inline.process(suffix)}
+                </span>
+            );
+        });
     }
 };
 
@@ -119,35 +137,76 @@ function Header(props) {
     }
 }
 
+function Quote(props) {
+    let { text, caption, alignment } = props.data;
+    const { key } = props;
+
+    text = inline.process(sanitize(text));
+    caption = inline.process(sanitize(caption));
+
+    return(
+        <div key={key}>
+            <blockquote>
+                <p align={alignment}>{text}</p>
+            </blockquote>
+            <cite>{caption}</cite>
+        </div>
+    );
+}
+
+function Warning(props) {
+    let { title, message } = props.data;
+    const { key } = props;
+
+    message = inline.process(sanitize(message));
+    title = inline.process(sanitize(title));
+
+    return (
+        <div key={key} class="method-block method-block-warning">
+            <p class="method-block-warning method-block-warning-title">{title}</p>
+            <p class="method-block-warning method-block-warning-message">{message}</p>
+        </div>
+    );
+
+}
+
+function Table(props) {
+    const { content } = props.data;
+    const { key } = props;
+
+    const body = content.map((row) => {
+        return (
+            <tr>
+                {
+                    row.map((cell) =>
+                        <td>
+                            {
+                                inline.process(sanitize(cell))
+                            }
+                        </td>
+                    )
+                }
+            </tr>
+        );
+    });
+
+    return (
+        <table key={key} class="method-block method-block-table">
+            {body}
+        </table>
+    );
+}
+
+function Delimiter(props) {
+    const { key } = props.key;
+    return (
+        <Divider key={key}/>
+    );
+}
+
 export function BlockContent(props) {
     const { content } = props;
 
-    // const link = (text) => {
-    //     //@todo extract link!
-    //     return text;
-    // };
-    // const bold = (text) => {
-    //     //@todo same as italic but bold!
-    //     return text;
-    // }
-    //
-    // const table = (text) => {
-    //     //@todo how?!
-    //     return text;
-    // };
-    //
-    // const delimiter = () => {
-    //     return (<hr/>);
-    // };
-    //
-    // const quote = (text) => {
-    //     return (<blockquote>{text}</blockquote>);
-    // };
-    //
-    // const warning = (text) => {
-    //     //@todo
-    //     return text;
-    // };
     //
     // const image = (text) => {
     //     return text;
@@ -164,6 +223,14 @@ export function BlockContent(props) {
                         return <List data={item.data} key={counter} />;
                     case 'header':
                         return <Header data={item.data} key={counter} />;
+                    case 'quote':
+                        return <Quote data={item.data} key={counter} />;
+                    case 'warning':
+                        return <Warning data={item.data} key={counter} />;
+                    case 'table':
+                        return <Table data={item.data} key={counter} />;
+                    case 'delimiter':
+                        return <Delimiter key={counter}/>;
                     }
                 })
             }
