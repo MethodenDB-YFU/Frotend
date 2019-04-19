@@ -1,5 +1,7 @@
 @import "~antd/dist/antd.less";
 
+@volunteer-color: #e6004b;
+
 .hide {
     display: none;
 }
@@ -27,6 +29,48 @@
     align-items: stretch;
 }
 
-.DetailLable {
+.method-block-warning {
+    border-left: 5px solid @volunteer-color;
+    padding-left: 9px;
+}
+
+.method-block-warning-title {
     font-weight: bold;
+    color: @volunteer-color;
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+
+    &::before {
+        font-size: 2em;
+        vertical-align: middle;
+        content: '\26a0\00a0';
+    }
+
+}
+
+.method-block-table {
+    border-collapse: collapse;
+    border: 1px solid @normal-color;
+    margin: 10px auto;
+
+    tr {
+        &:nth-child(even) {
+            background-color: @table-selected-row-bg;
+        }
+
+        td {
+            padding: @table-padding-vertical @table-padding-horizontal;
+        }
+    }
+}
+
+.method-block-quote {
+    border-left: 5px solid @normal-color;
+    padding-left: 9px;
+    font-style: italic;
+    color: @text-color-secondary;
+}
+
+.method-block-quote-cite::before {
+    content: '\2014\00a0';
 }

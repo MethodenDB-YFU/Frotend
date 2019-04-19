@@ -145,11 +145,11 @@ function Quote(props) {
     caption = inline.process(sanitize(caption));
 
     return(
-        <div key={key}>
-            <blockquote>
+        <div key={key} className='method-block method-block-quote'>
+            <blockquote className='method-block method-block-quote-body'>
                 <p align={alignment}>{text}</p>
             </blockquote>
-            <cite>{caption}</cite>
+            <cite className='method-block method-block-quote-cite'>{caption}</cite>
         </div>
     );
 }
@@ -162,9 +162,9 @@ function Warning(props) {
     title = inline.process(sanitize(title));
 
     return (
-        <div key={key} class="method-block method-block-warning">
-            <p class="method-block-warning method-block-warning-title">{title}</p>
-            <p class="method-block-warning method-block-warning-message">{message}</p>
+        <div key={key} className='method-block method-block-warning'>
+            <p className='method-block-warning-title'>{title}</p>
+            <p className='method-block-warning-message'>{message}</p>
         </div>
     );
 
@@ -174,12 +174,12 @@ function Table(props) {
     const { content } = props.data;
     const { key } = props;
 
-    const body = content.map((row) => {
+    const body = content.map((row, i) => {
         return (
-            <tr>
+            <tr key={i}>
                 {
-                    row.map((cell) =>
-                        <td>
+                    row.map((cell, j) =>
+                        <td key={j}>
                             {
                                 inline.process(sanitize(cell))
                             }
@@ -191,14 +191,16 @@ function Table(props) {
     });
 
     return (
-        <table key={key} class="method-block method-block-table">
-            {body}
+        <table key={key} className="method-block method-block-table">
+            <tbody>
+                {body}
+            </tbody>
         </table>
     );
 }
 
 function Delimiter(props) {
-    const { key } = props.key;
+    const { key } = props;
     return (
         <Divider key={key}/>
     );
@@ -207,7 +209,7 @@ function Delimiter(props) {
 export function BlockContent(props) {
     const { content } = props;
 
-    //
+
     // const image = (text) => {
     //     return text;
     // };
