@@ -207,7 +207,7 @@ function Delimiter(props) {
 }
 
 export function BlockContent(props) {
-    const { content } = props;
+    const { blocks } = props.content;
 
 
     // const image = (text) => {
@@ -217,7 +217,7 @@ export function BlockContent(props) {
     return (
         <div>
             {
-                content.blocks.map((item, counter) => {
+                blocks.blocks.map((item, counter) => {
                     switch (item.type) {
                     case 'paragraph':
                         return <Paragraph data={item.data} key={counter} />;

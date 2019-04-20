@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const translations = {
     add_attachment: 'Anhang hinzufügen',
     attachments: 'Anhänge',
@@ -6,6 +8,8 @@ export const translations = {
     connection_error: 'Verbindungsfehler',
     create_attachment: 'Anhang erstellen',
     create_method: 'Methode erstellen',
+    create_method_error: 'Fehler beim erstellen der Methode',
+    create_method_error_text: 'Es sieht so aus, als hätte der Server Probleme die Methode zu verstehen.',
     explanation_placeholder: 'Hier könnte eine Erklärung stehen.',
     goal: 'Ziel',
     goals: 'Ziele',
@@ -13,6 +17,8 @@ export const translations = {
     method_details: 'Detail der Methode',
     method_level_select_placeholder: 'Methoden-Level auswählen...',
     method_name: 'Methodenname',
+    method_not_found_error: 'Methode nicht gefunden',
+    method_not_found_error_text: (<span>Die Methode konnte leider nicht gefunden werden. War der Link korrekt?<br/><br/><a href="/">Zurück</a></span>),
     method_title: 'Methodentitel',
     method_type_select_placeholder: 'Methodentyp auswählen...',
     name: 'Name',
@@ -40,4 +46,5 @@ export const translations = {
     step_summary: 'Zusammenfassung',
     type: 'Typ',
     unknown: 'Unbekannt',
+    unknown_error: 'Unbekannter Fehler',
 };
