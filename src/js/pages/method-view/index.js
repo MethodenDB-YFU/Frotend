@@ -41,7 +41,7 @@ export class MethodDetailContainer extends Component {
                     throw ('500 error');
                 }
             }).catch(() => {
-                openNotification('error', translations.method_not_found, (<span>Die Methode konnte leider nicht gefunden werden. War der Link korrekt?<br/><br/><a href="/">Zurück</a></span>));
+                openNotification('error', translations.method_not_found_error, translations.method_not_found_error_text);
                 this.setState({
                     tableLoading: true,
                 });

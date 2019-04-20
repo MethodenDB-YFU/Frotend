@@ -35,7 +35,6 @@ export class Editor extends Component {
     }
 
     componentDidMount() {
-        console.log('data', this.props.data);
         const editor = new EditorJS({
             holderId: 'editorjs-'+this.props.id,
             onChange: () => { this.save(); },

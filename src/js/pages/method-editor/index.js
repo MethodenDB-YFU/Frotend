@@ -70,19 +70,19 @@ export class MethodEditor extends Component {
 
     saveMethod() {
         const payload = buildPayload(this.state.method);
-        console.log('payload', payload);
         let fetchParams = urlHelper.buildFetchParams(urlConstants.createMethod, '', payload);
         fetch(fetchParams.url, fetchParams.request)
             .then((response) => {
                 switch (response.status) {
                 case 201:
-                    console.log('success', response);
                     return response.json();
                 case 400:
                     console.error('400', response);
-                    openNotification('error', 'Fehler beim speichern', 'Es sieht so aus, als hätte der Server Probleme die Methode zu verstehen.');
-                    break;
+                    throw ('400 error');
                 }
+            }).catch(() => {
+                //@todo provide option to download JSON as file?
+                openNotification('error', translations.create_method_error, translations.create_method_error_text);
             }).then(() => {
                 history.push('/');
             });
