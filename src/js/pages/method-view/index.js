@@ -30,8 +30,21 @@ export class MethodDetailContainer extends Component {
         const fetchParams = urlHelper.buildFetchParams(urlConstants.getMethod, this.state.id);
         fetch(fetchParams.url, fetchParams.request)
             .then(response => {
-                console.log('response', response);
-                return response.json();
+                switch (response.status) {
+                case 200:
+                    return response.json();
+                case 404:
+                    console.error('response', response);
+                    throw('404 error');
+                case 500:
+                    console.error('response', response);
+                    throw ('500 error');
+                }
+            }).catch(() => {
+                openNotification('error', translations.method_not_found, (<span>Die Methode konnte leider nicht gefunden werden. War der Link korrekt?<br/><br/><a href="/">Zurück</a></span>));
+                this.setState({
+                    tableLoading: true,
+                });
             }).then(data => {
                 let method = {
                     key: data.id,    
@@ -40,25 +53,16 @@ export class MethodDetailContainer extends Component {
                     seminar: data.seminar_type.name,
                     typ: data.method_types[0].name,
                     level: data.method_levels[0].name,
-                    attachments: data.attachments.map((attachment) => (
-                        {
-                            content: {blocks: JSON.parse(attachment.content)},
-                            title: attachment.title,
-                            id: attachment.id,
-                        })
-                    )
+                    attachments: data.attachments.map((attachment) => ({
+                        content: {blocks: JSON.parse(attachment.content)},
+                        title: attachment.title,
+                        id: attachment.id,
+                    }))
                 };
-                console.log('fetched', method);
-               
-                // display loaded methods and remove loading-animation
+
                 this.setState({
                     method: method,
                     tableLoading: false
-                });
-            }).catch(() => {
-                openNotification('error', translations.connection_error, 'Could not connect to the server');
-                this.setState({
-                    tableLoading: false,
                 });
             });
     };
@@ -71,6 +75,7 @@ export class MethodDetailContainer extends Component {
 }
 
 MethodDetailContainer.displayName = 'Method Detail Container';
+
 // function mapStateToProps(state) {
 //     //console.log('state.cart', state.cart);
 //     const { cart } = state;
@@ -78,12 +83,12 @@ MethodDetailContainer.displayName = 'Method Detail Container';
 //         cart
 //     };
 // }
-
+//
 // const connectedMethodDetailPage = connect(mapStateToProps)(Index);
 // export { connectedMethodDetailPage as Index };
-
-/**
- * container for the method form
- * @type Form
- */
-//export const Index = Form.create()(MethodDetail);
+//
+// /**
+//  * container for the method form
+//  * @type Form
+//  */
+// export const Index = Form.create()(MethodDetail);

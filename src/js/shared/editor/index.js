@@ -18,38 +18,6 @@ import Paragraph from '@editorjs/paragraph';
 
 export const fullToolbar = ['italic', 'bold', 'link'];
 
-export const config = {
-    header: {
-        class: Header,
-        inlineToolbar: ['italic'],
-    },
-    list: {
-        class: List,
-        inlineToolbar: true,
-    },
-    link: {
-        class: Link,
-        inlineToolbar: true,
-    },
-    table: {
-        class: Table,
-        inlineToolbar: true
-    },
-    delimiter: Delimiter,
-    quote: {
-        class: Quote,
-        inlineToolbar: ['bold'],
-    },
-    warning: {
-        class: Warning,
-        inlineToolbar: ['italic', 'bold'],
-    },
-    paragraph: {
-        class: Paragraph,
-        inlineToolbar: true,
-    },
-};
-
 /**
  * form field to add attachments to the method like graphics or texts
  * @extends Component
@@ -67,10 +35,41 @@ export class Editor extends Component {
     }
 
     componentDidMount() {
+        console.log('data', this.props.data);
         const editor = new EditorJS({
             holderId: 'editorjs-'+this.props.id,
             onChange: () => { this.save(); },
-            tools: config,
+            tools: { // need to be inline as editor fails otherwise!
+                header: {
+                    class: Header,
+                    inlineToolbar: ['italic'],
+                },
+                list: {
+                    class: List,
+                    inlineToolbar: true,
+                },
+                link: {
+                    class: Link,
+                    inlineToolbar: true,
+                },
+                table: {
+                    class: Table,
+                    inlineToolbar: true
+                },
+                delimiter: Delimiter,
+                quote: {
+                    class: Quote,
+                    inlineToolbar: ['bold'],
+                },
+                warning: {
+                    class: Warning,
+                    inlineToolbar: ['italic', 'bold'],
+                },
+                paragraph: {
+                    class: Paragraph,
+                    inlineToolbar: true,
+                },
+            },
             data: this.props.data,
         });
         this.setState({

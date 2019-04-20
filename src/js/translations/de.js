@@ -13,6 +13,7 @@ export const translations = {
     method_details: 'Detail der Methode',
     method_level_select_placeholder: 'Methoden-Level auswählen...',
     method_name: 'Methodenname',
+    method_not_found: 'Methode nicht gefunden',
     method_title: 'Methodentitel',
     method_type_select_placeholder: 'Methodentyp auswählen...',
     name: 'Name',
@@ -40,4 +41,5 @@ export const translations = {
     step_summary: 'Zusammenfassung',
     type: 'Typ',
     unknown: 'Unbekannt',
+    unknown_error: 'Unbekannter Fehler',
 };

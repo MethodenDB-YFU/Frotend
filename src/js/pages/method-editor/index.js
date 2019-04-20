@@ -7,6 +7,8 @@ import { ContentEditor } from './components/content-editor';
 import { AttachmentEditor } from './components/attachment-editor';
 import { MetadataEditor } from './components/metadata-editor';
 import { SummaryView } from './components/summary-view';
+import { openNotification } from '../../shared/notification';
+import { history } from '../../helpers';
 
 /**
  * @type {Steps.Step}
@@ -17,9 +19,15 @@ const translations = {...t, page_title: 'Neue Methode Erstellen'};
 
 const buildPayload = (data) => {
     return {
-        attachments: data.attachments,
+        attachments: data.attachments.map(item => {
+            return {
+                //id: item.id, // id needs to be removed when creating attachments. @todo will break on update!
+                content: JSON.stringify(item.content), // content needs to be a string. Otherwise backend tries to deserialize
+                title: item.title
+            };
+        }),
         title: data.title,
-        content: data.content,
+        content: JSON.stringify(data.content),
         seminar_type: data.seminarType.id,
         seminar_goals: data.seminarGoals.map((item) => item.id),
         method_levels: data.methodLevels,
@@ -60,15 +68,23 @@ export class MethodEditor extends Component {
         });
     }
 
-    //@todo backend changes needed (X-User-ID header)
     saveMethod() {
         const payload = buildPayload(this.state.method);
+        console.log('payload', payload);
         let fetchParams = urlHelper.buildFetchParams(urlConstants.createMethod, '', payload);
         fetch(fetchParams.url, fetchParams.request)
-            .then(results => {
-                return results.json();
-            }).then(data => {
-                console.log(data);
+            .then((response) => {
+                switch (response.status) {
+                case 201:
+                    console.log('success', response);
+                    return response.json();
+                case 400:
+                    console.error('400', response);
+                    openNotification('error', 'Fehler beim speichern', 'Es sieht so aus, als hätte der Server Probleme die Methode zu verstehen.');
+                    break;
+                }
+            }).then(() => {
+                history.push('/');
             });
     }
 
@@ -83,7 +99,6 @@ export class MethodEditor extends Component {
     }
 
     render() {
-
         const { currentStep } = this.state;
 
         const steps = [{
