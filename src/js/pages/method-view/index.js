@@ -54,7 +54,7 @@ export class MethodDetailContainer extends Component {
                     typ: data.method_types[0].name,
                     level: data.method_levels[0].name,
                     attachments: data.attachments.map((attachment) => ({
-                        content: {blocks: JSON.parse(attachment.content)},
+                        content: JSON.parse(attachment.content),
                         title: attachment.title,
                         id: attachment.id,
                     }))
