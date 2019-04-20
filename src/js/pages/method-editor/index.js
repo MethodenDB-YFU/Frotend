@@ -22,12 +22,12 @@ const buildPayload = (data) => {
         attachments: data.attachments.map(item => {
             return {
                 //id: item.id, // id needs to be removed when creating attachments. @todo will break on update!
-                content: JSON.stringify(item.content), // content needs to be a string. Otherwise backend tries to deserialize
+                content: JSON.stringify(item.content.blocks), // content needs to be a string. Otherwise backend tries to deserialize. Stripping editor version and timestamp here.
                 title: item.title
             };
         }),
         title: data.title,
-        content: JSON.stringify(data.content),
+        content: JSON.stringify(data.content.blocks),
         seminar_type: data.seminarType.id,
         seminar_goals: data.seminarGoals.map((item) => item.id),
         method_levels: data.methodLevels,
